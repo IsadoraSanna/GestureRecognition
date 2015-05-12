@@ -6,18 +6,23 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
+    // Enum expressionState
     public enum expressionState
     {
         Complete = 1,
         Default = 0,
         Eerror = -1
     }
+    // Delegate per i GestureEventHandler
+    public delegate void GestureEventHandler(EventArgs evt);
 
     public class Term
     {
         public expressionState state = expressionState.Default;
-        private Event onComplete = new Event();
-        private Event onError = new Event();
+        public event GestureEventHandler onComplete;
+        public event GestureEventHandler onError;  
+        //private Event onComplete = new Event();
+        //private Event onError = new Event();
         public bool excluded;
         public bool once;
 
@@ -35,13 +40,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //imposto lo stato dell'espressione come completo
         public void complete(Token token){
 		    this.state = expressionState.Complete;
-		    onComplete.trigger(“completed”, token);
+            //onComplete.trigger(“completed”, token);
         }
 
         //imposto lo stato dell'espressione come errore
         public void error(Token token){
 		    this.state = expressionState.Eerror;
-		    onError.trigger(“error”, token);
+		    //onError.trigger(“error”, token);
         }
 
         //verifica se l'imput puo' essere accettato o no

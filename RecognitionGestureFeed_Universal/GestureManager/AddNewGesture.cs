@@ -51,6 +51,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager
 
             if (scrittura)
             {
+                
                 /*XmlTextWriter c = new XmlTextWriter("C:/Users/BatCave/Copy/Tesi/DatabaseGesture/databaseGesture_1.xml", null);
                 // Apro il documento
                 c.WriteStartDocumentAsync();

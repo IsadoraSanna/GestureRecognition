@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GestureXMLSchema"
+    targetNamespace="http://tempuri.org/GestureXMLSchema.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/GestureXMLSchema.xsd"
+    xmlns:mstns="http://tempuri.org/GestureXMLSchema.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+    <!-- Tipo Gesture -->
+    <xs:element name="Gesture">
+      <xs:complexType>>
+        <xs:sequence>
+          <!-- Tipo Joint -->
+          <xs:element name="Joint">
+            <xs:complexType>
+              <xs:attribute name="JointType" type="xs:string"></xs:attribute>
+              <!--<xs:attribute name="Orientation" type="xs:"></xs:attribute>-->
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+</xs:schema>

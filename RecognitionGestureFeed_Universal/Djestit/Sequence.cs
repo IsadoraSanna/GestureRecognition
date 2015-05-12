@@ -57,14 +57,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public void fire(Token token)
         {
-            //come nell'if precedente per il fire
-            if (this.lookahead(token) && (this.children[index].fire != null))
+            //come nell'if precedente per il fire  
+            if (this.lookahead(token))
             {
                 this.children[index].fire(token);
             }
             else
             {
-                this.error();
+                this.error(token);
             }
 
             switch (this.children[index].state)

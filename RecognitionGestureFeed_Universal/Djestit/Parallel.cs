@@ -32,7 +32,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             if(this.state == expressionState.Complete || this.state== expressionState.Eerror)
                 return false;
-            if(this.children !=null && this.children.GetType() == typeof(List<Term>)
+            if(this.children !=null && this.children.GetType() == typeof(List<Term>))
             {
                 for(int index = 0; index < this.children.Count; index++)
                 {
