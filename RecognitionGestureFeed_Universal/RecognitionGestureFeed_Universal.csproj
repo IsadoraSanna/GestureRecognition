@@ -69,10 +69,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Djestit\Choice.cs" />
     <Compile Include="Djestit\CompositeTerm.cs" />
-    <Compile Include="Djestit\DJ.cs" />
-    <Compile Include="Djestit\Event.cs" />
+    <Compile Include="Djestit\Disabling.cs" />
     <Compile Include="Djestit\GroundTerm.cs" />
+    <Compile Include="Djestit\Interative.cs" />
+    <Compile Include="Djestit\OrderIndependece.cs" />
+    <Compile Include="Djestit\Parallel.cs" />
     <Compile Include="Djestit\Sequence.cs" />
     <Compile Include="Djestit\StateSequence.cs" />
     <Compile Include="Djestit\Term.cs" />
