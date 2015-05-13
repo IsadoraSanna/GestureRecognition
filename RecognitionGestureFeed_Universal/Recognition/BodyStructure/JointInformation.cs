@@ -8,9 +8,12 @@ using Microsoft.Kinect;
 using System.Diagnostics;
 // Point
 using System.Windows;
+// XmlAttribute
+using System.Xml.Serialization;
 
 namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 {
+    [Serializable]
     public class JointInformation : ICloneable
     {
         /// <summary>
@@ -20,11 +23,17 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// - orientation: indica l'orientamento del joint
         /// - status: se il sensore non rileva il joint in questione, allora questo viene posto come false, viceversa se vi sono dei dati disponibili viene posto a true
         ///</summary>
+        [XmlAttribute("ID")]
         private ulong idBody;
+        [XmlAttribute("Type")]
         private JointType type;
+        [XmlAttribute]
         private string name;
+        [XmlAttribute]
         private Joint joint;
+        [XmlAttribute]
         private Vector4 orientation;
+        [XmlAttribute]
         private TrackingState status;
 
         /* Costruttori */
@@ -37,6 +46,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             this.joint = joint;
             this.orientation = orientation; 
             this.status = joint.TrackingState;
+        }
+        public JointInformation()
+        {
+
         }
 
         /// <summary>

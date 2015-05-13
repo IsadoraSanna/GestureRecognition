@@ -10,26 +10,32 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 // Xml
 using System.Xml;
 using System.Xml.XmlConfiguration;
+using System.Xml.Serialization;
+using System.IO;
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.GestureManager
 {
+
     public class AddNewGesture
     {
         public class GestureXML
         {
-            public List<JointInformation> jointInformationList = new List<JointInformation>();
+
+            [XmlArray("JointInformationList"), XmlArrayItem(typeof(JointInformation), ElementName = "Joint")]
+            public List<JointInformation> jointInformationList { get; set; }
+
         }
 
         public AddNewGesture(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList)
         {
             // La nuova GestureXML che verrà inserita nel database
             GestureXML newGesture = new GestureXML();
+            newGesture.jointInformationList = new List<JointInformation>();
             bool scrittura = false;
             // Variabile che verrà usata per accedere alle joint da registrare
             JointInformation joint;
-            //
-            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(GestureXML));
-            System.IO.StreamWriter file = new System.IO.StreamWriter("C:/Users/Alessandro/Copy/Tesi/DatabaseGesture_1.xml");
+
 
             foreach(Skeleton skeleton in skeletonList)
             {
@@ -42,13 +48,27 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                         // Processo i dati
 
                         // Inserisco il Joint e i dati appena calcolati nella lista di newGesture
+                        //newGesture.jointInformationList.Add(joint);
                         newGesture.jointInformationList.Add(joint);
-
-                        // Scrittura
-                        writer.Serialize(file, newGesture);
+                        
+                        scrittura = true;
                     }
                 }
             }
+            if(scrittura)
+                SerializeToXML(newGesture);
+            //
+
+        }
+       
+        private void SerializeToXML(GestureXML newGesture)
+        {
+            Debug.WriteLine("tipo joint" + newGesture.jointInformationList[0].getPosition().X);
+
+            XmlSerializer writer = new XmlSerializer(typeof(GestureXML));
+            FileStream file = new FileStream("C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml", FileMode.Append);
+            // Scrittura
+            writer.Serialize(file, newGesture);
             file.Close();
         }
     }
