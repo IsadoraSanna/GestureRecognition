@@ -175,7 +175,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
         /// </summary>
         /// <param name="skeleton"></param>
         /// <param name="drawingContext"></param>
-        public static ImageSource drawSkeletons(Skeleton[] skeletonList, double width, double height, CoordinateMapper coordinateMapper)
+        public static void drawSkeletons(this WriteableBitmap bitmap, Skeleton[] skeletonList, CoordinateMapper coordinateMapper)
+        //public static ImageSource drawSkeletons(Skeleton[] skeletonList, double width, double height, CoordinateMapper coordinateMapper)
         {
             DrawingVisual drawingVisual = new DrawingVisual();
             DrawingContext drawingContext = drawingVisual.RenderOpen();
@@ -183,23 +184,26 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
 
             // Creo uno sfondo nero per settare la dimensione del render (serve per la stampa degli scheletri)
             drawingContext.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, 450, 700));
+            // Creo uno sfondo nero
+            bitmap.Clear(Colors.Black);
 
             // Disegno le ossa e le joints
             foreach (Skeleton skeleton in skeletonList)
             {
                 if (skeleton.getStatus())
-                    skeleton.drawBones(drawingContext, coordinateMapper);
+                    bitmap.drawBones(skeleton, coordinateMapper);
+                    //skeleton.drawBones(drawingContext, coordinateMapper);
                 // prevent drawing outside of our render area
                 //skeletonsDrawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, 250, 400));
             }
             // Tutti gli scheletri disegnati vengono salvati in un Skeleton Image
-            drawingContext.DrawImage(skeletonImage, new Rect(new Point(0, 0), new Size(width, height)));
-            drawingContext.Close();
+            //drawingContext.DrawImage(skeletonImage, new Rect(new Point(0, 0), new Size(width, height)));
+            //drawingContext.Close();
             // RenderTargetBitmap che viene usato per passare da DrawingVisual a BitmapSource
-            RenderTargetBitmap bmp = new RenderTargetBitmap(450, 700, 96, 96, PixelFormats.Pbgra32);
-            bmp.Render(drawingVisual);
+            //RenderTargetBitmap bmp = new RenderTargetBitmap(450, 700, 96, 96, PixelFormats.Pbgra32);
+            //bmp.Render(drawingVisual);
 
-            return encodeBitmap(bmp);
+            //return encodeBitmap(bmp);
         }
 
         /// <summary>
@@ -208,7 +212,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
         /// </summary>
         /// <param name="skeleton"></param>
         /// <param name="drawingContext"></param>
-        private static void drawBones(this Skeleton skeleton, DrawingContext drawingContext, CoordinateMapper coordinateMapper)
+        //private static void drawBones(this Skeleton skeleton, DrawingContext drawingContext, CoordinateMapper coordinateMapper)
+        private static void drawBones(this WriteableBitmap bitmap, Skeleton skeleton, CoordinateMapper coordinateMapper)
         {
             Point point0, point1;
             JointInformation joint0, joint1;
@@ -248,9 +253,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
                 // Se entrambe le joint sono rilevate, allora disegno l'osso,
                 // altrimenti la disegno ma in maniera molto più leggera.
                 if (joint0.getStatus() == TrackingState.Tracked && joint1.getStatus() == TrackingState.Tracked)
-                    drawingContext.DrawLine(penTracked, point0, point1);
+                    bitmap.DrawLineAa((int)point0.X, (int)point0.Y, (int)point1.X, (int)point1.Y, Colors.Red, 6);
+                    ///****drawingContext.DrawLine(penTracked, point0, point1);
                 else
-                    drawingContext.DrawLine(penNotTracked, point0, point1);
+                    bitmap.DrawLineAa((int)point0.X, (int)point0.Y, (int)point1.X, (int)point1.Y, Colors.LightGray, 1);
+                    ///****drawingContext.DrawLine(penNotTracked, point0, point1);
             }
             // Disegna le palline delle joints
             foreach (JointInformation jointInformation in skeleton.getListJointInformation())
@@ -261,10 +268,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
                 Point point = jointCoordinate[(int)jointInformation.getType()].Item2;
                 // Se il Joint è tracciato, allora lo disegno
                 if (trackingState == TrackingState.Tracked)
-                    drawingContext.DrawEllipse(trackedJointBrush, null, point, trackedJointThickness, trackedJointThickness);
+                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 3, 3, Colors.Black);
+                    ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, trackedJointThickness, trackedJointThickness);
                 // Se il Joint è nello stato Inferred allora lo disegno, però con 
                 else if (trackingState == TrackingState.Inferred)
-                    drawingContext.DrawEllipse(trackedJointBrush, null, point, inferredJointThickness, inferredJointThickness);
+                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 1, 1, Colors.Black);
+                    ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, inferredJointThickness, inferredJointThickness);
             }
         }
 

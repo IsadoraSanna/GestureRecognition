@@ -56,7 +56,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                 // Apro il documento
                 c.WriteStartDocumentAsync();
                 //
-                c.WriteStartElementAsync("Porcoddio");
+                c.WriteStartElementAsync("");
                 c.WriteWhitespaceAsync("\n");
                 foreach(JointInformation jointI in newGesture.jointInformationList)
                 {
@@ -66,6 +66,11 @@ namespace RecognitionGestureFeed_Universal.GestureManager
 
                 c.WriteEndElement();
                 c.WriteEndDocument();*/
+
+                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(GestureXML));
+                System.IO.StreamWriter file = new System.IO.StreamWriter("C:/Users/Alessandro/Copy/Tesi/DatabaseGesture_1.xml");
+                writer.Serialize(file, newGesture);
+                file.Close();
             }
         }
     }

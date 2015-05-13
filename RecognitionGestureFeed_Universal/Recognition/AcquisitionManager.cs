@@ -42,10 +42,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
         private WriteableBitmap depthBitmap = null;
         private WriteableBitmap infraredBitmap = null;
         private WriteableBitmap colorBitmap = null;
+        private WriteableBitmap skeletonBitmap = null;
         private ImageSource skeletonImage = null;
         // Altezza e Larghezza delle immagini
-        private double width = 0;
-        private double height = 0;
+        private int width = 600;
+        private int height = 800;
 
         //Bool per capire se l'utente preferisce stampare le immagini o le informazioni
         private bool infoRequest;
@@ -60,10 +61,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
             infoRequest = infoR;
             printRequest = printR;
 
-            // Inizializzo le variabili di imageWidth e imageHeight */
-            this.width = 400;// imageWidth;
-            this.height = 500;// imageHeight;
-
             // Inizializzo la lista di GestureDetector
             this.gestureDetectorList = new List<GestureDetector>();
             // Iniziliazza l'array di skeleton e GestureDetector
@@ -73,6 +70,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 GestureDetector detector = new GestureDetector(this.kinectSensor);
                 this.gestureDetectorList.Add(detector);
             }
+            // Inizializzo la WritableBitmap usata per stampare gli scheletri
+            this.skeletonBitmap = new WriteableBitmap(width, height, 96.0, 96.0, PixelFormats.Bgr32, null);
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
@@ -173,7 +172,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 this.depthBitmap.convertBitmap(this.depthData);
                 this.infraredBitmap.convertBitmap(this.infraredData);
                 this.colorBitmap.convertBitmap(this.colorData);
-                this.skeletonImage = StreamManager.drawSkeletons(this.skeletonList, 400, 500, this.coordinateMapper);
+                this.skeletonBitmap.drawSkeletons(this.skeletonList, this.coordinateMapper);
+                //this.skeletonImage = StreamManager.drawSkeletons(this.skeletonList, 400, 500, this.coordinateMapper);
             }
             /************************** Gesture ************************************/
             if (infoRequest)
@@ -199,11 +199,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
             List<JointType> patagherru = new List<JointType>();
             patagherru.Add(JointType.Head);
             patagherru.Add(JointType.Neck);
-            AddNewGesture cacca = new AddNewGesture("porcoddio!", patagherru, skeletonList);
-            
-        
+            AddNewGesture cacca = new AddNewGesture("ie!", patagherru, skeletonList);
         }
-
 
         #region Bitmap Stream
         /// <summary>
@@ -222,7 +219,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 case DisplayFrameType.Color:
                     return this.colorBitmap;
                 case DisplayFrameType.Body:
-                    return this.skeletonImage as BitmapImage;
+                    //return this.skeletonImage as BitmapImage;
+                    return this.skeletonBitmap;
                 default:
                     return null;
             }
@@ -254,7 +252,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         valReturn = true;
                     break;
                 case DisplayFrameType.Body:
-                    if (skeletonImage != null)
+                    //if (skeletonImage != null)
+                    if (skeletonBitmap != null)
                         valReturn = true;
                     break;
             }

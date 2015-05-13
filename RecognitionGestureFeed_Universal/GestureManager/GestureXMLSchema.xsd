@@ -6,17 +6,31 @@
     xmlns:mstns="http://tempuri.org/GestureXMLSchema.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-    <!-- Tipo Gesture -->
+    <!-- Name -->
+    <xs:simpleType name="NameJointType">
+      <xs:restriction base="xs:string"></xs:restriction>
+    </xs:simpleType>
+    <!-- Posizione -->  
+    <xs:complexType name="PositionType">
+      <xs:sequence>
+        <xs:element name="Position_X" type="xs:float"></xs:element>
+        <xs:element name="Position_Y" type="xs:float"></xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  
+  <!-- Joint Information -->
+    <xs:complexType name="JointInformationType">
+      <xs:sequence>
+        <xs:element name="NameJoint" type="PositionType" />
+        <xs:element name="Position" type="NameJointType" />
+      </xs:sequence>
+    </xs:complexType>
+  
+  <!-- Gesture -->
     <xs:element name="Gesture">
-      <xs:complexType>>
+      <xs:complexType>
         <xs:sequence>
-          <!-- Tipo Joint -->
-          <xs:element name="Joint">
-            <xs:complexType>
-              <xs:attribute name="JointType" type="xs:string"></xs:attribute>
-              <!--<xs:attribute name="Orientation" type="xs:"></xs:attribute>-->
-            </xs:complexType>
-          </xs:element>
+          <xs:element name="Joint" type="JointInformationType"/>
         </xs:sequence>
       </xs:complexType>
     </xs:element>

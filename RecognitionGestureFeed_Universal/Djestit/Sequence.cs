@@ -47,7 +47,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return false;
             }
             //terzo argomento dell'if . nel codice JS non c'è il parametro token
-            if ((this.children != null) && (this.children[index] != null) && (this.children[index].lookahead(token) != null))
+            if ((this.children != null) && (this.children[index] != null))// && (this.children[index].lookahead(token) != null))
             {
                 return this.children[index].lookahead(token);
             }

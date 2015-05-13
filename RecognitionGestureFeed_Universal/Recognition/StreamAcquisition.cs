@@ -172,12 +172,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         /// Aggiorno l'indice
                         index++;
                     }
-                    skeletonImage = StreamManager.drawSkeletons(skeletonList, width, height, coordinateMapper);                     
+                    //skeletonImage = StreamManager.drawSkeletons(skeletonList, width, height, coordinateMapper);                     
                 }
             }
         }
-
         #endregion
-
     }
 }
