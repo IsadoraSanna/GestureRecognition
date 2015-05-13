@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 {
-    public class JointInformation
+    public class JointInformation : ICloneable
     {
         /// <summary>
         /// - idBody: ID legato alla Joints (equivale ai values di https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx) 
@@ -61,6 +61,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         }
 
         #region utilities
+        /* Clone */
+        // Override del metodo Clone, clona il joint in input
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
         /* Get functions */
         // Restituisce l'ID del Body associato
         public ulong getId()

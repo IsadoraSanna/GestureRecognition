@@ -81,6 +81,8 @@
     <Compile Include="Djestit\Term.cs" />
     <Compile Include="Djestit\Token.cs" />
     <Compile Include="GestureManager\AddNewGesture.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\GestureStart.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\GestureToken.cs" />
     <Compile Include="Recognition\Acquisition.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />

@@ -27,6 +27,9 @@ namespace RecognitionGestureFeed_Universal.GestureManager
             bool scrittura = false;
             // Variabile che verrà usata per accedere alle joint da registrare
             JointInformation joint;
+            //
+            System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(GestureXML));
+            System.IO.StreamWriter file = new System.IO.StreamWriter("C:/Users/Alessandro/Copy/Tesi/DatabaseGesture_1.xml");
 
             foreach(Skeleton skeleton in skeletonList)
             {
@@ -34,44 +37,19 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                 {
                     foreach (JointType jointType in jointReg)
                     {
-                        if (skeleton.getStatus())
-                        {
-                            // Prendo dallo scheletro il joint che mi serve
-                            joint = skeleton.getJointInformation(jointType);
-                            // Processo i dati
+                        // Prendo dallo scheletro il joint che mi serve
+                        joint = skeleton.getJointInformation(jointType);
+                        // Processo i dati
 
-                            // Inserisco il Joint e i dati appena calcolati nella lista di newGesture
-                            newGesture.jointInformationList.Add(joint);
+                        // Inserisco il Joint e i dati appena calcolati nella lista di newGesture
+                        newGesture.jointInformationList.Add(joint);
 
-                            scrittura = true;
-                        }
+                        // Scrittura
+                        writer.Serialize(file, newGesture);
                     }
                 }
             }
-
-            if (scrittura)
-            {
-                
-                /*XmlTextWriter c = new XmlTextWriter("C:/Users/BatCave/Copy/Tesi/DatabaseGesture/databaseGesture_1.xml", null);
-                // Apro il documento
-                c.WriteStartDocumentAsync();
-                //
-                c.WriteStartElementAsync("");
-                c.WriteWhitespaceAsync("\n");
-                foreach(JointInformation jointI in newGesture.jointInformationList)
-                {
-                    c.WriteElementString("Joint: ", jointI.getName());
-                    c.WriteWhitespace("\n");
-                }
-
-                c.WriteEndElement();
-                c.WriteEndDocument();
-
-                System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(GestureXML));
-                System.IO.StreamWriter file = new System.IO.StreamWriter("C:/Users/Alessandro/Copy/Tesi/DatabaseGesture_1.xml");
-                writer.Serialize(file, newGesture);
-                file.Close();*/
-            }
+            file.Close();
         }
     }
 }

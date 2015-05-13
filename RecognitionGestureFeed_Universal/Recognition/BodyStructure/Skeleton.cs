@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 {
-    public class Skeleton
+    public class Skeleton : ICloneable
     {
         private readonly Int16 number_joints = 25;// Numero di Joint disponibili
         #region Skeleton
@@ -118,7 +118,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             return this.bones;
         }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         public List<JointInformation> getListJointInformation()
         {
             if (this.getStatus())
@@ -126,14 +129,24 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             else
                 return null;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool getStatus()
         {
             return this.status;
         }
-
+        /// <summary>
+        /// Fornisce una nuova copia dell'oggetto scheletro.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
         #endregion Skeleton
-
+        
         #region utilities
         private static void boneBuilder(List<Bone> bones)
         {
