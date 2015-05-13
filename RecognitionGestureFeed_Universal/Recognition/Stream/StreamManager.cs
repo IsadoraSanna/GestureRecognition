@@ -268,11 +268,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
                 Point point = jointCoordinate[(int)jointInformation.getType()].Item2;
                 // Se il Joint è tracciato, allora lo disegno
                 if (trackingState == TrackingState.Tracked)
-                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 3, 3, Colors.Black);
+                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 3, 3, Colors.Aquamarine);
                     ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, trackedJointThickness, trackedJointThickness);
                 // Se il Joint è nello stato Inferred allora lo disegno, però con 
                 else if (trackingState == TrackingState.Inferred)
-                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 1, 1, Colors.Black);
+                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 1, 1, Colors.Aquamarine);
                     ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, inferredJointThickness, inferredJointThickness);
             }
         }
