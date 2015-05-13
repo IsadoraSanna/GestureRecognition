@@ -196,10 +196,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
 
             // Prova Aggiunta GestureXML
-            List<JointType> patagherru = new List<JointType>();
+            /*List<JointType> patagherru = new List<JointType>();
             patagherru.Add(JointType.Head);
             patagherru.Add(JointType.Neck);
-            AddNewGesture cacca = new AddNewGesture("ie!", patagherru, skeletonList);
+            AddNewGesture cacca = new AddNewGesture("ie!", patagherru, skeletonList);*/
         }
 
         #region Bitmap Stream

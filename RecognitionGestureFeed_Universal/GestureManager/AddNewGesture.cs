@@ -65,12 +65,12 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                 }
 
                 c.WriteEndElement();
-                c.WriteEndDocument();*/
+                c.WriteEndDocument();
 
                 System.Xml.Serialization.XmlSerializer writer = new System.Xml.Serialization.XmlSerializer(typeof(GestureXML));
                 System.IO.StreamWriter file = new System.IO.StreamWriter("C:/Users/Alessandro/Copy/Tesi/DatabaseGesture_1.xml");
                 writer.Serialize(file, newGesture);
-                file.Close();
+                file.Close();*/
             }
         }
     }
