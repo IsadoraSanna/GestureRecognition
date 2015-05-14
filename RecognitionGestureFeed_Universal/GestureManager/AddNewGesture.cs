@@ -21,10 +21,8 @@ namespace RecognitionGestureFeed_Universal.GestureManager
     {
         public class GestureXML
         {
-
-            [XmlArray("JointInformationList"), XmlArrayItem(typeof(JointInformation), ElementName = "Joint")]
             public List<JointInformation> jointInformationList { get; set; }
-
+            public GestureXML() { }
         }
 
         public AddNewGesture(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList)
@@ -33,42 +31,39 @@ namespace RecognitionGestureFeed_Universal.GestureManager
             GestureXML newGesture = new GestureXML();
             newGesture.jointInformationList = new List<JointInformation>();
             bool scrittura = false;
-            // Variabile che verrà usata per accedere alle joint da registrare
-            JointInformation joint;
+            /// Elemento che verrà usato per accedere ai JointInformation di Skeleton
+            JointInformation jointI;
 
-
-            foreach(Skeleton skeleton in skeletonList)
+            foreach (Skeleton skeleton in skeletonList)
             {
-                if(skeleton.getStatus())
+                if (skeleton.getStatus())
                 {
                     foreach (JointType jointType in jointReg)
                     {
                         // Prendo dallo scheletro il joint che mi serve
-                        joint = skeleton.getJointInformation(jointType);
+                        jointI = (JointInformation) skeleton.getJointInformation(jointType).Clone();
                         // Processo i dati
 
                         // Inserisco il Joint e i dati appena calcolati nella lista di newGesture
-                        //newGesture.jointInformationList.Add(joint);
-                        newGesture.jointInformationList.Add(joint);
-                        
+                        newGesture.jointInformationList.Add(jointI);
+                        // La gesture è stata registrata
                         scrittura = true;
                     }
                 }
             }
-            if(scrittura)
+            if (scrittura)
                 SerializeToXML(newGesture);
-            //
-
         }
-       
+
         private void SerializeToXML(GestureXML newGesture)
         {
-            Debug.WriteLine("tipo joint" + newGesture.jointInformationList[0].getPosition().X);
-
+            // Creo il serializer per poter scrivere sul file xml i dati della gesture appena registrata
             XmlSerializer writer = new XmlSerializer(typeof(GestureXML));
+            // Apro il database in input in modalità append
             FileStream file = new FileStream("C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml", FileMode.Append);
             // Scrittura
             writer.Serialize(file, newGesture);
+            // Chiudo il flusso del file
             file.Close();
         }
     }

@@ -17,33 +17,30 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
     public class JointInformation : ICloneable
     {
         /// <summary>
-        /// - idBody: ID legato alla Joints (equivale ai values di https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx) 
-        /// - name: nome della Joint
+        /// - idBody: ID legato alla Joints (equivale ai values di https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx)
+        /// - type: Indica il jointType a cui fa riferimento il joint
         /// - joint: l'oggetto Joint vero e proprio (che contiene coordinate x,y,z)
+        /// - position: le coordinate della posizione del joint
         /// - orientation: indica l'orientamento del joint
         /// - status: se il sensore non rileva il joint in questione, allora questo viene posto come false, viceversa se vi sono dei dati disponibili viene posto a true
         ///</summary>
-        [XmlAttribute("ID")]
-        private ulong idBody;
-        [XmlAttribute("Type")]
-        private JointType type;
-        [XmlAttribute]
-        private string name;
-        [XmlAttribute]
-        private Joint joint;
-        [XmlAttribute]
-        private Vector4 orientation;
-        [XmlAttribute]
-        private TrackingState status;
+        //public ulong idBody { get{return idBody;} set{ idBody = value ;} }
+        public ulong idBody { get; set; }
+        public JointType type { get; set; }
+        public Joint joint { get; set; }
+        public CameraSpacePoint position { get; set; }
+        public Vector4 orientation { get; set; }
+        public TrackingState status { get; set; }
 
+        
         /* Costruttori */
         // Assegno al nuovo oggetto le informazioni passate in input
         public JointInformation(ulong idBody, Joint joint, Vector4 orientation)
         {
             this.idBody = idBody;
             this.type = joint.JointType;
-            this.name = joint.JointType.ToString();
             this.joint = joint;
+            this.position = joint.Position;
             this.orientation = orientation; 
             this.status = joint.TrackingState;
         }
@@ -57,9 +54,9 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// Qualora status di jointInformation è false, restituisce null
         /// </summary>
         /// <returns></returns>
-        public Tuple<ulong, string, Joint, Vector4, TrackingState> getJointInformation()
+        public Tuple<ulong, Joint, Vector4, TrackingState> getJointInformation()
         {
-            return Tuple.Create(this.idBody, this.name, this.joint, this.orientation, this.status);
+            return Tuple.Create(this.idBody, this.joint, this.orientation, this.status);
         }
 
         // Restituisce le informazioni contenute nell'oggetto come stringa
@@ -67,9 +64,9 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             String result=null;
             if (this.status != TrackingState.NotTracked)// ovvero se il joint è tracciato
-                result = ("ID Body: " + this.idBody + " - Joint's Name: " + this.name.ToString() + " - Joint: " + this.joint.ToString() + " - Joint's Orientation: " + this.orientation);
+                result = ("ID Body: " + this.idBody + " - Joint: " + this.joint.ToString() + " - Joint's Orientation: " + this.orientation);
             else
-                result = ("ID Body: " + this.idBody + " - Joint's Name: "+this.name.ToString());
+                result = ("ID Body: " + this.idBody);
             return result;
         }
 
@@ -78,18 +75,13 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         // Override del metodo Clone, clona il joint in input
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return this.MemberwiseClone() as JointInformation;
         }
         /* Get functions */
         // Restituisce l'ID del Body associato
         public ulong getId()
         {
             return this.idBody;
-        }
-        // Restituisce il nome del Joint
-        public string getName()
-        {
-            return this.name;
         }
         // Restituisce il Joint 
         public Joint getJoint()
@@ -114,7 +106,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         // Restituisce il CameraSpacePoint costruito sulle coordinate X e Y del joint
         public CameraSpacePoint getPosition()
         {
-            return this.joint.Position;
+            return this.position;
         }
         #endregion
     }

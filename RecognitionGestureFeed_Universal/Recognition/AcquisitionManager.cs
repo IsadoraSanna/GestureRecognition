@@ -19,6 +19,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 {
     public class AcquisitionManager
     {
+        #region Attributi
         /****** Attributi ******/
         // Mapper che viene utilizzato per passare da una rappresentazione all'altra.
         private CoordinateMapper coordinateMapper;
@@ -54,9 +55,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
         // Variabile usata per la comunicazione con la kinect
         private KinectSensor kinectSensor = null;
+        #endregion
 
+        //
+
+        /****** Costruttore ******/
         public AcquisitionManager(KinectSensor ks, bool infoR, bool printR)
         {
+
             kinectSensor = ks;
             infoRequest = infoR;
             printRequest = printR;
@@ -165,6 +171,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
             }
 
+            // Creo l'evento
             /*************************** Stampa *************************************/
             if (printRequest)
             {
@@ -203,6 +210,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         }
 
         #region Bitmap Stream
+        /****** Metodi ******/
         /// <summary>
         /// Funzione che restituisce il WritableBitmap associato ad ogni tipo di frame
         /// </summary>
