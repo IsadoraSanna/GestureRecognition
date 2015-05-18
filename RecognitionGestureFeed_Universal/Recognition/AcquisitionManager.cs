@@ -17,18 +17,19 @@ using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
+    //
+    public delegate void FrameManaged(AcquisitionManager sender);
+
     public class AcquisitionManager
     {
         #region Attributi
         /****** Attributi ******/
-        // Mapper che viene utilizzato per passare da una rappresentazione all'altra.
-        private CoordinateMapper coordinateMapper;
         // Numero massimo di scheletri gestibili contemporaneamente
         static private ulong n_max_skeleton = 10;
         //private IList<Body> bodyList; // Lista di Body
         private Body[] bodyList = null;
         // Array che contiene gli n_max_skeleton rilevati dalla kinect 
-        private Skeleton[] skeletonList = new Skeleton[n_max_skeleton];
+        public Skeleton[] skeletonList = new Skeleton[n_max_skeleton];
         // List of gesture detectors, there will be one detector created for each potential body (max of 6) 
         private List<GestureDetector> gestureDetectorList = null;
 
@@ -36,36 +37,27 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
         /// </summary>
-        private DepthData depthData = null;
-        private InfraredData infraredData = null;
-        private ColorData colorData = null;
-        // Immagine che contiene il frame da stampare (depth, infrared, color e skeleton)
-        private WriteableBitmap depthBitmap = null;
-        private WriteableBitmap infraredBitmap = null;
-        private WriteableBitmap colorBitmap = null;
-        private WriteableBitmap skeletonBitmap = null;
-        private ImageSource skeletonImage = null;
+        public DepthData depthData = null;
+        public InfraredData infraredData = null;
+        public ColorData colorData = null;
         // Altezza e Larghezza delle immagini
         private int width = 600;
         private int height = 800;
 
         //Bool per capire se l'utente preferisce stampare le immagini o le informazioni
         private bool infoRequest;
-        private bool printRequest;
 
         // Variabile usata per la comunicazione con la kinect
         private KinectSensor kinectSensor = null;
+        // Evento che indica quando un frame è stato gestito
+        public event FrameManaged frameManaged;
         #endregion
 
-        //
-
         /****** Costruttore ******/
-        public AcquisitionManager(KinectSensor ks, bool infoR, bool printR)
+        public AcquisitionManager(KinectSensor ks, bool infoR)
         {
-
             kinectSensor = ks;
             infoRequest = infoR;
-            printRequest = printR;
 
             // Inizializzo la lista di GestureDetector
             this.gestureDetectorList = new List<GestureDetector>();
@@ -76,8 +68,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 GestureDetector detector = new GestureDetector(this.kinectSensor);
                 this.gestureDetectorList.Add(detector);
             }
-            // Inizializzo la WritableBitmap usata per stampare gli scheletri
-            this.skeletonBitmap = new WriteableBitmap(width, height, 96.0, 96.0, PixelFormats.Bgr32, null);
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
@@ -86,23 +76,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // Inizializza l'oggetto depthFrameData
             FrameDescription depthFrameDescription = kinectSensor.DepthFrameSource.FrameDescription;
             this.depthData = new DepthData(depthFrameDescription);
-            this.depthBitmap = new WriteableBitmap(depthData.width, depthData.height, 96.0, 96.0, PixelFormats.Gray8, null);
             // Inizializza l'oggetto InfraredFrameData
             FrameDescription infraredFrameDescription = kinectSensor.InfraredFrameSource.FrameDescription;
             this.infraredData = new InfraredData(infraredFrameDescription);
-            this.infraredBitmap = new WriteableBitmap(infraredData.width, infraredData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
             // Inizializza l'oggetto ColorFrameData
             FrameDescription colorFrameDescription = kinectSensor.ColorFrameSource.FrameDescription;
             this.colorData = new ColorData(colorFrameDescription);
-            colorBitmap = new WriteableBitmap(colorData.width, colorData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
        
             // Attivo il lettore di multiframe
             MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.Color | FrameSourceTypes.Body);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
-
-            // Prendo dalla variabile kinectSensor, 
-            coordinateMapper = kinectSensor.CoordinateMapper;
         }
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -171,17 +155,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
             }
 
-            // Creo l'evento
-            /*************************** Stampa *************************************/
-            if (printRequest)
-            {
-                //this.depthBitmap = StreamManager.convertBitmap(this.depthData);
-                this.depthBitmap.convertBitmap(this.depthData);
-                this.infraredBitmap.convertBitmap(this.infraredData);
-                this.colorBitmap.convertBitmap(this.colorData);
-                this.skeletonBitmap.drawSkeletons(this.skeletonList, this.coordinateMapper);
-                //this.skeletonImage = StreamManager.drawSkeletons(this.skeletonList, 400, 500, this.coordinateMapper);
-            }
             /************************** Gesture ************************************/
             if (infoRequest)
             {
@@ -203,15 +176,23 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
 
             // Prova Aggiunta GestureXML
-            List<JointType> patagherru = new List<JointType>();
-            patagherru.Add(JointType.Head);
-            patagherru.Add(JointType.Neck);
-            AddNewGesture cacca = new AddNewGesture("ie!", patagherru, skeletonList);
+            //List<JointType> patagherru = new List<JointType>();
+            //patagherru.Add(JointType.Head);
+            //patagherru.Add(JointType.Neck);
+            //AddNewGestureXML cacca = new AddNewGestureXML("ie!", patagherru, skeletonList);
+
+            //prova stampa da XML
+            GestureDetectorXML filemanager = new GestureDetectorXML();
+            filemanager.printXML(filemanager.gesture);
+
+            // Richiamo l'evento
+            this.OnFrameManaged(this);
         }
+
 
         #region Bitmap Stream
         /****** Metodi ******/
-        /// <summary>
+       /* /// <summary>
         /// Funzione che restituisce il WritableBitmap associato ad ogni tipo di frame
         /// </summary>
         /// <param name="displayFrameType"></param>
@@ -266,7 +247,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     break;
             }
             return valReturn;
-        }
+        }*/
         #endregion
+
+        /// <summary>
+        /// Evento che avvisa la gestione di un Frame prelevato dalla kinect.
+        /// </summary>
+        /// <param name="sender">Passa in input l'oggetto di tipo AcquisitionManager, che contiene tutte le informazioni necessarie per la stampa.</param>
+        protected virtual void OnFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = frameManaged;
+            if (handler != null)
+                handler(sender);
+        }
     }
 }
