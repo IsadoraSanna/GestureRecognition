@@ -3,29 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// Djestit
+// GroundTerm
 using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class GestureStart : GroundTerm
+    class GestureEnd : GroundTerm
     {
-        /* Attributi */
-        private ulong ID { get; set; }
+        // Attributi
+        ulong ID;
 
-        public GestureStart(ulong ID)
+        public GestureEnd(ulong id)
         {
-            this.ID = ID;
+            this.ID = id;
         }
 
-        /* Metodi */
         public bool accepts(GestureToken token)
         {
-            if(token.type != TypeToken.Start)
+            if(token.type != TypeToken.End)
                 return false;
             if(this.ID != null && this.ID != token.jointInformation.getId())
                 return false;
             return true;
-        }        
+        }
     }
 }
