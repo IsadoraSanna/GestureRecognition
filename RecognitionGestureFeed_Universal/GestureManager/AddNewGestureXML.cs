@@ -19,20 +19,17 @@ namespace RecognitionGestureFeed_Universal.GestureManager
     public class AddNewGestureXML
     {
         // Attributi
-        string path = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
-        public class GestureXML
-        {
-            public List<JointInformation> jointInformationList { get; set; }
-            public GestureXML() { }
-        }
+        string path2 = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
 
-        // Metodi
-        public AddNewGestureXML(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList)
+        // Costruttore
+        public AddNewGestureXML(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList, string path)
         {
-            // La nuova GestureXML che verrà inserita nel database
+            // Inizializzo la nuova GestureXML che verrà inserita nel database
             GestureXML newGesture = new GestureXML();
             newGesture.jointInformationList = new List<JointInformation>();
-            bool scrittura = false;
+            newGesture.name = nameGesture;
+            // Variabile che indicherà se la gesture è stata effettivamente registrata o meno
+            bool boolYesWriting = false;
             /// Elemento che verrà usato per accedere ai JointInformation di Skeleton
             JointInformation jointI;
 
@@ -49,24 +46,25 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                         // Inserisco il Joint e i dati appena calcolati nella lista di newGesture
                         newGesture.jointInformationList.Add(jointI);
                         // La gesture è stata registrata
-                        scrittura = true;
+                        boolYesWriting = true;
                     }
                 }
             }
             // Se una gesture è stata registrata, allora provvedo alla serializzazione
-            if (scrittura)
+            if (boolYesWriting)
             {
                 // Richiamo la funzione per serializzare il file
-                SerializeToXML(newGesture);
+                SerializeToXML(newGesture, path);
             }
         }
 
-        private void SerializeToXML(GestureXML newGesture)
+        // Metodi
+        private void SerializeToXML(GestureXML newGesture, string path)
         {
             // Serializer usato per leggere/scrivere dal file
-            XmlSerializer serializer = new XmlSerializer(typeof(List<AddNewGestureXML.GestureXML>));
+            XmlSerializer serializer = new XmlSerializer(typeof(List<GestureXML>));
             /// Read
-            List<AddNewGestureXML.GestureXML> listGesture = GestureDetectorXML.readXML(path, serializer);
+            List<GestureXML> listGesture = GestureDetectorXML.readXML(path, serializer);
             /// Write
             // Aggiungo nella lista la GestureXML
             listGesture.Add(newGesture);

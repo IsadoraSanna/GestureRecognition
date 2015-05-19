@@ -30,8 +30,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             // Inizializzo la lista di GestureDetector
             gestureDetectorList = new List<GestureDetector>();
-
-            // Iniziliazza l'array di skeleton e GestureDetector
             for (int i = 0; i < (int)n_max_skeleton; i++)
             {
                 GestureDetector detector = new GestureDetector(kinectSensor);
