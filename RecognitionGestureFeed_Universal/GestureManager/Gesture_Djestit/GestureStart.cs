@@ -14,9 +14,19 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         private ulong ID { get; set; }
 
         /* Metodi */
-        /*public bool accepts(GestureToken token)
+        public bool accepts(GestureToken token)
         {
-            if(token )
-        }*/
+            if(token.type != TypeToken.Start)
+                return false;
+            if(this.ID != null && this.ID != token.jointInformation.getId())
+                return false;
+            return true
+
+            if (this.id && this.id !== null && this.id !== token.id) {
+                return false;
+            }
+            return true;
+         
+        }
     }
 }
