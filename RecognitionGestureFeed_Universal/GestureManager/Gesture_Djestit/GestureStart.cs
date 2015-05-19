@@ -13,11 +13,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         /* Attributi */
         private ulong ID { get; set; }
 
-        public GestureStart(ulong ID)
-        {
-            this.ID = ID;
-        }
-
         /* Metodi */
         public bool accepts(GestureToken token)
         {
@@ -26,6 +21,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             if(this.ID != null && this.ID != token.jointInformation.getId())
                 return false;
             return true;
-        }        
+        }
     }
 }
