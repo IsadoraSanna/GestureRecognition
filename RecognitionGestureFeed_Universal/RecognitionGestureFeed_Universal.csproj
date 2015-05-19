@@ -82,6 +82,7 @@
     <Compile Include="Djestit\Token.cs" />
     <Compile Include="GestureManager\AddNewGestureXML.cs" />
     <Compile Include="GestureManager\GestureDetectorXML.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\GestureMove.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\GestureStart.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\GestureToken.cs" />
     <Compile Include="Recognition\GestureManager.cs" />
