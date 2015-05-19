@@ -20,13 +20,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                 return false;
             if(this.ID != null && this.ID != token.jointInformation.getId())
                 return false;
-            return true
-
-            if (this.id && this.id !== null && this.id !== token.id) {
-                return false;
-            }
             return true;
-         
         }
     }
 }

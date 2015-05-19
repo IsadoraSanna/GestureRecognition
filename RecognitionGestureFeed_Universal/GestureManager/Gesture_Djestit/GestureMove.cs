@@ -18,7 +18,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 
         public bool accepts(GestureToken token)
         {
-            if(token.GetType != TypeToken.Move)
+            if(token.type != TypeToken.Move)
                 return false;
             if (this.ID != null && this.ID != token.jointInformation.getId())
                 return false;
