@@ -16,7 +16,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager
         /// Il Path del database in cui risiedono le gesture
         /// </summary>
         private readonly string gestureDatabase = @"C:\Users\BatCave\Copy\Tesi\Carca\Programma_di_Prova\Programma_di_Prova\Database\database_gesture_burde.gbd";
-        private readonly string GestureName = "Mano_Alzata";
 
         /// <summary> 
         /// Rispettivamente:

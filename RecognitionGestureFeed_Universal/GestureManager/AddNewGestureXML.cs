@@ -16,15 +16,17 @@ using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.GestureManager
 {
-
     public class AddNewGestureXML
     {
+        // Attributi
+        string path = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
         public class GestureXML
         {
             public List<JointInformation> jointInformationList { get; set; }
             public GestureXML() { }
         }
 
+        // Metodi
         public AddNewGestureXML(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList)
         {
             // La nuova GestureXML che verrà inserita nel database
@@ -51,20 +53,29 @@ namespace RecognitionGestureFeed_Universal.GestureManager
                     }
                 }
             }
+            // Se una gesture è stata registrata, allora provvedo alla serializzazione
             if (scrittura)
+            {
+                // Richiamo la funzione per serializzare il file
                 SerializeToXML(newGesture);
+            }
         }
 
         private void SerializeToXML(GestureXML newGesture)
         {
-            // Creo il serializer per poter scrivere sul file xml i dati della gesture appena registrata
-            XmlSerializer writer = new XmlSerializer(typeof(GestureXML));
-            // Apro il database in input in modalità append
-            FileStream file = new FileStream("C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml", FileMode.Append);
-            // Scrittura
-            writer.Serialize(file, newGesture);
-            // Chiudo il flusso del file
-            file.Close();
+            // Serializer usato per leggere/scrivere dal file
+            XmlSerializer serializer = new XmlSerializer(typeof(List<AddNewGestureXML.GestureXML>));
+            /// Read
+            List<AddNewGestureXML.GestureXML> listGesture = GestureDetectorXML.readXML(path, serializer);
+            /// Write
+            // Aggiungo nella lista la GestureXML
+            listGesture.Add(newGesture);
+            // Apro il file in modalità open
+            StreamWriter writer = new StreamWriter(path);
+            // Serializzo la lista di gesture sul file
+            serializer.Serialize(writer, listGesture);
+            // Chiudo il file
+            writer.Close();
         }
     }
 }

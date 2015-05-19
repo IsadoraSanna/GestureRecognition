@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 
 namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 {
-    [Serializable]
+    [Serializable()]
     public class JointInformation : ICloneable
     {
         /// <summary>

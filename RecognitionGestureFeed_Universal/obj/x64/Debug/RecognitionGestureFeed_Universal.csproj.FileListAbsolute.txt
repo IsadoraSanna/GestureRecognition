@@ -56,3 +56,4 @@ C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\x64\Debug\Mic
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Wpf.Controls.xml
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.dll
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.pdb
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

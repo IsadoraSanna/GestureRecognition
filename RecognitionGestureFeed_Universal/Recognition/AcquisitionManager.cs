@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Writable
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 // Kinect
@@ -17,41 +18,48 @@ using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
-    //
+    // Indentifico la tipologia di dati che voglio stampare.
+    public enum DisplayFrameType
+    {
+        Depth,
+        Body,
+        Infrared,
+        Color
+    }
+
+    /// <summary>
+    /// Delegate per l'evento di tipo FrameManaged.
+    /// </summary>
+    /// <param name="sender"></param>
     public delegate void FrameManaged(AcquisitionManager sender);
 
     public class AcquisitionManager
     {
-        #region Attributi
         /****** Attributi ******/
+        // Evento che indica quando un frame è stato gestito
+        public event FrameManaged frameManaged;
+
+        // Variabile usata per la comunicazione con la kinect
+        private KinectSensor kinectSensor = null;
+
         // Numero massimo di scheletri gestibili contemporaneamente
-        static private ulong n_max_skeleton = 10;
+        internal const ulong n_max_skeleton = 6;
         //private IList<Body> bodyList; // Lista di Body
-        private Body[] bodyList = null;
+        internal Body[] bodyList = null;
         // Array che contiene gli n_max_skeleton rilevati dalla kinect 
-        public Skeleton[] skeletonList = new Skeleton[n_max_skeleton];
-        // List of gesture detectors, there will be one detector created for each potential body (max of 6) 
-        private List<GestureDetector> gestureDetectorList = null;
+        internal Skeleton[] skeletonList = new Skeleton[n_max_skeleton];
 
         /// <summary>
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
         /// </summary>
-        public DepthData depthData = null;
-        public InfraredData infraredData = null;
-        public ColorData colorData = null;
-        // Altezza e Larghezza delle immagini
-        private int width = 600;
-        private int height = 800;
+        internal DepthData depthData = null;
+        internal InfraredData infraredData = null;
+        internal ColorData colorData = null;
 
         //Bool per capire se l'utente preferisce stampare le immagini o le informazioni
         private bool infoRequest;
 
-        // Variabile usata per la comunicazione con la kinect
-        private KinectSensor kinectSensor = null;
-        // Evento che indica quando un frame è stato gestito
-        public event FrameManaged frameManaged;
-        #endregion
 
         /****** Costruttore ******/
         public AcquisitionManager(KinectSensor ks, bool infoR)
@@ -59,15 +67,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
             kinectSensor = ks;
             infoRequest = infoR;
 
-            // Inizializzo la lista di GestureDetector
-            this.gestureDetectorList = new List<GestureDetector>();
-            // Iniziliazza l'array di skeleton e GestureDetector
+            // Iniziliazza l'array di skeleton
             for (int i = 0; i < (int)n_max_skeleton; i++)
-            {
                 skeletonList[i] = new Skeleton();
-                GestureDetector detector = new GestureDetector(this.kinectSensor);
-                this.gestureDetectorList.Add(detector);
-            }
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
@@ -155,100 +157,20 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
             }
 
-            /************************** Gesture ************************************/
-            if (infoRequest)
-            {
-                /// Rilevamento Gesture
-                /// Se TrackingID del body cambia, aggiorno la gesture detector corrispondente col nuovo valore.
-                int i = 0;
-                foreach (Body body in this.bodyList)
-                {
-                    ulong trackingId = body.TrackingId;
-                    if (trackingId != this.gestureDetectorList[i].TrackingId)
-                    {
-                        this.gestureDetectorList[i].TrackingId = trackingId;
-                        // Se il body è tracciato, il suo detector esce dalla pausa per catturare gli eventi VisualGestureBuilderFrameArrived.
-                        // Altrimenti il suo detector rimane in pausa e non sprechiamo risorse cercando di gestire gesture invalide.
-                        this.gestureDetectorList[i].IsPaused = trackingId == 0;
-                    }
-                    i++;// aggiorno l'indice
-                }
-            }
-
             // Prova Aggiunta GestureXML
             //List<JointType> patagherru = new List<JointType>();
             //patagherru.Add(JointType.Head);
             //patagherru.Add(JointType.Neck);
             //AddNewGestureXML cacca = new AddNewGestureXML("ie!", patagherru, skeletonList);
+            
 
             //prova stampa da XML
-            GestureDetectorXML filemanager = new GestureDetectorXML();
-            filemanager.printXML(filemanager.gesture);
+            //GestureDetectorXML filemanager = new GestureDetectorXML();
+            //filemanager.printXML();
 
             // Richiamo l'evento
             this.OnFrameManaged(this);
         }
-
-
-        #region Bitmap Stream
-        /****** Metodi ******/
-       /* /// <summary>
-        /// Funzione che restituisce il WritableBitmap associato ad ogni tipo di frame
-        /// </summary>
-        /// <param name="displayFrameType"></param>
-        /// <returns></returns>
-        public ImageSource updateStream(DisplayFrameType displayFrameType)
-        {
-            switch (displayFrameType)
-            {
-                case DisplayFrameType.Depth:
-                    return this.depthBitmap;
-                case DisplayFrameType.Infrared:
-                    return this.infraredBitmap;
-                case DisplayFrameType.Color:
-                    return this.colorBitmap;
-                case DisplayFrameType.Body:
-                    //return this.skeletonImage as BitmapImage;
-                    return this.skeletonBitmap;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// streamIsReady, prendendo in input un valore valido di displayFrameType, restituisce
-        /// true se l'ImageSource associato a quel tipo di displayFrameType è stato inizializzato. Viceversa
-        /// restituisce false.
-        /// </summary>
-        /// <param name="displayFrameType"></param>
-        /// <returns></returns>
-        public bool isStreamReady(DisplayFrameType displayFrameType)
-        {
-            bool valReturn = false;
-
-            switch (displayFrameType)
-            {
-                case DisplayFrameType.Depth:
-                    if (this.depthBitmap != null)
-                        valReturn = true;
-                    break;
-                case DisplayFrameType.Infrared:
-                    if (this.infraredBitmap != null)
-                        valReturn = true;
-                    break;
-                case DisplayFrameType.Color:
-                    if (colorBitmap != null)
-                        valReturn = true;
-                    break;
-                case DisplayFrameType.Body:
-                    //if (skeletonImage != null)
-                    if (skeletonBitmap != null)
-                        valReturn = true;
-                    break;
-            }
-            return valReturn;
-        }*/
-        #endregion
 
         /// <summary>
         /// Evento che avvisa la gestione di un Frame prelevato dalla kinect.
