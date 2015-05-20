@@ -8,7 +8,7 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.GestureManager
 {
-    class GestureXML
+    public class GestureXML
     {
         /*** Attributi ***/
         public List<JointInformation> jointInformationList { get; set; }

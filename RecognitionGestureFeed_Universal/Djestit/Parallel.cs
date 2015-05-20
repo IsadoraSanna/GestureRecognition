@@ -14,7 +14,7 @@ using System.Threading.Tasks;
      */
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class Parallel : CompositeTerm
+    public class Parallel : CompositeTerm
     {
         // Costruttori
         public Parallel(Term terms)

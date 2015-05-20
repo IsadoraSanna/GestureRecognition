@@ -1,1 +1,15 @@
 C:\Users\Alessandro\Copy\Tesi\Carca\RecognitionGestureFeed_Universal\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\RecognitionGestureFeed_Universal.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\RecognitionGestureFeed_Universal.pdb
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.VisualGestureBuilder.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.Wpf.Controls.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\WriteableBitmapEx.Wpf.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.VisualGestureBuilder.xml
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.Wpf.Controls.xml
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\WriteableBitmapEx.Wpf.pdb
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\WriteableBitmapEx.Wpf.xml
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.pdb
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.dll
+C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.xml

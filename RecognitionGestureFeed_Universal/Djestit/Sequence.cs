@@ -10,7 +10,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class Sequence : CompositeTerm
     {
-        private List<Term> children;
+        public List<Term> children;
         //index = 0
         private int index;
         private expressionState state;

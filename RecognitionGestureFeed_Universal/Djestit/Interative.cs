@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class Interative : CompositeTerm
+    public class Interative : CompositeTerm
     {
         private Term children;
 

@@ -38,7 +38,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
         /// Aggiorna il contenuto del depthData (quindi array, max e min depth).
         /// </summary>
         /// <param name="frame"></param>
-        public unsafe void update(DepthFrame frame)
+        public void update(DepthFrame frame)
         {
             // Aggiorno il contenuto dell'array
             frame.CopyFrameDataToArray(this.frameData);
