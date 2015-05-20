@@ -33,7 +33,7 @@ namespace UnitTestProject1
         {
 
             GroundTerm term1 = new GroundTerm();   
-            Interactive
+            
             //Interative iterative = new Interative();
 
             

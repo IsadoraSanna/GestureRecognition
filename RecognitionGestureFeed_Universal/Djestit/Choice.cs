@@ -13,7 +13,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
      * The implementation exploits a best effort approach for dealing with the 
      * selection ambiguity problem (see [1])
      */
-    class Choice : CompositeTerm
+    public class Choice : CompositeTerm
     {
         // Costruttori
         public Choice(Term terms)

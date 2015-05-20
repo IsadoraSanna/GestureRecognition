@@ -73,7 +73,7 @@
     <Compile Include="Djestit\CompositeTerm.cs" />
     <Compile Include="Djestit\Disabling.cs" />
     <Compile Include="Djestit\GroundTerm.cs" />
-    <Compile Include="Djestit\Interative.cs" />
+    <Compile Include="Djestit\Iterative.cs" />
     <Compile Include="Djestit\OrderIndependece.cs" />
     <Compile Include="Djestit\Parallel.cs" />
     <Compile Include="Djestit\Sequence.cs" />

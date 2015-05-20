@@ -13,3 +13,4 @@ C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\Debug\Recogni
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.pdb
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.dll
 C:\Users\BatCave\Desktop\TESI\RecognitionGestureFeed_Universal\bin\Debug\Microsoft.Kinect.xml
+C:\Users\BatCave\Desktop\TESI\GestureRecognition\RecognitionGestureFeed_Universal\obj\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

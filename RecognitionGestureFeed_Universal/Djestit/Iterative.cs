@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    public class Interative : CompositeTerm
+    public class Iterative : CompositeTerm
     {
         private Term children;
 
         //COSTRUTTORI
         //creo 2 costruttori invece che solo uno come nel JS dato che è troppo tipato
-        public Interative(Term term)
+        public Iterative(Term term)
         {
             this.children = term;
         }
 
-        public Interative(List<Term> terms)
+        public Iterative(List<Term> terms)
         {
             this.children = terms.First();
         }
