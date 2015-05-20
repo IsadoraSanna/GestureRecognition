@@ -30,11 +30,13 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         public TypeToken type { get; set; }//*************************************** Vedere con Davidino
 
         /* Costruttore */
-        public GestureToken(JointInformation jointInformation)
+        public GestureToken(TypeToken type, JointInformation jointInformation)
         {
             // Creo un joint uguale a quello in input e lo assegno al joint di GestureToken.
             this.jointInformation = (JointInformation)jointInformation.Clone();
             this.identifier = jointInformation.getId();
+            this.type = type;
         }
+
     }
 }

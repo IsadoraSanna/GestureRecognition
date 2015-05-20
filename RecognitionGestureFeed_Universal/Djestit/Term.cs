@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,15 +15,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
         Eerror = -1
     }
     // Delegate per i GestureEventHandler
-    public delegate void GestureEventHandler(EventArgs evt);
+    public delegate void GestureEventHandler(Skeleton skeleton);
 
     public class Term
     {
         public expressionState state = expressionState.Default;
         public event GestureEventHandler onComplete;
         public event GestureEventHandler onError;  
-        //private Event onComplete = new Event();
-        //private Event onError = new Event();
+
         public bool excluded;
         public bool once;
 

@@ -89,6 +89,7 @@
     <Compile Include="GestureManager\Gesture_Djestit\GestureStateSequence.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\GestureToken.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\MoveSensor.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />
     <Compile Include="Recognition\FrameDataManager\FrameData.cs" />

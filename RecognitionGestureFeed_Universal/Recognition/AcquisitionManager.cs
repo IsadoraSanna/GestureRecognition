@@ -148,7 +148,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         /// allora aggiorno l'oggetto di tipo Skeleton 
                         /// (che contiene tutte le informazioni sul corpo rilevato)
                         if (body.IsTracked)
-                            skeletonList[index].updateSkeleton(body);
+                            skeletonList[index].updateSkeleton(body, index);
                         else
                             skeletonList[index].updateSkeleton();
                         /// Aggiorno l'indice
