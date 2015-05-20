@@ -9,12 +9,12 @@ namespace RecognitionGestureFeed_Universal.Djestit
     class StateSequence
     {
         //attributi
-        private int capacity;
-        private List<Token> tokens;
-        private int index;
+        public int capacity {set; get;}
+        public List<Token> tokens;
+        public int index {set;get;}
+
 
         //metodi
-
         //nel JS si chiamava init ma credo si possa utilizzare come un costruttore
         public StateSequence(int capacity)
         {
@@ -25,6 +25,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
 	        this.tokens = new List<Token>();
 	        this.index = -1;
+        }
+
+        public StateSequence()
+        {
+            // TODO: Complete member initialization
         }
 
         public void _push(Token token)
