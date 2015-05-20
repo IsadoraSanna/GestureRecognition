@@ -32,18 +32,48 @@ namespace UnitTestProject1
         public void IterativeOperator()
         {
 
-            GroundTerm term1 = new GroundTerm();  
-            
-            Iterative iterative = new Iterative();
+            GroundTerm term1 = new GroundTerm();
+            Iterative iterative = new Iterative(term1);
 
-            
-            /*
-            iterative.fire(new djestit.Token());
-            assert.ok(djestit.COMPLETE === iterative.state, "First iteration completed");
+            Token token1 = new Token();
+            iterative.fire(token1);
+            Assert.IsTrue(expressionState.Complete == iterative.state, "First iteration completed");
 
-            // execute the term more than once
-            iterative.fire(new djestit.Token());
-            assert.ok(djestit.COMPLETE === iterative.state, "Second iteration completed");*/
+            Token token2 = new Token();
+            iterative.fire(token2);
+            Assert.IsTrue(expressionState.Complete == iterative.state, "Second iteration completed");
         }
+
+        [TestMethod]
+        public void SequenceOperator()
+        {
+            GroundTerm term1 = new GroundTerm();
+            GroundTerm term2 = new GroundTerm();
+
+            List<Term> lista1 = new List<Term>();
+            lista1.Add(term1);
+            lista1.Add(term2);
+
+            Sequence sequence = new Sequence(lista1);
+
+            sequence.onComplete += 
+            /////////sequence1.onComplete.add(function() {console.log(sequence1.state);});
+            //sequence1.
+
+            sequence.fire(new Token());
+            sequence.fire(new Token());
+
+            Assert.is
+        }
+
+
+    sequence1.onComplete.add(function() {console.log(sequence1.state);});
+
+
+    assert.ok(djestit.COMPLETE === sequence1.state, "Sequence completed");
+
+    sequence1.fire(new djestit.Token());
+    assert.ok(djestit.ERROR === sequence1.state, "No more token accepted");
+});
     }
 }
