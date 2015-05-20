@@ -51,7 +51,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// Funzione di aggiornamento delle compenenti dello scheletro
         /// </summary>
         /// <param name="body"></param>
-        public void updateSkeleton(Body body)
+        public void updateSkeleton(Body body, int idSkeleton)
         {
             // Aggiorno lo stato
             if (body.IsTracked)
@@ -78,7 +78,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                 // 1° elemento: ID del body
                 // 3° elemento: l'oggetto Joints
                 // 4° elemento: Orientamento del joint
-                joints.Add(new JointInformation(ID, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation));
+                joints.Add(new JointInformation(ID, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
             }     
         }
 

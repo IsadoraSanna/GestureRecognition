@@ -31,11 +31,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         public CameraSpacePoint position { get; set; }
         public Vector4 orientation { get; set; }
         public TrackingState status { get; set; }
+        public int idSkeleton { set; get; }
 
         
         /* Costruttori */
         // Assegno al nuovo oggetto le informazioni passate in input
-        public JointInformation(ulong idBody, Joint joint, Vector4 orientation)
+        public JointInformation(ulong idBody, Joint joint, Vector4 orientation, int idSkeleton)
         {
             this.idBody = idBody;
             this.type = joint.JointType;
@@ -43,6 +44,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             this.position = joint.Position;
             this.orientation = orientation; 
             this.status = joint.TrackingState;
+            this.idSkeleton = idSkeleton;
         }
         public JointInformation()
         {

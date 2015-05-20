@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class OrderIndependece : Choice
+    public class OrderIndependece : Choice
     {
         // Costruttori
         public OrderIndependece(Term term) : base(term)

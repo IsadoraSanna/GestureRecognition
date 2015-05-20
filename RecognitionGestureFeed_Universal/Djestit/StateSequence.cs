@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class StateSequence
+    public class StateSequence
     {
         //attributi
         public int capacity {set; get;}

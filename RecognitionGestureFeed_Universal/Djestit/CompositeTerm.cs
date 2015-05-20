@@ -9,7 +9,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class CompositeTerm : Term
     {
         protected expressionState state;
-        protected List<Term> children;
+        public List<Term> children;
 
         public void reset()
         {

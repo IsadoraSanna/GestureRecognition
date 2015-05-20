@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class Disabling : Choice
+    public class Disabling : Choice
     {
         // Costruttori
         public Disabling(Term term) : base(term)

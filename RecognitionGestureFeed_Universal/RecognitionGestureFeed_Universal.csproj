@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -65,7 +65,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
     <Reference Include="WriteableBitmapEx.Wpf">
-      <HintPath>..\..\..\..\..\Desktop\WriteableBitmapEx_v1.5.0.0\WPF\WriteableBitmapEx.Wpf.dll</HintPath>
+      <HintPath>..\..\..\Downloads\WriteableBitmapEx_v1.5.0.0\WPF\WriteableBitmapEx.Wpf.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +73,7 @@
     <Compile Include="Djestit\CompositeTerm.cs" />
     <Compile Include="Djestit\Disabling.cs" />
     <Compile Include="Djestit\GroundTerm.cs" />
-    <Compile Include="Djestit\Interative.cs" />
+    <Compile Include="Djestit\Iterative.cs" />
     <Compile Include="Djestit\OrderIndependece.cs" />
     <Compile Include="Djestit\Parallel.cs" />
     <Compile Include="Djestit\Sequence.cs" />
@@ -89,6 +89,7 @@
     <Compile Include="GestureManager\Gesture_Djestit\GestureStateSequence.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\GestureToken.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\MoveSensor.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />
     <Compile Include="Recognition\FrameDataManager\FrameData.cs" />
@@ -108,7 +109,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(KINECTSDK20_DIR)Redist\VGB\$(Platform)\vgbtechs" "$(TargetDir)\vgbtechs" /S /R /Y /I</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
