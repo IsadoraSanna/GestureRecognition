@@ -60,7 +60,6 @@ namespace UnitTestProject1
 
             Sequence sequence = new Sequence(lista1);
 
-            sequence.onComplete(sequence);
             sequence.Complete += onComplete1;
 
             sequence.fire(new Token());
@@ -79,7 +78,6 @@ namespace UnitTestProject1
             GroundTerm term1 = new GroundTerm();
             Iterative iterative = new Iterative(term1);
 
-            iterative.onComplete(term1);
             iterative.Complete += onComplete2;
 
             iterative.fire(new Token());
@@ -99,10 +97,10 @@ namespace UnitTestProject1
 
             Parallel parallel = new Parallel(lista);
 
-            parallel.Complete += onComplete2;
+            //parallel.Complete += onComplete2;
             term1.onComplete(term1);
 
-            parallel.Complete += onComplete2;
+            //parallel.Complete += onComplete2;
             term2.onComplete(term2);
 
             parallel.fire(new Token());
