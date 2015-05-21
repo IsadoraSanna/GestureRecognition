@@ -13,13 +13,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //private qualcosa modality = null; per JS this.modality = undefined;
         //non ho minimamente capito l'utilità di questa classe
 
-        public bool _accepts(Token token)
+        public virtual bool _accepts(Token token)
         {
             //if(token != null) return true; else return false;
             return true;
         }
 
-        public bool accepts(Token token)
+        public virtual bool accepts(Token token)
         {
             //if(token != null) return true; else return false;
             return true;
@@ -29,7 +29,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             return (this._accepts(token) && this.accepts(token));
         }
-
     }
     
 }

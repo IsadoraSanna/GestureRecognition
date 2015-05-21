@@ -12,16 +12,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
     {
         Complete = 1,
         Default = 0,
-        Eerror = -1
+        Error = -1
     }
     // Delegate per i GestureEventHandler
-    public delegate void GestureEventHandler(Skeleton skeleton);
+    public delegate void GestureEventHandler(Term t);
 
     public class Term
     {
         public expressionState state = expressionState.Default;
-        public event GestureEventHandler onComplete;
-        public event GestureEventHandler onError;  
+        public event GestureEventHandler Complete;
+        public event GestureEventHandler Error;  
 
         public bool excluded;
         public bool once;
@@ -45,7 +45,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         //imposto lo stato dell'espressione come errore
         public void error(Token token){
-		    this.state = expressionState.Eerror;
+		    this.state = expressionState.Error;
 		    //onError.trigger(“error”, token);
         }
 
@@ -56,5 +56,26 @@ namespace RecognitionGestureFeed_Universal.Djestit
 	        }
             return false;
         }
+
+        public virtual void onComplete(Term t)
+        {
+            t.state = expressionState.Complete;
+            GestureEventHandler handler = Complete;
+            if (handler != null)
+            {  
+                handler(t);
+            }
+        }
+
+        public virtual void onError(Term t)
+        {
+            t.state = expressionState.Error;
+            GestureEventHandler handler = Error;
+            if (handler != null)
+            {
+                handler(t);
+            }
+        }
+ 
     }
 }

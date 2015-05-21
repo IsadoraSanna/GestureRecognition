@@ -30,7 +30,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         
         public bool lookahead(Token token)
         {
-            if(this.state == expressionState.Complete || this.state == expressionState.Eerror)
+            if(this.state == expressionState.Complete || this.state == expressionState.Error)
                 return false;
             if(this.children != null && this.children.GetType() == typeof(List<Term>))
             {
@@ -63,7 +63,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                                 this.children[index].excluded = true;
                                 newSequence = true;
                                 break;
-                            case expressionState.Eerror:
+                            case expressionState.Error:
                                 // this case is never executed, since
                                 // feedToken excludes the subterms in error state
                                 break;

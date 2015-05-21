@@ -38,7 +38,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public bool lookahead(Token token)
         {
-            if (this.state == expressionState.Complete || this.state == expressionState.Eerror)
+            if (this.state == expressionState.Complete || this.state == expressionState.Error)
                 return false;
             if (this.children != null && this.children.GetType() == typeof(List<Term>))
             {
@@ -54,7 +54,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public void feedToken(Token token)
         {
-            if (this.state == expressionState.Complete || this.state == expressionState.Eerror)
+            if (this.state == expressionState.Complete || this.state == expressionState.Error)
                 return;
 
             if (this.children != null && this.children.GetType() == typeof(List<Term>))
@@ -63,7 +63,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 {
                     if (!this.children[index].excluded)
                     {
-                        if (this.children[index].lookahead(token) == true)
+                        if (this.children[index].lookahead(token))
                         {
                             this.children[index].fire(token);
                         }
@@ -97,7 +97,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                             this.complete(token);
                             return;
 
-                        case expressionState.Eerror:
+                        case expressionState.Error:
                             // this case is never executed, since
                             // feedToken excludes the subterms in error state
                             return;

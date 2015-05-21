@@ -30,7 +30,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Lookahead
         public bool lookahead(Token token)
         {
-            if(this.state == expressionState.Complete || this.state== expressionState.Eerror)
+            if(this.state == expressionState.Complete || this.state== expressionState.Error)
                 return false;
             if(this.children !=null && this.children.GetType() == typeof(List<Term>))
             {
@@ -53,7 +53,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 {
                     if(child.lookahead(token))
                         child.fire(token);
-                    if(child.state == expressionState.Eerror)
+                    if(child.state == expressionState.Error)
                         this.error(token);
                     all = all && child.state == expressionState.Complete;
                 }

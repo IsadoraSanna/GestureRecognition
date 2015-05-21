@@ -38,6 +38,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
                                 this.complete(token);
                             }
                             break;
+                        default:
+                            break;
                     }
                 }
                 else
@@ -54,7 +56,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
             if(allExcluded)
             {
                 this.error(token);
-                return;
             }
         }
     }

@@ -8,7 +8,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class Iterative : CompositeTerm
     {
-        private Term children;
+        public Term children;
 
         //COSTRUTTORI
         //creo 2 costruttori invece che solo uno come nel JS dato che è troppo tipato
@@ -51,7 +51,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                         this.complete(token);
                         this.children.reset();
                         break;
-                    case expressionState.Eerror:
+                    case expressionState.Error:
                         this.error(token);
                         this.children.reset();
                         break;

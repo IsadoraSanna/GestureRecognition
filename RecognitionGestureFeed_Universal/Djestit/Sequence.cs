@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Debug
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -11,8 +13,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class Sequence : CompositeTerm
     {
         public List<Term> children;
-        //index = 0
-        private int index;
+        private int index = 0;
         private expressionState state;
 
         //COSTRUTTORI
@@ -42,14 +43,15 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public bool lookahead(Token token)
         {
-            if(this.state == expressionState.Complete || this.state == expressionState.Eerror)
+            if (this.state == expressionState.Complete || this.state == expressionState.Error)
             {
                 return false;
             }
             //terzo argomento dell'if . nel codice JS non c'è il parametro token
-            if ((this.children != null) && (this.children[index] != null))// && (this.children[index].lookahead(token) != null))
+            if ((this.children != null) && (index < this.children.Count) )// && (this.children[index].lookahead(token) != null))
             {
-                return this.children[index].lookahead(token);
+                if (this.children[index] != null)
+                    return this.children[index].lookahead(token);
             }
 
             return false;
@@ -57,7 +59,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public void fire(Token token)
         {
-            //come nell'if precedente per il fire  
+           // Debug.Assert(true, "Index: " + this.index);
+            //come nell'if precedente per il fire
             if (this.lookahead(token))
             {
                 this.children[index].fire(token);
@@ -67,14 +70,32 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 this.error(token);
             }
 
+            if (index >= this.children.Count)
+            {
+                this.error(token);
+            }
+            else if (this.children[index].state == expressionState.Complete)
+            {
+                this.index++;
+                Debug.WriteLine(index);
+                if (index >= this.children.Count)
+                    this.complete(token);
+            }
+            /*
             switch (this.children[index].state)
             {
                 case expressionState.Complete:
+                    this.index++;
+                    Debug.WriteLine(index);
+                    if(index >= this.children.Count)
+                        this.complete(token);
+                    break;
+                case expressionState.Eerror:
+                    this.error(token);
                     break;
 
-                case expressionState.Eerror:
-                    break;
             }
+             * */
         }
     }
 }
