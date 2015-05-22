@@ -72,6 +72,7 @@
     <Compile Include="Djestit\Choice.cs" />
     <Compile Include="Djestit\CompositeTerm.cs" />
     <Compile Include="Djestit\Disabling.cs" />
+    <Compile Include="Djestit\GestureEventArgs.cs" />
     <Compile Include="Djestit\GroundTerm.cs" />
     <Compile Include="Djestit\Iterative.cs" />
     <Compile Include="Djestit\OrderIndependece.cs" />

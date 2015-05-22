@@ -11,9 +11,9 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 
     class MoveSensor
     {
-        public event GestureEventHandler onSkeletonStart;
-        public event GestureEventHandler onSkeletonMove;
-        public event GestureEventHandler onSkeletonEnd;
+        /*public event GestureEventArgs onSkeletonStart;
+        public event GestureEventArgs onSkeletonMove;
+        public event GestureEventArgs onSkeletonEnd;*/
         //element... cosa è??
         private int capacity;
         private Term root;

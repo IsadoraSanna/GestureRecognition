@@ -260,6 +260,7 @@ namespace UnitTestProject1
             // send a C token
             disabling.fire(tokenC);
 
+
             Assert.IsTrue(disabling.state == expressionState.Complete, "C token accepted");
 
             disabling.reset();
