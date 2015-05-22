@@ -41,8 +41,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public void complete(Token token){
 		    this.state = expressionState.Complete;
             GestureEventArgs e = new GestureEventArgs(this);
+            //this.Complete += 
             onComplete(e);
-            //onComplete.trigger(“completed”, token);
         }
 
         //imposto lo stato dell'espressione come errore
@@ -50,7 +50,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 		    this.state = expressionState.Error;
             GestureEventArgs e = new GestureEventArgs(this);
             onError(e);
-		    //onError.trigger(“error”, token);
         }
 
         //verifica se l'imput puo' essere accettato o no
@@ -63,6 +62,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public virtual void onComplete(GestureEventArgs t)
         {
+            //GestureEventHandler _complete = Complete;
             //t.state = expressionState.Complete;
             if (Complete != null)
             {
@@ -71,7 +71,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         public virtual void onError(GestureEventArgs t)
-        {
+        {            
             //t.state = expressionState.Error;
             if (Error != null)
             {

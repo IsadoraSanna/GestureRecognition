@@ -8,7 +8,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class GestureEventArgs : EventArgs
     {
-        private readonly Term t;
+        public readonly Term t;
 
         public GestureEventArgs(Term t)
         {
