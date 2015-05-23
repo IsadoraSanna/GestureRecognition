@@ -45,9 +45,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return false;
             }
             //terzo argomento dell'if . nel codice JS non c'è il parametro token
-            if ((this.children != null) && (index < this.children.Count) )// && (this.children[index].lookahead(token) != null))
+            if ((this.children != null) && (this.children[index] != null))// && (this.children[index].lookahead(token) != null))
             {
-                if (this.children[index] != null)
+                //if (this.children[index] != null)
                     return this.children[index].lookahead(token);
             }
 
@@ -64,20 +64,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
             else
             {
                 this.error(token);
+                return;
             }
 
             if (index >= this.children.Count)
             {
                 this.error(token);
             }
-            else if (this.children[index].state == expressionState.Complete)
-            {
-                this.index++;
-                Debug.WriteLine(index);
-                if (index >= this.children.Count)
-                    this.complete(token);
-            }
-            /*
+
             switch (this.children[index].state)
             {
                 case expressionState.Complete:
@@ -86,12 +80,12 @@ namespace RecognitionGestureFeed_Universal.Djestit
                     if(index >= this.children.Count)
                         this.complete(token);
                     break;
-                case expressionState.Eerror:
+                case expressionState.Error:
                     this.error(token);
                     break;
 
             }
-             * */
+             
         }
     }
 }

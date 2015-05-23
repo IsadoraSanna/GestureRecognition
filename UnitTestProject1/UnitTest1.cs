@@ -211,26 +211,26 @@ namespace UnitTestProject1
             order.fire(tokenA);
             order.fire(tokenA);
 
-            Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed");
+            Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed 1");
 
             order.fire(tokenB);
             order.fire(tokenA);
 
-            Assert.IsTrue(parallel.state == expressionState.Complete, "Second operand (parallel) completed");
-            Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed");
+            Assert.IsTrue(parallel.state == expressionState.Complete, "Second operand (parallel) completed 1");
+            Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed 1");
 
             order.reset();
 
             order.fire(tokenB);
             order.fire(tokenA);
 
-            Assert.IsTrue(parallel.state == expressionState.Complete, "Second operand (parallel) completed");
+            Assert.IsTrue(parallel.state == expressionState.Complete, "Second operand (parallel) completed 2");
 
             order.fire(tokenA);
             order.fire(tokenA);
 
-        Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed");
-        Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed");
+        Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed 2");
+        Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed 2");
     }
     
     [TestMethod]
