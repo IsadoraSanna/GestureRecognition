@@ -16,7 +16,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
         }
 
-        public void fire(Token token)
+        public override void fire(Token token)
         {
             this.feedToken(token);
             bool allExcluded = true;

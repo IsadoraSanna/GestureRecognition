@@ -10,7 +10,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     {
         public List<Term> children;
 
-        public void reset()
+        public override void reset()
         {
 	        this.state = expressionState.Default;
 	        foreach(var child in this.children)

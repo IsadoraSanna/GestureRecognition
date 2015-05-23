@@ -263,7 +263,7 @@ namespace UnitTestProject1
             disabling.fire(tokenC);
 
 
-            Assert.IsTrue(disabling.state == expressionState.Complete, "C token accepted");
+            Assert.IsTrue(disabling.state == expressionState.Complete, "C token accepted 1");
 
             disabling.reset();
 
@@ -286,10 +286,11 @@ namespace UnitTestProject1
             Assert.IsTrue(iterative2.state == expressionState.Complete, "B tokens accepted");
 
             disabling.fire(tokenC);
-            Assert.IsTrue(iterative2.state == expressionState.Complete, "C tokens accepted");
+            Assert.IsTrue(disabling.state == expressionState.Complete, "C tokens accepted 2");
         }
 
-        //metodi
+    #region metodi & classi
+    //metodi
         public bool accepts(Token token)
         {
             return token.type != null && token.type == "A";
@@ -336,5 +337,7 @@ namespace UnitTestProject1
                 return (token.type != null && token.type == "C");
             }
         }
+    #endregion
+
     }
 }

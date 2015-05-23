@@ -28,7 +28,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         //METODI
-        public void reset()
+        public override void reset()
         {
             this.state = expressionState.Default;
             this.index = 0;
@@ -38,7 +38,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
         }
 
-        public bool lookahead(Token token)
+        public override bool lookahead(Token token)
         {
             if (this.state == expressionState.Complete || this.state == expressionState.Error)
             {
@@ -54,10 +54,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
             return false;
         }
 
-        public void fire(Token token)
+        public override void fire(Token token)
         {
-           // Debug.Assert(true, "Index: " + this.index);
-            //come nell'if precedente per il fire
+
             if (this.lookahead(token))
             {
                 this.children[index].fire(token);

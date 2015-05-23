@@ -22,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             this.children = terms.First();
         }
 
-        public void reset()
+        public override void reset()
         {
             this.state = expressionState.Default;
             if(this.children != null)
@@ -30,8 +30,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 children.reset();
             }
         }
-        
-        public bool lookahead(Token token)
+
+        public override bool lookahead(Token token)
         {
 
             if(this.children != null && this.children.lookahead(token))
@@ -40,7 +40,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return false;
         }
 
-        public void fire(Token token)
+        public override void fire(Token token)
         {
             if(this.lookahead(token))// if (this.lookahead(token) && this.children.fire)
             {

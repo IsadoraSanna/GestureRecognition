@@ -26,7 +26,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         // Metodi
-        public void reset()
+        public override void reset()
         {
             this.state = expressionState.Default;
             foreach (Term child in this.children)
@@ -36,7 +36,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
         }
 
-        public bool lookahead(Token token)
+        public override bool lookahead(Token token)
         {
             if (this.state == expressionState.Complete || this.state == expressionState.Error)
                 return false;
@@ -79,7 +79,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
         }
 
-        public void fire(Token token)
+        public override void fire(Token token)
         {
             this.feedToken(token);
             bool allExcluded = true;

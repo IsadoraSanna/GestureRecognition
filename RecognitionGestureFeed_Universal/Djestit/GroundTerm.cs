@@ -25,7 +25,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             return true;
         }
 
-        public bool lookahead(Token token)
+        public override bool lookahead(Token token)
         {
             return (this._accepts(token) && this.accepts(token));
         }

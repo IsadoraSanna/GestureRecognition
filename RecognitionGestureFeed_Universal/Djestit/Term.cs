@@ -26,13 +26,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public bool excluded;
         public bool once;
 
-        public void fire(Token token)
+        public virtual void fire(Token token)
         {
             this.complete(token);
         }
 
         //reinizializzo il termine dell'espressione
-        public void reset()
+        public virtual void reset()
         {
             this.state = expressionState.Default;
         }
@@ -53,7 +53,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         //verifica se l'imput puo' essere accettato o no
-        public bool lookahead(Token token){
+        public virtual bool lookahead(Token token)
+        {
 	        if(token != null){
 		        return true;
 	        }

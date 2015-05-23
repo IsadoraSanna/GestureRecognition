@@ -28,7 +28,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         // Metodi
         // Lookahead
-        public bool lookahead(Token token)
+        public override bool lookahead(Token token)
         {
             if(this.state == expressionState.Complete || this.state== expressionState.Error)
                 return false;
@@ -44,7 +44,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         // Fire
-        public void fire(Token token)
+        public override void fire(Token token)
         {
             bool all = true;
             if(this.lookahead(token))
