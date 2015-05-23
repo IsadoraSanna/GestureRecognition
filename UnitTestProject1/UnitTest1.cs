@@ -59,7 +59,6 @@ namespace UnitTestProject1
             lista1.Add(term2);
 
             Sequence sequence = new Sequence(lista1);
-
             sequence.Complete += onComplete1;
 
             sequence.fire(new Token());
@@ -71,6 +70,7 @@ namespace UnitTestProject1
             sequence.fire(new Token());
             Assert.IsTrue(expressionState.Error == sequence.state, "No more token accepted");
         }
+
 
         [TestMethod]
         public void IterativeOperator2()
@@ -98,10 +98,12 @@ namespace UnitTestProject1
             Parallel parallel = new Parallel(lista);
 
             //parallel.Complete += onComplete2;
-            term1.onComplete(term1);
+            GestureEventArgs t1 = new GestureEventArgs(term1);
+            term1.onComplete(t1);
 
             //parallel.Complete += onComplete2;
-            term2.onComplete(term2);
+            GestureEventArgs t2 = new GestureEventArgs(term2);
+            term2.onComplete(t2);
 
             parallel.fire(new Token());
             Assert.IsTrue(expressionState.Complete == parallel.state, "Passed!");
@@ -111,8 +113,8 @@ namespace UnitTestProject1
         [TestMethod]
         public void ParallelOperator1()
         {
-            GroundTerm term1 = new GroundTerm();
-            GroundTerm term2 = new GroundTerm();
+            GroundTermA term1 = new GroundTermA();
+            GroundTermB term2 = new GroundTermB();
             Iterative iterative1 = new Iterative(term1);
             Iterative iterative2 = new Iterative(term1);
             List<Term> listTerm = new List<Term>();
@@ -139,10 +141,10 @@ namespace UnitTestProject1
         [TestMethod]
         public void ChoiceOperator()
         {
-           GroundTerm term1 = new GroundTerm();
+           GroundTermA term1 = new GroundTermA();
            GroundTerm term2 = new GroundTerm();
-           GroundTerm term3 = new GroundTerm();
-           GroundTerm term4 = new GroundTerm();
+           GroundTermB term3 = new GroundTermB();
+           GroundTermB term4 = new GroundTermB();
 
            List<Term> listTerm1 = new List<Term>();
            List<Term> listTerm2 = new List<Term>();
@@ -179,10 +181,10 @@ namespace UnitTestProject1
         [TestMethod]
         public void OrderIndependenceOperator()
         {
-            GroundTerm term1 = new GroundTerm();
+            GroundTermA term1 = new GroundTermA();
             GroundTerm term2 = new GroundTerm();
-            GroundTerm term3 = new GroundTerm();
-            GroundTerm term4 = new GroundTerm();
+            GroundTermB term3 = new GroundTermB();
+            GroundTermA term4 = new GroundTermA();
 
             List<Term> listTerm1 = new List<Term>();
             List<Term> listTerm2 = new List<Term>();
@@ -227,18 +229,18 @@ namespace UnitTestProject1
             order.fire(tokenA);
             order.fire(tokenA);
 
-            Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed");
-            Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed");
-        }
-
-        [TestMethod]
-        public void DisablingOperator()
+        Assert.IsTrue(sequence.state == expressionState.Complete, "First operand (sequence) completed");
+        Assert.IsTrue(order.state == expressionState.Complete, "OrderIndependence completed");
+    }
+    
+    [TestMethod]
+    public void DisablingOperator()
         {
-            GroundTerm term1 = new GroundTerm();
+            GroundTermA term1 = new GroundTermA();
             Iterative iterative1 = new Iterative(term1);
-            GroundTerm term2 = new GroundTerm();
+            GroundTermB term2 = new GroundTermB();
             Iterative iterative2 = new Iterative(term2);
-            GroundTerm term3 = new GroundTerm();
+            GroundTermC term3 = new GroundTermC();
 
             List<Term> listTerm = new List<Term>();
             listTerm.Add(iterative1);
@@ -251,7 +253,7 @@ namespace UnitTestProject1
             Token tokenB = new Token();
             tokenB.type = "B";
             Token tokenC = new Token();
-            tokenB.type = "C";
+            tokenC.type = "C";
 
             // a sequence of A tokens
             disabling.fire(tokenA);
@@ -259,6 +261,7 @@ namespace UnitTestProject1
 
             // send a C token
             disabling.fire(tokenC);
+
 
             Assert.IsTrue(disabling.state == expressionState.Complete, "C token accepted");
 
@@ -297,14 +300,41 @@ namespace UnitTestProject1
         }
 
         // Funzioni per OnComplete
-        private void onComplete1(Term e)
+        private void onComplete1(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine(e.state);
+            Debug.Assert(true, "stato: " +t.t.state);
         }
 
-        private void onComplete2(Term term)
+        private void onComplete2(object sender, GestureEventArgs t)
         {
-            Assert.IsTrue(expressionState.Complete == term.state, "Sequence completed");
+            Assert.IsTrue(expressionState.Complete == t.t.state, "Sequence completed");
+        }
+
+        //classi
+        public class GroundTermA : GroundTerm
+        {
+            public override bool accepts(Token token)
+            {
+
+                return (token.type != null && token.type == "A");
+            }
+
+        }
+        public class GroundTermB : GroundTerm
+        {
+            public override bool accepts(Token token)
+            {
+
+                return (token.type != null && token.type == "B");
+            }
+        }
+        public class GroundTermC : GroundTerm
+        {
+            public override bool accepts(Token token)
+            {
+
+                return (token.type != null && token.type == "C");
+            }
         }
     }
 }

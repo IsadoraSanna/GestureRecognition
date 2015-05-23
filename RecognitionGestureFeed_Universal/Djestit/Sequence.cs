@@ -12,17 +12,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class Sequence : CompositeTerm
     {
-        public List<Term> children;
+        //public List<Term> children;
         private int index = 0;
-        private expressionState state;
 
         //COSTRUTTORI
         //creo 2 costruttori invece che solo uno come nel JS dato che è troppo tipato
         public Sequence(Term terms)
         {
             this.children = new List<Term>();
-            //se il termine che viene passato è di tipo terms
-            //if (terms.GetType() == typeof(List<Term>))
         }
 
         public Sequence(List<Term> terms)

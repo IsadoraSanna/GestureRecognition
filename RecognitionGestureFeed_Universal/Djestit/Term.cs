@@ -15,7 +15,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         Error = -1
     }
     // Delegate per i GestureEventHandler
-    public delegate void GestureEventHandler(Term t);
+    public delegate void GestureEventHandler(object sender, GestureEventArgs t);
 
     public class Term
     {
@@ -40,15 +40,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //imposto lo stato dell'espressione come completo
         public void complete(Token token){
 		    this.state = expressionState.Complete;
-            this.onComplete(this);
-            //onComplete.trigger(“completed”, token);
+            GestureEventArgs e = new GestureEventArgs(this);
+            //this.Complete += 
+            onComplete(e);
         }
 
         //imposto lo stato dell'espressione come errore
         public void error(Token token){
 		    this.state = expressionState.Error;
-            this.onError(this);
-		    //onError.trigger(“error”, token);
+            GestureEventArgs e = new GestureEventArgs(this);
+            onError(e);
         }
 
         //verifica se l'imput puo' essere accettato o no
@@ -59,23 +60,22 @@ namespace RecognitionGestureFeed_Universal.Djestit
             return false;
         }
 
-        public virtual void onComplete(Term t)
+        public virtual void onComplete(GestureEventArgs t)
         {
+            //GestureEventHandler _complete = Complete;
             //t.state = expressionState.Complete;
-            GestureEventHandler handler = Complete;
-            if (handler != null)
-            {  
-                handler(t);
+            if (Complete != null)
+            {
+                Complete(this, t);
             }
         }
 
-        public virtual void onError(Term t)
-        {
+        public virtual void onError(GestureEventArgs t)
+        {            
             //t.state = expressionState.Error;
-            GestureEventHandler handler = Error;
-            if (handler != null)
+            if (Error != null)
             {
-                handler(t);
+                Error(this, t);
             }
         }
  
