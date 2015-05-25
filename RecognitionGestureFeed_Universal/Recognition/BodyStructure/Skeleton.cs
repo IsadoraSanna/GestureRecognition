@@ -22,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// bones è la lista di tutte le ossa
         /// status che indica se lo scheletro è rilevato o meno
         /// </summary>
-        private ulong ID;
+        private ulong Id;
         private HandState leftHandStatus;
         private HandState rightHandStatus;
         private List<JointInformation> joints;
@@ -35,7 +35,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         public Skeleton()
         {
             // Inizializzo l'ID
-            this.ID = 1000;
+            this.Id = 1000;
             // Stato delle mani (HandSideState restituisce: unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
             leftHandStatus = 0;
             rightHandStatus = 0;
@@ -57,28 +57,30 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             if (body.IsTracked)
             {
                 status = true;
-                ID = body.TrackingId;
+                Id = body.TrackingId;
             }
             else
             {
                 status = false;
-                ID = 1000;
+                Id = 1000;
             }
             // Aggiorno lo stato delle mani (HandSideState restituisce: unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
             leftHandStatus = body.HandLeftState;
             rightHandStatus = body.HandRightState;
 
             // Aggiorno le coordinate delle varie joint rilevate
-            if (joints.Count > 0) 
-                joints.Clear();
-
+            if (joints.Count > 0)
+            {
+                foreach (JointInformation ji in this.getListJointInformation())
+                    ji.Update(body.Joints[ji.getType()], body.JointOrientations[ji.getType()].Orientation);
+            }
             for (int index = 0; index < number_joints; index++)
             {
                 // A seconda di quante joint sono riconosciuto nel body, le aggiungiamo in una lista di tuple composta da:
                 // 1° elemento: ID del body
                 // 3° elemento: l'oggetto Joints
                 // 4° elemento: Orientamento del joint
-                joints.Add(new JointInformation(ID, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
+                joints.Add(new JointInformation(Id, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
             }     
         }
 
@@ -97,9 +99,9 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                 joints.Clear();
         }
         
-        public ulong getID()
+        public ulong getId()
         {
-            return this.ID;
+            return this.Id;
         }
         /// <summary>
         /// Dato il nome del Joint a cui vuole accedere, restituisce il JointInformation relativo
@@ -185,6 +187,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             bones.Add(new Bone(JointType.AnkleLeft, JointType.FootLeft));
         }
         #endregion
+
+
+        /******************************* In prova **************************************/
+
     }
 }
 

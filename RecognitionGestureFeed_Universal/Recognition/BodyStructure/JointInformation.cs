@@ -8,11 +8,47 @@ using Microsoft.Kinect;
 using System.Diagnostics;
 // Point
 using System.Windows;
-// XmlAttribute
-using System.Xml.Serialization;
+// Vector3D
+using System.Windows.Media.Media3D;
 
 namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 {
+    [Serializable()]
+    public class JointInformationXML
+    {
+        /* Attributi */
+        public ulong idBody { get; set; }
+        public JointType type { get; set; }
+        public Joint joint { get; set; }
+        public CameraSpacePoint position { get; set; }
+        public Vector4 orientation { get; set; }
+        public TrackingState status { get; set; }
+        public int idSkeleton { set; get; }
+
+        /* Costruttore */
+        public JointInformationXML()
+        {
+
+        }
+
+        /* Metodo */
+        /// <summary>
+        /// Salve le informazioni contenute in JointInformation all'interno dell'oggetto JointInformationXML
+        /// </summary>
+        /// <param name="jointInformation"></param>
+        public void fromJointInformation(JointInformation jointInformation)
+        {
+            this.idBody = jointInformation.getId();
+            this.type = jointInformation.getType();
+            this.joint = jointInformation.getJoint();
+            this.position = jointInformation.getPosition();
+            this.orientation = jointInformation.getOrientation();
+            this.status = jointInformation.getStatus();
+            this.idSkeleton = jointInformation.getIdSkeleton();
+        }
+
+    }
+
     [Serializable()]
     public class JointInformation : ICloneable
     {
@@ -24,7 +60,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// - orientation: indica l'orientamento del joint
         /// - status: se il sensore non rileva il joint in questione, allora questo viene posto come false, viceversa se vi sono dei dati disponibili viene posto a true
         ///</summary>
-        //public ulong idBody { get{return idBody;} set{ idBody = value ;} }
         public ulong idBody { get; set; }
         public JointType type { get; set; }
         public Joint joint { get; set; }
@@ -35,7 +70,13 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
 
         
         /* Costruttori */
-        // Assegno al nuovo oggetto le informazioni passate in input
+        /// <summary>
+        /// Assegno al nuovo oggetto le informazioni passate in input
+        /// </summary>
+        /// <param name="idBody"></param>
+        /// <param name="joint"></param>
+        /// <param name="orientation"></param>
+        /// <param name="idSkeleton"></param>
         public JointInformation(ulong idBody, Joint joint, Vector4 orientation, int idSkeleton)
         {
             this.idBody = idBody;
@@ -48,7 +89,20 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         }
         public JointInformation()
         {
+            
+        }
 
+        /// <summary>
+        /// Aggiorna le informazioni del JointInformation.
+        /// </summary>
+        /// <param name="joint"></param>
+        /// <param name="orientation"></param>
+        public void Update(Joint joint, Vector4 orientation)
+        {
+            this.joint = joint;
+            this.position = joint.Position;
+            this.orientation = orientation;
+            this.status = joint.TrackingState;
         }
 
         /// <summary>
@@ -105,10 +159,48 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             return this.type;
         }
-        // Restituisce il CameraSpacePoint costruito sulle coordinate X e Y del joint
+        /// <summary>
+        /// Restituisce il CameraSpacePoint costruito sulle coordinate X e Y del joint
+        /// </summary>
+        /// <returns></returns>
         public CameraSpacePoint getPosition()
         {
             return this.position;
+        }
+        /// <summary>
+        /// Restituisce l'ID dello Skeleton a cui è associato
+        /// </summary>
+        /// <returns></returns>
+        public int getIdSkeleton()
+        {
+            return this.idSkeleton;
+        }
+
+        /// <summary>
+        /// Restituisce la distanza tra due JointInformation (se questi non sono diversi restituisce zero).
+        /// </summary>
+        /// <param name="jointInformation1"></param>
+        /// <param name="jointInformation2"></param>
+        /// <returns></returns>
+        public double calculateDistance(JointInformation jointInformation1, JointInformation jointInformation2)
+        {
+            if (jointInformation1.getType() != jointInformation2.getType())
+                return returnVector3D(jointInformation1, jointInformation2).Length;
+            else
+                return 0d;
+        }
+
+        /// <summary>
+        /// Calcola il Vector3D a partire dalla posizione di due JointInformation
+        /// </summary>
+        /// <param name="jI1"></param>
+        /// <param name="jI2"></param>
+        /// <returns></returns>
+        internal static Vector3D returnVector3D(JointInformation jI1, JointInformation jI2)
+        {
+            CameraSpacePoint positionJoint1 = jI1.getPosition();
+            CameraSpacePoint positionJoint2 = jI2.getPosition();
+            return new Vector3D((positionJoint1.X - positionJoint2.X), (positionJoint1.Y - positionJoint2.Y), (positionJoint1.Z - positionJoint2.Z));
         }
         #endregion
     }

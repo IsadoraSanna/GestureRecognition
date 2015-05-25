@@ -38,6 +38,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /****** Attributi ******/
         // Evento che indica quando un frame è stato gestito
         public event FrameManaged frameManaged;
+        public event FrameManaged depthFrameManaged;
+        public event FrameManaged infraredFrameManaged;
+        public event FrameManaged colorFrameManaged;
+        public event FrameManaged skeletonFrameManaged;
 
         // Variabile usata per la comunicazione con la kinect
         private KinectSensor kinectSensor = null;
@@ -57,15 +61,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
         internal InfraredData infraredData = null;
         internal ColorData colorData = null;
 
-        //Bool per capire se l'utente preferisce stampare le immagini o le informazioni
-        private bool infoRequest;
-
-
         /****** Costruttore ******/
-        public AcquisitionManager(KinectSensor ks, bool infoR)
+        public AcquisitionManager(KinectSensor ks)
         {
             kinectSensor = ks;
-            infoRequest = infoR;
 
             // Iniziliazza l'array di skeleton
             for (int i = 0; i < (int)n_max_skeleton; i++)

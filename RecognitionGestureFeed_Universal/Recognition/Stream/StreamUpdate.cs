@@ -243,13 +243,13 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
             // Per ogni osso presente nella lista bones
             foreach (var bone in bones)
             {
-                joint0 = skeleton.getJointInformation(bone.Item1);
-                joint1 = skeleton.getJointInformation(bone.Item2);
+                joint0 = skeleton.getJointInformation(bone.start);
+                joint1 = skeleton.getJointInformation(bone.end);
                 /// Prendo i due position associati ai JointType che sono estremi dell'osso, ovvero:
                 /// prendo dalla lista jointCoordinate il secondo elemento della tupla (Point, ovvero le coordinate del punto) 
                 /// che è associato al JoinType che forma l'osso. 
-                point0 = jointCoordinate[(int)bone.Item1].Item2;
-                point1 = jointCoordinate[(int)bone.Item2].Item2;
+                point0 = jointCoordinate[(int)bone.start].Item2;
+                point1 = jointCoordinate[(int)bone.end].Item2;
                 // Se entrambe le joint sono rilevate, allora disegno l'osso,
                 // altrimenti la disegno ma in maniera molto più leggera.
                 if (joint0.getStatus() == TrackingState.Tracked && joint1.getStatus() == TrackingState.Tracked)
