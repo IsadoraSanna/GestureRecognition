@@ -8,13 +8,13 @@ using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class BodyStart : GroundTerm
+    class JointStart : GroundTerm
     {
         /* Attributi */
         private ulong ID { get; set; }
 
         /* Metodi */
-        public bool accepts(BodyToken token)
+        public bool accepts(JointToken token)
         {
             if(token.type != TypeToken.Start)
                 return false;

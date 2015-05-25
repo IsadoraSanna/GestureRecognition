@@ -9,7 +9,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     
     public class GroundTerm : Term
     {
-        private String type = "ground";
+        public String type = "ground";
         //private qualcosa modality = null; per JS this.modality = undefined;
         //non ho minimamente capito l'utilità di questa classe
 

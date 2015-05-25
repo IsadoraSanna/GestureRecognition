@@ -8,17 +8,17 @@ using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class BodyEnd : GroundTerm
+    class JointEnd : GroundTerm
     {
         // Attributi
         ulong ID;
 
-        public BodyEnd(ulong id)
+        public JointEnd(ulong id)
         {
             this.ID = id;
         }
 
-        public bool accepts(BodyToken token)
+        public bool accepts(JointToken token)
         {
             if(token.type != TypeToken.End)
                 return false;

@@ -8,15 +8,14 @@ using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class BodyStateSequence : StateSequence
+    class JointStateSequence : StateSequence
     {
         /* Attributi */
-        int capacity;
         List<StateSequence> moves;
         List<int> m_index;
 
         /* costruttore */
-        public BodyStateSequence(int capacity)
+        public JointStateSequence(int capacity)
         {
             this.capacity = capacity;
             this.moves = new List<StateSequence>();
@@ -24,7 +23,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         }
 
         /* Metodi */
-        public void push(BodyToken token)
+        public void push(JointToken token)
         {
             this._push(token);
             switch(token.type)

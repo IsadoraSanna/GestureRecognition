@@ -8,34 +8,34 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class Iterative : CompositeTerm
     {
-        public Term children;
+        public Term child;
 
         //COSTRUTTORI
         //creo 2 costruttori invece che solo uno come nel JS dato che è troppo tipato
         public Iterative(Term term)
         {
-            this.children = term;
+            this.child = term;
         }
 
         public Iterative(List<Term> terms)
         {
-            this.children = terms.First();
+            this.child = terms.First();
         }
 
         public override void reset()
         {
             this.state = expressionState.Default;
-            if(this.children != null)
+            if(this.child != null)
             {
-                children.reset();
+                child.reset();
             }
         }
 
         public override bool lookahead(Token token)
         {
 
-            if(this.children != null && this.children.lookahead(token))
-                return this.children.lookahead(token);
+            if(this.child != null && this.child.lookahead(token))
+                return this.child.lookahead(token);
             else
                 return false;
         }
@@ -44,16 +44,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             if(this.lookahead(token))// if (this.lookahead(token) && this.children.fire)
             {
-                this.children.fire(token);
-                switch (this.children.state)
+                this.child.fire(token);
+                switch (this.child.state)
                 {
                     case expressionState.Complete:
                         this.complete(token);
-                        this.children.reset();
+                        this.child.reset();
                         break;
                     case expressionState.Error:
                         this.error(token);
-                        this.children.reset();
+                        this.child.reset();
                         break;
                 }
             }

@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class BodyMove : GroundTerm
+    class JointMove : GroundTerm
     {
         private ulong ID { set; get; }
 
-        public BodyMove(ulong id)
+        public JointMove(ulong id)
         {
             this.ID = id;
         }
 
-        public bool accepts(BodyToken token)
+        public bool accepts(JointToken token)
         {
             if(token.type != TypeToken.Move)
                 return false;

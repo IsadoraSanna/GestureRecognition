@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
 
-    class BodySensor
+    class JointSensor
     {
         /*public event GestureEventArgs onSkeletonStart;
         public event GestureEventArgs onSkeletonMove;
@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         //element... cosa è??
         private int capacity;
         private Term root;
-        private BodyStateSequence sequence;
+        private JointStateSequence sequence;
         private List<int> gestureToEvent;
         private List<int> eventToGesture;
 
@@ -27,12 +27,12 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.root = djestit.expression(root);
         }*/
 
-        public BodySensor(Term root, int capacity)
+        public JointSensor(Term root, int capacity)
         {
             this.capacity = capacity;
             this.root = root;
             //statesequence e gesturestatesequence hanno il tipo di capacity diverso. controllare!!
-            this.sequence = new BodyStateSequence(this.capacity);
+            this.sequence = new JointStateSequence(this.capacity);
             this.eventToGesture = new List<int>();
             this.gestureToEvent = new List<int>();
             this.gestureToEvent.Add(-1);
@@ -41,7 +41,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         }
 
         public Token generateToken(TypeToken type, JointInformation jointInformation){
-            BodyToken token = new BodyToken(type, jointInformation);
+            JointToken token = new JointToken(type, jointInformation);
             switch(type)
             {
                 case TypeToken.Start:
