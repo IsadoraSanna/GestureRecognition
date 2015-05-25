@@ -39,7 +39,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        public static void startStream(AcquisitionManager am, KinectSensor kinectSensor)
+        public static void startAllStream(AcquisitionManager am, KinectSensor kinectSensor)
         {
             /* Inizializzazione WritableBitmap */
             // Inizializza l'oggetto depthFrameData
@@ -132,5 +132,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
         }
         #endregion
 
+
+        /******************************************************************** In Prova **************************************************************************/
+        public static void startDepthStream(AcquisitionManager am, KinectSensor kinectSensor)
+        {
+            // Inizializza l'oggetto depthFrameData
+            FrameDescription depthFrameDescription = kinectSensor.DepthFrameSource.FrameDescription;
+            depthBitmap = new WriteableBitmap(am.depthData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Gray8, null);
+            // Associo l'handler updateStream all'evento frameManaged
+        }
     }
 }

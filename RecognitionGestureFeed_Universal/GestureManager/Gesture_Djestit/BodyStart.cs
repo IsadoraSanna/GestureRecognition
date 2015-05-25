@@ -3,24 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// GroundTerm
+// Djestit
 using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class GestureEnd : GroundTerm
+    class BodyStart : GroundTerm
     {
-        // Attributi
-        ulong ID;
+        /* Attributi */
+        private ulong ID { get; set; }
 
-        public GestureEnd(ulong id)
+        /* Metodi */
+        public bool accepts(BodyToken token)
         {
-            this.ID = id;
-        }
-
-        public bool accepts(GestureToken token)
-        {
-            if(token.type != TypeToken.End)
+            if(token.type != TypeToken.Start)
                 return false;
             if(this.ID != null && this.ID != token.jointInformation.getId())
                 return false;
