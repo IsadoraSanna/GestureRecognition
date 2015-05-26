@@ -5,27 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Kinect
+using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-
-    class JointSensor
+    public class JointSensor
     {
-        /*public event GestureEventArgs onSkeletonStart;
-        public event GestureEventArgs onSkeletonMove;
-        public event GestureEventArgs onSkeletonEnd;*/
-        //element... cosa è??
+        //public event GestureEventArgs onSkeletonStart;
+        //public event GestureEventArgs onSkeletonMove;
+        //public event GestureEventArgs onSkeletonEnd;
+        //element... cosa èhhh?? Dovrebbe essere un acquisition manager
         private int capacity;
         private Term root;
-        private JointStateSequence sequence;
+        public JointStateSequence sequence;
         private List<int> gestureToEvent;
         private List<int> eventToGesture;
-
-        /*if (root instanceof djestit.Term) {
-            this.root = root;
-        } else {
-            this.root = djestit.expression(root);
-        }*/
 
         public JointSensor(Term root, int capacity)
         {
@@ -36,15 +31,16 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.eventToGesture = new List<int>();
             this.gestureToEvent = new List<int>();
             this.gestureToEvent.Add(-1);
-
-
         }
-
+/*
         public Token generateToken(TypeToken type, JointInformation jointInformation){
             JointToken token = new JointToken(type, jointInformation);
             switch(type)
             {
                 case TypeToken.Start:
+                    var touchId = this.firstId(touch)
+
+
                     int identifier = firstId(jointInformation.idSkeleton);
                     this.eventToGesture[jointInformation.idSkeleton] = identifier;
                     this.gestureToEvent[identifier] = jointInformation.idSkeleton;
@@ -65,10 +61,43 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             //token.sequence = this.sequence; ???? MIO DIO!!!!
             return token;
         }
+*/
+        public NewJointToken generateToken(TypeToken typeToken, NewJointToken jointToken)
+        {
+            int ID = jointToken.identifier;
+            NewJointToken token = new NewJointToken(jointToken.jointType, jointToken.x, jointToken.y, jointToken.z, ID);
+            switch (typeToken)
+            {
+                case TypeToken.Start:
+                    int touchId = this.firstId(jointToken.identifier);
+                    this.eventToGesture.Insert(jointToken.identifier, touchId);
+                    this.gestureToEvent.Insert(touchId, jointToken.identifier);
+                    jointToken.identifier = touchId;
+                    /*
+                    int identifier = firstId(ID);
+                    this.eventToGesture.Add(identifier);
+                    this.gestureToEvent.Add(ID);
+                    token.identifier = identifier;*/
+                    break;
+                case TypeToken.Move:
+                    token.identifier = this.eventToGesture[jointToken.identifier];
+                    break;
+                case TypeToken.End:
+                    token.identifier = this.eventToGesture[jointToken.identifier];
+                    this.eventToGesture.RemoveAt(ID);
+                    this.gestureToEvent.RemoveAt((int)token.identifier);
+                    break;
+                default:
+                    break;
+            }
+            this.sequence.push(token);
+            //token.sequence = this.sequence; ???? MIO DIO!!!!
+            return token;
+        }
 
         public int firstId(int id)
         {
-            for (var i = 0; i < this.gestureToEvent.Count(); i++)
+            for (var i = 1; i < this.gestureToEvent.Count(); i++)
             {
                 if (gestureToEvent[i] == null)
                     return i;
@@ -77,15 +106,16 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             return this.gestureToEvent.Count() - 1;
         }
 
-        public void raiseMoveEvent(Skeleton skeleton, TypeToken typeToken)
+        /*public void raiseMoveEvent(Skeleton skeleton, TypeToken typeToken)
         {
             foreach(JointInformation ji in skeleton.getListJointInformation())
             {
                 Token token = this.generateToken(typeToken, ji);
                 this.root.fire(token);
             }
-        }
+        }*/
 
+        /*
         public void _onSkeletonStart(Skeleton sender)
         {
             this.raiseMoveEvent(sender, TypeToken.Start);
@@ -97,6 +127,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         public void _onSkeletonEnd(Skeleton sender)
         {
             this.raiseMoveEvent(sender, TypeToken.End);
-        }
+        }*/
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class JointToken : Token
+    public class JointToken : Token
     {
                 /* Attributi */
         /// <summary>

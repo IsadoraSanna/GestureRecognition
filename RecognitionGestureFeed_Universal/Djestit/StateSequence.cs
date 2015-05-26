@@ -10,7 +10,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     {
         //attributi
         public int capacity {set; get;}
-        public List<Token> tokens;
+        public List<Token> tokens = new List<Token>();
         public int index {set;get;}
 
 
@@ -22,8 +22,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 this.capacity = capacity;
             else 
                 capacity = 2;
-
-	        this.tokens = new List<Token>();
 	        this.index = -1;
         }
 
@@ -42,11 +40,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
             else
             {
                 this.index = (this.index + 1) % this.capacity;
-                this.tokens[this.index] = token;
+                this.tokens.Insert(index, token);//Add(token);
             }
         }
 
-        public void push(Token token)
+        public virtual void push(Token token)
         {
             this._push(token);
         }

@@ -21,10 +21,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
     // Indentifico la tipologia di dati che voglio stampare.
     public enum DisplayFrameType
     {
-        Depth,
         Body,
+        Color,
         Infrared,
-        Color
+        Depth,
+        LongExposureInfrared
     }
 
     /// <summary>
@@ -57,9 +58,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
         /// </summary>
+        internal ColorData colorData = null;
         internal DepthData depthData = null;
         internal InfraredData infraredData = null;
-        internal ColorData colorData = null;
+        internal LongExposureInfraredData longExposureInfraredData = null;
 
         /****** Costruttore ******/
         public AcquisitionManager(KinectSensor ks)
@@ -83,9 +85,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // Inizializza l'oggetto ColorFrameData
             FrameDescription colorFrameDescription = kinectSensor.ColorFrameSource.FrameDescription;
             this.colorData = new ColorData(colorFrameDescription);
-       
+            // Inizializza l'oggetto longExposureInfraredData
+            FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
+            this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Attivo il lettore di multiframe
-            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.Color | FrameSourceTypes.Body);
+            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
@@ -101,7 +105,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 return;
             }
 
-            // Nel caso in cui stiamo leggendo un Depth frame
+            // Nel caso in cui venga letto un Color frame
+            using (ColorFrame colorFrame = multiSourceFrame.ColorFrameReference.AcquireFrame())
+            {
+                // Controllo se l'infraredFrame è nullo
+                if (colorFrame != null)
+                {
+                    // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
+                    colorData.update(colorFrame);
+                }
+            }
+            // Nel caso in cui venga letto un Depth frame
             using (DepthFrame depthFrame = multiSourceFrame.DepthFrameReference.AcquireFrame())
             {
                 // Controllo se il depthFrame è nullo
@@ -111,7 +125,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     depthData.update(depthFrame);
                 }
             }
-            // Nel caso in cui stiamo leggendo un Infrared frame
+            // Nel caso in cui venga letto un Infrared frame
             using (InfraredFrame infraredFrame = multiSourceFrame.InfraredFrameReference.AcquireFrame())
             {
                 // Controllo se l'infraredFrame è nullo
@@ -121,14 +135,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     infraredData.update(infraredFrame);
                 }   
             }
-            // Nel caso in cui stiamo leggendo un Color frame
-            using (ColorFrame colorFrame = multiSourceFrame.ColorFrameReference.AcquireFrame())
+            // Nel caso in cui venga letto un LongExposureInfrared frame
+            using (LongExposureInfraredFrame longExposureInfraredFrame = multiSourceFrame.LongExposureInfraredFrameReference.AcquireFrame())
             {
-                // Controllo se l'infraredFrame è nullo
-                if (colorFrame != null)
+                // 
+                if(longExposureInfraredFrame != null)
                 {
-                    // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
-                    colorData.update(colorFrame);
+                    // Se il LongExposureInfraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
+                    longExposureInfraredData.update(longExposureInfraredFrame);
                 }
             }
             // Nel caso in cui stiamo leggendo un Body frame
@@ -155,6 +169,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     }                    
                 }
             }
+            
 
             // Prova Aggiunta GestureXML
             //List<JointType> patagherru = new List<JointType>();
