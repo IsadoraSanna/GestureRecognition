@@ -18,10 +18,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //nel JS si chiamava init ma credo si possa utilizzare come un costruttore
         public StateSequence(int capacity)
         {
-            if(this.capacity == capacity) 
-                this.capacity = capacity;
-            else 
-                capacity = 2;
+            this.capacity = capacity != 0 ? capacity : 2;
 	        this.index = -1;
         }
 
@@ -39,9 +36,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
             else
             {
-                /// Ora però crasha anche qui, sappiamo il perché (ovvero risulta che capacity sia uguale a zero)
-                /// però non capiamo il perché sostanzialmente (cioè al momento della creazione capacity lo inizializza, però poi diventa zero e ora non
-                /// troviamo più il bug. Appena lo risolviamo rifacciamo il commit.
                 this.index = (this.index + 1) % this.capacity;
                 this.tokens.Insert(index, token);
             }
