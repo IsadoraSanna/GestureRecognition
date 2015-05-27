@@ -39,8 +39,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
             else
             {
+                /// Ora però crasha anche qui, sappiamo il perché (ovvero risulta che capacity sia uguale a zero)
+                /// però non capiamo il perché sostanzialmente (cioè al momento della creazione capacity lo inizializza, però poi diventa zero e ora non
+                /// troviamo più il bug. Appena lo risolviamo rifacciamo il commit.
                 this.index = (this.index + 1) % this.capacity;
-                this.tokens.Insert(index, token);//Add(token);
+                this.tokens.Insert(index, token);
             }
         }
 
@@ -54,7 +57,5 @@ namespace RecognitionGestureFeed_Universal.Djestit
             int pos = Math.Abs(this.index - delay) % this.capacity;
             return this.tokens[pos];
         }
-
-        //su JS c'è this.init(capacity) ma credo che serva solo per inizializzare questa classe
     }
 }

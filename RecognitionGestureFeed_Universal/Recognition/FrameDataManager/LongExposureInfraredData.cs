@@ -8,7 +8,7 @@ using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
 {
-    class LongExposureInfraredData : InfraredData
+    public class LongExposureInfraredData : InfraredData
     {
         /* Attributi */
         public TimeSpan relativeTime { get; private set; }

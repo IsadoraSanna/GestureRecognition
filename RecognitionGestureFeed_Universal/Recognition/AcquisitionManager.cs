@@ -89,7 +89,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Attivo il lettore di multiframe
-            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body);
+            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body | FrameSourceTypes.BodyIndex);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
@@ -167,6 +167,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         /// Aggiorno l'indice
                         index++;
                     }                    
+                }
+            }
+            //
+            using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
+            {
+                if(bodyIndexFrame != null)
+                {
+
                 }
             }
             

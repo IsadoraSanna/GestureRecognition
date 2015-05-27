@@ -94,6 +94,7 @@
     <Compile Include="GestureManager\Gesture_Djestit\JointSensor.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointToken.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\NewJointToken.cs" />
+    <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />
     <Compile Include="Recognition\FrameDataManager\FrameData.cs" />
