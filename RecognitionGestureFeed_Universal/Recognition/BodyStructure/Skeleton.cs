@@ -56,7 +56,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Aggiorno lo stato
             if (body.IsTracked)
             {
-                status = true;
+                status = body.IsTracked;
                 Id = body.TrackingId;
             }
             else
@@ -74,14 +74,17 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                 foreach (JointInformation ji in this.getListJointInformation())
                     ji.Update(body.Joints[ji.getType()], body.JointOrientations[ji.getType()].Orientation);
             }
-            for (int index = 0; index < number_joints; index++)
+            else
             {
-                // A seconda di quante joint sono riconosciuto nel body, le aggiungiamo in una lista di tuple composta da:
-                // 1° elemento: ID del body
-                // 3° elemento: l'oggetto Joints
-                // 4° elemento: Orientamento del joint
-                joints.Add(new JointInformation(Id, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
-            }     
+                for (int index = 0; index < number_joints; index++)
+                {
+                    // A seconda di quante joint sono riconosciuto nel body, le aggiungiamo in una lista di tuple composta da:
+                    // 1° elemento: ID del body
+                    // 3° elemento: l'oggetto Joints
+                    // 4° elemento: Orientamento del joint
+                    joints.Add(new JointInformation(Id, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
+                }
+            }
         }
 
         /// <summary>

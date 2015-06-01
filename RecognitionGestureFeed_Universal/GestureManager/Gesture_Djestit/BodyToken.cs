@@ -24,7 +24,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         /// In sostanza si provvede a mettere in GestureToken le informazioni riguardanti un token (ad esempio
         /// id, coordinate, JointType ecc. del singolo Joint).
         /// </summary>
-        //public JointInformation jointInformation{get;set;}
+        
         public Skeleton skeleton { get; set; }
         public ulong identifier { get; set; }
         // Tipo di token

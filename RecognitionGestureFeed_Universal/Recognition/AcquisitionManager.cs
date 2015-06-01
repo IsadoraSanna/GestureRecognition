@@ -65,6 +65,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         internal InfraredData infraredData = null;
         internal LongExposureInfraredData longExposureInfraredData = null;
 
+        SensorInterface s = null;
         /****** Costruttore ******/
         public AcquisitionManager(KinectSensor ks)
         {
@@ -97,6 +98,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
             MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body | FrameSourceTypes.BodyIndex);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+
+            s = new SensorInterface(this);
         }
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -118,7 +121,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     colorData.update(colorFrame);
-                    this.OnColorFrameManaged(this);
+                    //this.OnColorFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Depth frame
@@ -129,7 +132,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se il depthFrame non è vuoto, allora aggiorno il contenuto dell'oggetto depthData
                     depthData.update(depthFrame);
-                    this.OnDepthFrameManaged(this);
+                    //this.OnDepthFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Infrared frame
@@ -140,7 +143,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     infraredData.update(infraredFrame);
-                    this.OnInfraredFrameManaged(this);
+                    //this.OnInfraredFrameManaged(this);
                 }   
             }
             // Nel caso in cui venga letto un LongExposureInfrared frame
@@ -176,9 +179,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         index++;
                     }                    
                 }
-                this.OnSkeletonFrameManaged(this);
+                //this.OnSkeletonFrameManaged(this);
             }
-            //
+            /*//
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
             {
                 if(bodyIndexFrame != null)
@@ -187,7 +190,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     this.bodyFrameManaged(this);
                 }
                 this.OnBodyFrameManaged(this);
-            }
+            }*/
             
 
             // Prova Aggiunta GestureXML
@@ -202,7 +205,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
             //filemanager.printXML();
 
             // Richiamo l'evento
-            //this.OnFrameManaged(this);
+            this.OnFrameManaged(this);
+            s.updateJoint(this);
         }
 
         #region Events

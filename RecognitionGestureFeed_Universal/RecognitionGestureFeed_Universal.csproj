@@ -87,11 +87,11 @@
     <Compile Include="GestureManager\GestureXML.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointEnd.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointMove.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\JointSensor.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStart.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStateSequence.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\BodyToken.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
-    <Compile Include="GestureManager\Gesture_Djestit\JointSensor.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointToken.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\NewJointToken.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Recognition\FrameDataManager\InfraredData.cs" />
     <Compile Include="Recognition\FrameDataManager\LongExposureInfraredData.cs" />
     <Compile Include="Recognition\GestureManager.cs" />
+    <Compile Include="Recognition\SensorInterface.cs" />
     <Compile Include="Recognition\StreamManager.cs" />
     <Compile Include="Recognition\BodyStructure\Bone.cs" />
     <Compile Include="Recognition\Init.cs" />

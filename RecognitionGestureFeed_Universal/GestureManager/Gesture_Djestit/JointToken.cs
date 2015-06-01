@@ -17,16 +17,16 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         /// id, coordinate, JointType ecc. del singolo Joint).
         /// </summary>
         public JointInformation jointInformation{get;set;}
-        public ulong identifier { get; set; }
+        public int identifier { get; set; }
         // Tipo di token
-        public TypeToken type { get; set; }//*************************************** Vedere con Davidino
+        public TypeToken type { get; set; }
 
         /* Costruttore */
         public JointToken(TypeToken type, JointInformation jointInformation)
         {
             // Creo un joint uguale a quello in input e lo assegno al joint di GestureToken.
             this.jointInformation = (JointInformation)jointInformation.Clone();
-            this.identifier = jointInformation.getId();
+            this.identifier = (int)jointInformation.getType();//jointInformation.getIdSkeleton();
             this.type = type;
         }
     }
