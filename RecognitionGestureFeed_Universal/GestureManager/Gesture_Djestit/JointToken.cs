@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
+    public enum TypeToken
+    {
+        Start,
+        Move,
+        End
+    }
+
     public class JointToken : Token
     {
                 /* Attributi */

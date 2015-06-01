@@ -190,10 +190,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             bones.Add(new Bone(JointType.AnkleLeft, JointType.FootLeft));
         }
         #endregion
-
-
-        /******************************* In prova **************************************/
-
     }
 }
 

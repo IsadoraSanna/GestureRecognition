@@ -39,16 +39,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         {
                             if (jointSensor.checkJoint(ji.getType() + 1))
                             {
-                                Debug.WriteLine("Modificato!");
                                 jointSensor.generateToken(TypeToken.Move, ji);
                             }
                             else
                             {
-                                Debug.WriteLine("Nuovo JointToken!");
                                 jointSensor.generateToken(TypeToken.Start, ji);
                             }
                         }
-                        Debug.WriteLine("Joint non tracciato!");
                         //else if(jointSensor.checkJoint(ji.getType()))
                         //rimuovi token
                     }
