@@ -30,7 +30,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
         {
             /// pixels avrà un numero di elementi pari alla larghezza dell'immagine acquisita *
             /// l'altezza dell'immagine acquisita * il numero di bit per pixel (bpp).
-            PixelFormat format = PixelFormats.Bgr32;
+            //PixelFormat format = PixelFormats.Bgr32;
             this.pixels = new byte[frameDescription.Width * frameDescription.Height * 4];// ((format.BitsPerPixel + 7) / 8)];
         }
 

@@ -18,13 +18,14 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         public float z;
         public int identifier;
 
-        public NewJointToken(JointType jointType, float x, float y, float z, int ID)
+        public NewJointToken(TypeToken typeToken, JointType jointType, float x, float y, float z, int ID)
         {
             this.jointType = jointType;
             this.x = x;
             this.y = y;
             this.z = z;
             this.identifier = ID;
+            this.type = typeToken;
         }
     }
 }

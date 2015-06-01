@@ -22,10 +22,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
     public enum DisplayFrameType
     {
         Body,
+        BodyIndex,
         Color,
         Infrared,
-        Depth,
-        LongExposureInfrared
+        Depth
     }
 
     /// <summary>
@@ -39,6 +39,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /****** Attributi ******/
         // Evento che indica quando un frame è stato gestito
         public event FrameManaged frameManaged;
+        public event FrameManaged bodyFrameManaged;
         public event FrameManaged depthFrameManaged;
         public event FrameManaged infraredFrameManaged;
         public event FrameManaged colorFrameManaged;
@@ -58,6 +59,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
         /// </summary>
+        internal BodyIndexData bodyIndexData = null;
         internal ColorData colorData = null;
         internal DepthData depthData = null;
         internal InfraredData infraredData = null;
@@ -76,16 +78,19 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
 
             /* Inizializzazione Array frameData e ImageSource */
-            // Inizializza l'oggetto depthFrameData
+            // Inizializza l'oggetto bodyIndexData
+            FrameDescription bodyIndexFrameDescription = kinectSensor.BodyIndexFrameSource.FrameDescription;
+            bodyIndexData = new BodyIndexData(bodyIndexFrameDescription);
+            // Inizializza l'oggetto depthData
             FrameDescription depthFrameDescription = kinectSensor.DepthFrameSource.FrameDescription;
             this.depthData = new DepthData(depthFrameDescription);
-            // Inizializza l'oggetto InfraredFrameData
+            // Inizializza l'oggetto InfraredData
             FrameDescription infraredFrameDescription = kinectSensor.InfraredFrameSource.FrameDescription;
             this.infraredData = new InfraredData(infraredFrameDescription);
-            // Inizializza l'oggetto ColorFrameData
+            // Inizializza l'oggetto ColorData
             FrameDescription colorFrameDescription = kinectSensor.ColorFrameSource.FrameDescription;
             this.colorData = new ColorData(colorFrameDescription);
-            // Inizializza l'oggetto longExposureInfraredData
+            // Inizializza l'oggetto LongExposureData
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Attivo il lettore di multiframe
@@ -113,6 +118,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     colorData.update(colorFrame);
+                    this.OnColorFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Depth frame
@@ -123,6 +129,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se il depthFrame non è vuoto, allora aggiorno il contenuto dell'oggetto depthData
                     depthData.update(depthFrame);
+                    this.OnDepthFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Infrared frame
@@ -133,6 +140,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     infraredData.update(infraredFrame);
+                    this.OnInfraredFrameManaged(this);
                 }   
             }
             // Nel caso in cui venga letto un LongExposureInfrared frame
@@ -168,14 +176,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         index++;
                     }                    
                 }
+                this.OnSkeletonFrameManaged(this);
             }
             //
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
             {
                 if(bodyIndexFrame != null)
                 {
-
+                    bodyIndexData.update(bodyIndexFrame);
+                    this.bodyFrameManaged(this);
                 }
+                this.OnBodyFrameManaged(this);
             }
             
 
@@ -191,9 +202,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
             //filemanager.printXML();
 
             // Richiamo l'evento
-            this.OnFrameManaged(this);
+            //this.OnFrameManaged(this);
         }
 
+        #region Events
         /// <summary>
         /// Evento che avvisa la gestione di un Frame prelevato dalla kinect.
         /// </summary>
@@ -204,5 +216,56 @@ namespace RecognitionGestureFeed_Universal.Recognition
             if (handler != null)
                 handler(sender);
         }
+        /// <summary>
+        /// Evento che avvisa la gestione di un BodyFrame.
+        /// </summary>
+        /// <param name="sender"></param>
+        protected virtual void OnBodyFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = depthFrameManaged;
+            if (handler != null)
+                handler(sender);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un DephtFrame.
+        /// </summary>
+        /// <param name="sender"></param>
+        protected virtual void OnDepthFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = bodyFrameManaged;
+            if (handler != null)
+                handler(sender);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un InfraredFrame.
+        /// </summary>
+        /// <param name="sender"></param>
+        protected virtual void OnInfraredFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = infraredFrameManaged;
+            if (handler != null)
+                handler(sender);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un ColorFrame.
+        /// </summary>
+        /// <param name="sender"></param>
+        protected virtual void OnColorFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = colorFrameManaged;
+            if (handler != null)
+                handler(sender);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un SkeletonFrame.
+        /// </summary>
+        /// <param name="sender"></param>
+        protected virtual void OnSkeletonFrameManaged(AcquisitionManager sender)
+        {
+            FrameManaged handler = skeletonFrameManaged;
+            if (handler != null)
+                handler(sender);
+        }
+        #endregion
     }
 }

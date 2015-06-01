@@ -66,8 +66,46 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
         // Creo l'oggetto pen che verrà usato per tracciare l'osso
         private static readonly Pen penTracked = new Pen(Brushes.Red, 6);
         private static readonly Pen penNotTracked = new Pen(Brushes.LightGray, 1);
+        // Array di colori per ogni corpo rilevato (viene utilizzato per la stampa del BodyIndexFrame)
+        private static readonly uint[] BodyColor = {0x0000FF00,0x00FF0000,0xFFFF4000,0x40FFFF00,0xFF40FF00,0xFF808000,};
 
         /****** Funzioni ******/
+        /// <summary>
+        /// La funzione provvede a rappresentare in una WritableBitmap le sagome dei corpi rilevati dalla kinect
+        /// e contenuti nell'array frameData.
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="frameData"></param>
+        public static void convertBitmap(this WriteableBitmap bitmap, BodyIndexData frameData)
+        {
+            // Prendo dal depthData le informazioni riguardanti la larghezza e l'altezza dal BodyIndexData
+            int width = frameData.width;
+            int height = frameData.height;
+            // Creo un vettore di uint, e che verrà usata per la stampa
+            uint[] bodyIndexPixels = new uint[width * height];
+
+            // Converte i dati prelevati precedentemente dal BodyIndexFrame (e contenuti in bodyIndexData) nel formato corretto per la stampa
+            for (int i = 0; i < (int)frameData.pixels.Count(); ++i)
+            {
+                // Un colore per ogni corpo che rileva
+                if (frameData.pixels[i] < BodyColor.Length)
+                {
+                    /// Se il pixel fa parte di un corpo, allora viene rappresentato con il colore corretto
+                    bodyIndexPixels[i] = BodyColor[frameData.pixels[i]];
+                }
+                else
+                {
+                    // Se non ne fa parte, viene impostato come nero.
+                    bodyIndexPixels[i] = 0x00000000;
+                }
+            }
+
+            // Trasferisco sul WritableBitmap il contenuto di bodyIndexPixels (ovvero l'immagine vere e propria)
+            bitmap.Lock();
+            bitmap.WritePixels(new Int32Rect(0, 0, width, height), bodyIndexPixels, width * 4, 0);// Disegno i nuovi pixel
+            bitmap.Unlock();
+        }
+
         /// <summary>
         /// La funzione convertBitmap provvede a rappresentare in una WritableBitmap i valori di profondità
         /// contenuti nell'array frameData di DepthData (dati calcolati a loro volta a partire dall'ultimo DepthFrame ricevuto).
@@ -167,7 +205,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
             bitmap.Lock();
             bitmap.WritePixels(new Int32Rect(0, 0, width, height), colorData.pixels, width * 4, 0);// Disegno i nuovi pixel
             bitmap.Unlock();
-
         }
 
         /// <summary>

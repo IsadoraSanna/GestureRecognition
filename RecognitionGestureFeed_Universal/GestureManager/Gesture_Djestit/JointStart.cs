@@ -13,6 +13,12 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         /* Attributi */
         private ulong ID { get; set; }
 
+        /*Costruttore
+        public JointStart()
+        {
+
+        } DA FARE */
+
         /* Metodi */
         public bool accepts(JointToken token)
         {

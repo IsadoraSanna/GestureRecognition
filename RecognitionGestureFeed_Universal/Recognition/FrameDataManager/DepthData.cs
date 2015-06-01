@@ -18,10 +18,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
         // Minima e massima profondità rilevati
         public ushort maxDepth { get; private set; }
         public ushort minDepth { get; private set; }
-        
-        // Prova 2
-        public KinectBuffer buffer { get; private set; }
-        public uint bpp { get; private set; }
 
         /// <summary>
         /// Inizializza gli oggetti del depthData. Per farlo usa anche il costruttore del padre (per width e height).

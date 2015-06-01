@@ -32,15 +32,13 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.gestureToEvent = new List<int>();
             this.gestureToEvent.Add(-1);
         }
-/*
-        public Token generateToken(TypeToken type, JointInformation jointInformation){
+
+       /* public Token generateToken(TypeToken type, JointInformation jointInformation){
             JointToken token = new JointToken(type, jointInformation);
             switch(type)
             {
                 case TypeToken.Start:
-                    var touchId = this.firstId(touch)
-
-
+                    var touchId = this.firstId(jointInformation.id);
                     int identifier = firstId(jointInformation.idSkeleton);
                     this.eventToGesture[jointInformation.idSkeleton] = identifier;
                     this.gestureToEvent[identifier] = jointInformation.idSkeleton;
@@ -60,24 +58,18 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.sequence.push(token);
             //token.sequence = this.sequence; ???? MIO DIO!!!!
             return token;
-        }
-*/
+        }*/
         public NewJointToken generateToken(TypeToken typeToken, NewJointToken jointToken)
         {
             int ID = jointToken.identifier;
-            NewJointToken token = new NewJointToken(jointToken.jointType, jointToken.x, jointToken.y, jointToken.z, ID);
+            NewJointToken token = new NewJointToken(typeToken, jointToken.jointType, jointToken.x, jointToken.y, jointToken.z, ID);
             switch (typeToken)
             {
                 case TypeToken.Start:
                     int touchId = this.firstId(jointToken.identifier);
-                    this.eventToGesture.Insert(jointToken.identifier, touchId);
-                    this.gestureToEvent.Insert(touchId, jointToken.identifier);
-                    jointToken.identifier = touchId;
-                    /*
-                    int identifier = firstId(ID);
-                    this.eventToGesture.Add(identifier);
-                    this.gestureToEvent.Add(ID);
-                    token.identifier = identifier;*/
+                    this.eventToGesture.Add(touchId);// Perché non insert(jointToken.identifier, touchId);?
+                    this.gestureToEvent[touchId] = jointToken.identifier;
+                    token.identifier = touchId;
                     break;
                 case TypeToken.Move:
                     token.identifier = this.eventToGesture[jointToken.identifier];

@@ -8,21 +8,30 @@ using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
 {
-    internal class BodyIndexData : FrameData
+    public class BodyIndexData : FrameData
     {
         /* Attributi */
-        public byte[] frameData { get; private set; }
-
+        // Vettore che conterrà i dati contenuti nei BodyIndexFrame
+        public byte[] pixels { get; private set; }
+        
         /* Costruttore */
+        /// <summary>
+        /// Inizializza gli oggetti del BodyIndexData. Per farlo usa anche il costruttore del padre (per width e height).
+        /// </summary>
+        /// <param name="frameDescription"></param>
         public BodyIndexData(FrameDescription frameDescription) : base(frameDescription)
         {
-            this.frameData = null;
+            this.pixels = new byte[width * height];
         }
             
         /* Metodi */
-        public void update(BodyIndexFrame frame)
+        /// <summary>
+        /// Aggiorna il contenuto del BodyIndexData
+        /// </summary>
+        /// <param name="frame"></param>
+        public unsafe void update(BodyIndexFrame frame)
         {
-            frame.CopyFrameDataToArray(this.frameData);
+            frame.CopyFrameDataToArray(this.pixels);
         }
     }
 }
