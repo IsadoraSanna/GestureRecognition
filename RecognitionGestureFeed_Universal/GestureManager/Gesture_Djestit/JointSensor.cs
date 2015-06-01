@@ -15,7 +15,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         //public event GestureEventArgs onSkeletonStart;
         //public event GestureEventArgs onSkeletonMove;
         //public event GestureEventArgs onSkeletonEnd;
-        //element... cosa èhhh?? Dovrebbe essere un acquisition manager
+        //element...
         private int capacity;
         private Term root;
         public JointStateSequence sequence;
@@ -66,7 +66,33 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                     break;
             }
             this.sequence.push(token);
-            //token.sequence = this.sequence; ???? MIO DIO!!!!
+            //token.sequence = this.sequence;
+            return token;
+        }
+        public Token generateToken(TypeToken type, Skeleton skeleton)
+        {
+            SkeletonToken token = new SkeletonToken(type, skeleton);
+            switch(type)
+            {
+                case TypeToken.Start:
+                    int skeletonId = this.firstId(skeleton.getIdSkeleton());
+                    this.eventToGesture.Add(skeletonId);// Perché non insert(jointToken.identifier, jointId);?
+                    this.gestureToEvent[skeletonId] = skeleton.getIdSkeleton();
+                    token.identifier = skeletonId;
+                    break;
+                case TypeToken.Move:
+                    token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
+                    break;
+                case TypeToken.End:
+                    token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
+                    this.eventToGesture.RemoveAt(skeleton.getIdSkeleton());
+                    this.gestureToEvent.RemoveAt(skeleton.getIdSkeleton());
+                    break;
+                default:
+                    break;
+            }
+            this.sequence.push(token);
+            //token.sequence = this.sequence;
             return token;
         }
         /*
@@ -137,6 +163,13 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                 return true;
             else
                 return false;   
+        }
+        public bool checkSkeleton(int skeletonId)
+        {
+            if (this.sequence.moves.ContainsKey(skeletonId))
+                return true;
+            else
+                return false;
         }
     }
 }

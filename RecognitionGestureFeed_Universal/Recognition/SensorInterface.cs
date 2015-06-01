@@ -24,7 +24,23 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public SensorInterface(AcquisitionManager am)
         {
             jointSensor = new JointSensor(3);
-            //+= updateJoint;
+            //am.OnSkeletonFrameManaged+= updateJoint;
+        }
+
+        public void updateSkeleton(AcquisitionManager am)
+        {
+            foreach(Skeleton skeleton in am.skeletonList)
+            {
+                if(skeleton.getStatus())
+                {
+                    if (jointSensor.checkSkeleton(skeleton.getIdSkeleton()))
+                        jointSensor.generateToken(TypeToken.Move, skeleton);
+                    else
+                        jointSensor.generateToken(TypeToken.Start, skeleton);
+                }
+                //else if(jointSensor.checkJoint(ji.getType()))
+                //rimuovi token
+            }
         }
 
         public void updateJoint(AcquisitionManager am)
@@ -38,18 +54,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
                         if (ji.getStatus() == TrackingState.Tracked)
                         {
                             if (jointSensor.checkJoint(ji.getType() + 1))
-                            {
                                 jointSensor.generateToken(TypeToken.Move, ji);
-                            }
                             else
-                            {
                                 jointSensor.generateToken(TypeToken.Start, ji);
-                            }
                         }
                         //else if(jointSensor.checkJoint(ji.getType()))
                         //rimuovi token
                     }
-                    Debug.WriteLine(jointSensor.sequence.moves.Count);
                     return;
                 }
             }

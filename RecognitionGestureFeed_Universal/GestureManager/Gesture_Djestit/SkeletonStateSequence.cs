@@ -41,7 +41,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                     goto case TypeToken.End;
                 case TypeToken.End:
                     List<SkeletonToken> t;
-                    this.moves.TryGetValue((int)token.identifier, out t);
+                    this.moves.TryGetValue(token.identifier, out t);
 
                     if (t.Count < this.capacity)//this.moves[(int)token.identifier].tokens.Count() < this.capacity)
                         t.Add(token);
@@ -60,44 +60,9 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 
             }
         }
-        /*
-        public void push(NewJointToken token)
-        {
-            this._push(token);
-            switch (token.type)
-            {
-                case TypeToken.Start:
-                    this.moves.Add(token.identifier, new List<NewJointToken>());
-                    this.m_index.Add(token.identifier, 0);
-                    //this.m_index.Insert(token.identifier, 0);
-                    goto case TypeToken.Move;
-                case TypeToken.Move:
-                    goto case TypeToken.End;
-                case TypeToken.End:
-                    List<NewJointToken> t;
-                     this.moves.TryGetValue((int)token.identifier, out t);
 
-                    if (t.Count < this.capacity)//this.moves[(int)token.identifier].tokens.Count() < this.capacity)
-                        t.Add(token);
-                        //this.moves[(int)token.identifier].tokens.Add(token);
-                    else
-                    {
-                        t.Insert(this.m_index[token.identifier], token);/******************************** Modificare *
-                        //this.moves[(int)token.identifier].tokens.Insert(this.m_index[token.identifier], token);
-                    }
-
-                    int c;
-                    this.m_index.TryGetValue(token.identifier, out c);
-                    c = (c+1) % this.capacity;
-                    m_index[token.identifier] = c;
-                    break;
-
-            }
-        }         
-        */
         public SkeletonToken getById(int delay, int id)
         {
-
             int pos = 0;
             List<SkeletonToken> t;
             this.moves.TryGetValue(id, out t);
@@ -106,10 +71,8 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 
             if (t.Count < this.capacity)
                 pos = m_index_id - delay - 1;
-            //pos = this.m_index[id] - delay -1;
             else
                 pos = (m_index_id - delay - 1 + this.capacity) % this.capacity;
-            //pos = (this.m_index[id] - delay - 1 + this.capacity) % this.capacity;
 
             return t[pos];
         }

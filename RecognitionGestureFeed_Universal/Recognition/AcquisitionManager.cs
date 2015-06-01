@@ -73,7 +73,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
             // Iniziliazza l'array di skeleton
             for (int i = 0; i < (int)n_max_skeleton; i++)
-                skeletonList[i] = new Skeleton();
+                skeletonList[i] = new Skeleton(i);
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
@@ -181,7 +181,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
                 //this.OnSkeletonFrameManaged(this);
             }
-            /*//
+            //
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
             {
                 if(bodyIndexFrame != null)
@@ -189,8 +189,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     bodyIndexData.update(bodyIndexFrame);
                     this.bodyFrameManaged(this);
                 }
-                this.OnBodyFrameManaged(this);
-            }*/
+                //this.OnBodyFrameManaged(this);
+            }
             
 
             // Prova Aggiunta GestureXML

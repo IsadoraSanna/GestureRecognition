@@ -24,6 +24,9 @@ namespace RecognitionGestureFeed_Universal.GestureManager
         /// </summary>
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
+        // Soglia di accettazione di una certa gesture
+        private readonly float threshold = 0.95f;
+
 
         public GestureDetector(KinectSensor kinectSensor)
         {
@@ -71,28 +74,54 @@ namespace RecognitionGestureFeed_Universal.GestureManager
             {
                 if (frame != null)// se il frame non è nullo
                 {
-                    // Prendo tutti i DiscreteGesture rilevati e contenuti nell'ultimo frame arrivato
+                    // Creo un dizionario, in cui per ogni gesture discreta è associato il suo valore di confidenza
                     IReadOnlyDictionary<Gesture, DiscreteGestureResult> discreteResults = frame.DiscreteGestureResults;
-                    
-                    if (discreteResults != null)// Quindi se è stato rilevato almeno un DiscreteGesture
+                    // Creo un dizionario, in cui per ogni gesture discreta è associato il suo valore di confidenza
+                    IReadOnlyDictionary<Gesture, ContinuousGestureResult> continuousResult = frame.ContinuousGestureResults;
+
+                    /* Gesture Discrete */
+                    if (discreteResults != null)// Se è stata rilevata almeno un gesture discreta
                     {
-                        // Per ogni DiscreteGesture rilevata e contenuta nel frame, verifico la sua somiglianza
+                        // Per ogni gesture discreta rilevata e contenuta nel frame, verifico la sua somiglianza
                         // con quelle contenute nel database
                         foreach (Gesture gesture in vgbFrameSource.Gestures)
                         {
                             if (gesture.GestureType == GestureType.Discrete)//gesture.Name.Equals(this.GestureName) && gesture.GestureType == GestureType.Discrete)
                             {
-                                // Non so cosa sto facendo; sicuramente sto dichiarando una variabile
-                                // di tipo DiscreteGestureResult che, presumo, utilizzerò per controllare 
-                                // se tale gesture è stata rilevata o meno.
+                                // Prendo dalla mappa contenuta in discreteResult il valore di confidenza della gesture
                                 DiscreteGestureResult result = null;
                                 discreteResults.TryGetValue(gesture, out result);
 
-                                if (result != null)
+                                /// Quindi se il valore di confidenza della gesture è superiore
+                                /// alla soglia impostata, alllora lo comunico (tramite evento) all'utente.
+                                if (result != null && result.Confidence > this.threshold)
                                 {
-                                    // 
-                                    Debug.WriteLine(result.Confidence);
-                                    // Aggiorno la visualizzione in base al contenuto giunto dalla Kinect (feed)
+                                    Debug.WriteLine("La gesture discreta " + gesture.Name + " è stata rilevata. Confidence: " + result.Confidence);
+                                    // Comunico che la gesture è stata rilevata correttamente
+                                    // this.GestureResultView.UpdateGestureResult(true, result.Detected, result.Confidence);
+                                }
+                            }
+                        }
+                    }
+                    /* Gesture Continue */
+                    if (continuousResult != null)// Se è stata rilevata almeno un gesture continua
+                    {
+                        // Per ogni gesture continua rilevata e contenuta nel frame, verifico la sua somiglianza
+                        // con quelle contenute nel database
+                        foreach (Gesture gesture in vgbFrameSource.Gestures)
+                        {
+                            if (gesture.GestureType == GestureType.Continuous)//gesture.Name.Equals(this.GestureName) && gesture.GestureType == GestureType.Discrete)
+                            {
+                                // Prendo dalla mappa contenuta in discreteResult il valore di confidenza della gesture
+                                ContinuousGestureResult result = null;
+                                continuousResult.TryGetValue(gesture, out result);
+
+                                // Quindi se il valore di confidenza della gesture è nulla non faccio,
+                                // viceversa comunico che la gesture in questione è stata rilevata
+                                if (result != null && result.Progress > this.threshold)
+                                {
+                                    Debug.WriteLine("La gesture continua "+gesture.Name+" è stata rilevata. Confidence: "+result.Progress);
+                                    // Comunico che la gesture è stata rilevata correttamente.
                                     // this.GestureResultView.UpdateGestureResult(true, result.Detected, result.Confidence);
                                 }
                             }
@@ -102,7 +131,11 @@ namespace RecognitionGestureFeed_Universal.GestureManager
             }
         }
 
-        // Handle che viene richiamato quando la kinect non rileva più un body
+        /// <summary>
+        /// Handle che viene richiamato quando la kinect non rileva più un body
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void vgbFrameSource_TrackingIdLost(object sender, TrackingIdLostEventArgs e)
         {
             //throw new NotImplementedException();

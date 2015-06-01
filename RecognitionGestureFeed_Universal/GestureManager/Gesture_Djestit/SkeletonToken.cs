@@ -23,7 +23,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.skeleton = (Skeleton)sklt.Clone();
             joints = new Dictionary<int,List<JointToken>>();
             this.type = type;
-            this.identifier = (int)skeleton.getId();
+            this.identifier = skeleton.getIdSkeleton();//(int)skeleton.getId();
         }
     }
 }

@@ -13,7 +13,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
     public class Skeleton : ICloneable
     {
         private readonly Int16 number_joints = 25;// Numero di Joint disponibili
-        #region Skeleton
         /* Attributi della classe Skeleton */
         /// <summary>
         /// ID del body associato dalla kinect
@@ -22,7 +21,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// bones è la lista di tutte le ossa
         /// status che indica se lo scheletro è rilevato o meno
         /// </summary>
-        private ulong Id;
+        private ulong idBody;
+        private int idSkeleton;
         private HandState leftHandStatus;
         private HandState rightHandStatus;
         private List<JointInformation> joints;
@@ -32,10 +32,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// <summary>
         /// Costruttori
         /// </summary>
-        public Skeleton()
+        public Skeleton(int i)
         {
-            // Inizializzo l'ID
-            this.Id = 1000;
+            // Inizializzo l'idBody e l'idSkeleton
+            this.idBody = 1000;
+            this.idSkeleton = i;
             // Stato delle mani (HandSideState restituisce: unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
             leftHandStatus = 0;
             rightHandStatus = 0;
@@ -57,12 +58,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             if (body.IsTracked)
             {
                 status = body.IsTracked;
-                Id = body.TrackingId;
+                idBody = body.TrackingId;
             }
             else
             {
                 status = false;
-                Id = 1000;
+                idBody = 1000;
             }
             // Aggiorno lo stato delle mani (HandSideState restituisce: unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
             leftHandStatus = body.HandLeftState;
@@ -82,11 +83,27 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                     // 1° elemento: ID del body
                     // 3° elemento: l'oggetto Joints
                     // 4° elemento: Orientamento del joint
-                    joints.Add(new JointInformation(Id, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
+                    joints.Add(new JointInformation(idBody, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
                 }
             }
         }
 
+        /// <summary>
+        /// Ritorna l'Id del body a cui è associato lo scheletro
+        /// </summary>
+        /// <returns></returns>
+        public ulong getIdBody()
+        {
+            return this.idBody;
+        }
+        /// <summary>
+        /// Ritorna l'Id dello scheletro
+        /// </summary>
+        /// <returns></returns>
+        public int getIdSkeleton()
+        {
+            return this.idSkeleton;
+        }
         /// <summary>
         /// Funzione per settare lo scheletro qualora non sia tracciato
         /// </summary>
@@ -102,10 +119,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                 joints.Clear();
         }
         
-        public ulong getId()
-        {
-            return this.Id;
-        }
         /// <summary>
         /// Dato il nome del Joint a cui vuole accedere, restituisce il JointInformation relativo
         /// </summary>
@@ -150,7 +163,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             return this.MemberwiseClone();
         }
-        #endregion Skeleton
         
         #region utilities
         private static void boneBuilder(List<Bone> bones)
