@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//
+// Debug
 using System.Diagnostics;
+// Kinect
 using Microsoft.Kinect;
 using Microsoft.Kinect.VisualGestureBuilder;
 

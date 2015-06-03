@@ -13,9 +13,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         /* Attributi */
         internal Dictionary<int, List<SkeletonToken>> moves;
         internal Dictionary<int, int> m_index;
-        //List<StateSequence> moves;
-        //internal Dictionary<int,List<NewJointToken>> moves;
-        //internal Dictionary<int, int> m_index;
 
         /* costruttore */
         public SkeletonStateSequence(int capacity)
@@ -23,8 +20,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         {
             this.moves = new Dictionary<int, List<SkeletonToken>>();
             this.m_index = new Dictionary<int, int>();
-            //this.moves = new Dictionary<int, List<NewJointToken>>();
-            //this.m_index = new List<int>();
         }
 
         /* Metodi */

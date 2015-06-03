@@ -43,7 +43,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public static void startAllStream(AcquisitionManager am, KinectSensor kinectSensor)
         {
             /* Inizializzazione WritableBitmap */
-            //initBodyIndexStream(am);
+            initBodyIndexStream(am);
             initDepthStream(am);
             initInfraredStream(am);
             initColorStream(am);
@@ -59,7 +59,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         private static void updateAllStream(AcquisitionManager sender)
         {
-            //bodyIndexBitmap.convertBitmap(sender.bodyIndexData);
+            bodyIndexBitmap.convertBitmap(sender.bodyIndexData);
  	        depthBitmap.convertBitmap(sender.depthData);
             infraredBitmap.convertBitmap(sender.infraredData);
             colorBitmap.convertBitmap(sender.colorData);

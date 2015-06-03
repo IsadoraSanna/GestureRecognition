@@ -23,8 +23,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// </summary>
         private ulong idBody;
         private int idSkeleton;
-        private HandState leftHandStatus;
-        private HandState rightHandStatus;
+        public HandState leftHandStatus {get; private set;}
+        public HandState rightHandStatus {get; private set;}
         private List<JointInformation> joints;
         private List<Bone> bones = new List<Bone>();
         private bool status;

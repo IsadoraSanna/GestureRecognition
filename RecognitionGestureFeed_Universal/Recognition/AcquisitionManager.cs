@@ -206,7 +206,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
             // Richiamo l'evento
             this.OnFrameManaged(this);
-            s.updateJoint(this);
+
         }
 
         #region Events

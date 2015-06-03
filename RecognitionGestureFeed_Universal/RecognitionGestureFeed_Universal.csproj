@@ -85,9 +85,11 @@
     <Compile Include="GestureManager\AddNewGestureXML.cs" />
     <Compile Include="GestureManager\GestureDetectorXML.cs" />
     <Compile Include="GestureManager\GestureXML.cs" />
+    <Compile Include="GestureManager\Gest\HandClose.cs" />
+    <Compile Include="GestureManager\Gest\HandOpen.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointEnd.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointMove.cs" />
-    <Compile Include="GestureManager\Gesture_Djestit\JointSensor.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\Sensor.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStart.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStateSequence.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\SkeletonToken.cs" />
@@ -95,6 +97,8 @@
     <Compile Include="GestureManager\Gesture_Djestit\JointToken.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\NewJointToken.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\SkeletonStateSequence.cs" />
+    <Compile Include="GestureManager\Gest\MoveX.cs" />
+    <Compile Include="GestureManager\Gest\MoveY.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />
