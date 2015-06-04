@@ -15,6 +15,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         internal Dictionary<int, List<JointToken>> joints;
         internal Skeleton skeleton;
         internal TypeToken type;
+        internal Dictionary<int, List<SkeletonToken>> moves;
         internal int identifier;
 
         /* Costruttore */

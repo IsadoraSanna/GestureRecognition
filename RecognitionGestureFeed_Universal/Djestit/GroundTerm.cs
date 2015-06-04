@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace RecognitionGestureFeed_Universal.Djestit
 {
     //
-    public delegate bool Accepts(Token token);
+    public delegate bool Accepts<T>(T token) where T : Token;
 
     public class GroundTerm : Term
     {
         public String type = "ground";
-        public Accepts _accepts;
-        public Accepts accepts;
+        public Accepts<Token> _accepts;
+        public Accepts<Token> accepts;
         //private qualcosa modality = null; per JS this.modality = undefined;
 
         public virtual bool _accepts2(Token token)

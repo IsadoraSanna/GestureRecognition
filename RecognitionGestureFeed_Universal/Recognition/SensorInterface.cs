@@ -21,26 +21,57 @@ namespace RecognitionGestureFeed_Universal.Recognition
         // Attributi
         public Sensor jointSensor;
 
-        internal bool close(SkeletonToken token)
+        internal bool close(Token token)
         {
-            if (token.skeleton.leftHandStatus == HandState.Closed)
-                return true;
-            else
-                return false;
+            Debug.WriteLine("Mano Chiusa");
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                //
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                //
+                if (skeletonToken.skeleton.leftHandStatus == HandState.Closed)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+
         }
-        internal bool Move(SkeletonToken token)
+        internal bool MoveX(Token token)
         {
-            if (token.skeleton.leftHandStatus == HandState.Closed)
-                return true;
-            else
-                return false;
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                // 
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                //
+                JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandLeft);
+                // 
+                List<SkeletonToken> t;
+                skeletonToken.moves.TryGetValue(0, out t);
+                JointInformation jiOld = t.ElementAt(skeletonToken.identifier).skeleton.getJointInformation(JointType.HandLeft);
+                //
+                if (skeletonToken.skeleton.leftHandStatus == HandState.Closed && jiNew.position.X > jiOld.position.X)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
         }
-        internal bool Open(SkeletonToken token)
+        internal bool Open(Token token)
         {
-            if (token.skeleton.leftHandStatus == HandState.Closed)
-                return true;
-            else
-                return false;
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                // 
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // 
+                List<SkeletonToken> t;
+                skeletonToken.moves.TryGetValue(0, out t);
+                if (skeletonToken.skeleton.leftHandStatus == HandState.Open && t.ElementAt(skeletonToken.identifier).skeleton.leftHandStatus == HandState.Closed)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
         }
 
         public SensorInterface(AcquisitionManager am)
@@ -65,6 +96,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTerm2.Add(termx1);
             listTerm2.Add(disablingx);
             Sequence panX = new Sequence(listTerm2);
+            panX.Complete += PanX;
 
             /* Pan Asse Y */
             // Close
@@ -85,6 +117,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTerm2.Add(termy1);
             listTerm2.Add(disablingy);
             Sequence panY = new Sequence(listTerm2);
+            panY.Complete += PanY;
 
             List<Term> listaPan = new List<Term>();
             listaPan.Add(panX);
@@ -99,11 +132,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // Dichiarazione Joint
             jointSensor = new Sensor(3);
             //am.OnSkeletonFrameManaged+= updateJoint;
-        }
-
-        private bool close(Token token)
-        {
-            throw new NotImplementedException();
         }
 
         public void updateSkeleton(AcquisitionManager am)
@@ -124,6 +152,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
         }
 
+        /*
         public void updateJoint(AcquisitionManager am)
         {       
             foreach (Skeleton sk in am.skeletonList)
@@ -152,8 +181,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
             {
                 jointSensor.generateToken(TypeToken.End, ji);
             }
+        }*/
+        void PanX(object sender, GestureEventArgs t)
+        {
+            Debug.WriteLine("Porcamadonna");
         }
-
+        void PanY(object sender, GestureEventArgs t)
+        {
+            Debug.WriteLine("Porcoddio");
+        }
 
     }
 }

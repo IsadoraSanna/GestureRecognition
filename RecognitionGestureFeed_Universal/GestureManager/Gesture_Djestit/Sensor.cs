@@ -18,7 +18,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         //element...
         private int capacity;
         private Term root;
-        public JointStateSequence sequence;
+        public SkeletonStateSequence sequence;
         private List<int> gestureToEvent;
         private List<int> eventToGesture;
 
@@ -27,7 +27,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.capacity = capacity;
             this.root = root;
             //statesequence e gesturestatesequence hanno il tipo di capacity diverso. controllare!!
-            this.sequence = new JointStateSequence(this.capacity);
+            this.sequence = new SkeletonStateSequence(this.capacity);
             this.eventToGesture = new List<int>();
             this.gestureToEvent = new List<int>();
             this.gestureToEvent.Add(-1);
@@ -37,12 +37,12 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.capacity = capacity;
             //this.root = root;
             //statesequence e gesturestatesequence hanno il tipo di capacity diverso. controllare!!
-            this.sequence = new JointStateSequence(this.capacity);
+            this.sequence = new SkeletonStateSequence(this.capacity);
             this.eventToGesture = new List<int>();
             this.gestureToEvent = new List<int>();
             this.gestureToEvent.Add(-1);
         }
-
+/*
         public Token generateToken(TypeToken type, JointInformation jointInformation)
         {
             JointToken token = new JointToken(type, jointInformation);
@@ -68,7 +68,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             this.sequence.push(token);
             //token.sequence = this.sequence;
             return token;
-        }
+        }*/
         public Token generateToken(TypeToken type, Skeleton skeleton)
         {
             SkeletonToken token = new SkeletonToken(type, skeleton);
@@ -92,7 +92,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                     break;
             }
             this.sequence.push(token);
-            //token.sequence = this.sequence;
+            token.moves = this.sequence.moves;//token.sequence = this.sequence;
             return token;
         }
         /*

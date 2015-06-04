@@ -8,15 +8,14 @@ using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
-    class SkeletonStateSequence : StateSequence
+    public class SkeletonStateSequence : StateSequence
     {
         /* Attributi */
         internal Dictionary<int, List<SkeletonToken>> moves;
         internal Dictionary<int, int> m_index;
 
         /* costruttore */
-        public SkeletonStateSequence(int capacity)
-            : base(capacity)
+        public SkeletonStateSequence(int capacity) : base(capacity)
         {
             this.moves = new Dictionary<int, List<SkeletonToken>>();
             this.m_index = new Dictionary<int, int>();
