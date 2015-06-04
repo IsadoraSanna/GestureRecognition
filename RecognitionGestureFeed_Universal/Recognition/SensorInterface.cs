@@ -21,13 +21,39 @@ namespace RecognitionGestureFeed_Universal.Recognition
         // Attributi
         public Sensor jointSensor;
 
+        internal bool close(SkeletonToken token)
+        {
+            if (token.skeleton.leftHandStatus == HandState.Closed)
+                return true;
+            else
+                return false;
+        }
+        internal bool Move(SkeletonToken token)
+        {
+            if (token.skeleton.leftHandStatus == HandState.Closed)
+                return true;
+            else
+                return false;
+        }
+        internal bool Open(SkeletonToken token)
+        {
+            if (token.skeleton.leftHandStatus == HandState.Closed)
+                return true;
+            else
+                return false;
+        }
+
         public SensorInterface(AcquisitionManager am)
         {
-            //pan asse x
+            /* Pan Asse x */
+            // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "BodyStart";
+            termx1.accepts = close;
+            // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "BodyMove";
+            // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "BodyEnd";
             Iterative iterativex = new Iterative(termx2);
@@ -40,11 +66,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTerm2.Add(disablingx);
             Sequence panX = new Sequence(listTerm2);
 
-            //pan asse y
+            /* Pan Asse Y */
+            // Close
             GroundTerm termy1 = new GroundTerm();
             termy1.type = "BodyStart";
+            // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "BodyMove";
+            // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "BodyEnd";
             Iterative iterativey = new Iterative(termy2);
@@ -65,8 +94,16 @@ namespace RecognitionGestureFeed_Universal.Recognition
             Choice choicePan = new Choice(listaPan);
 
 
+
+
+            // Dichiarazione Joint
             jointSensor = new Sensor(3);
             //am.OnSkeletonFrameManaged+= updateJoint;
+        }
+
+        private bool close(Token token)
+        {
+            throw new NotImplementedException();
         }
 
         public void updateSkeleton(AcquisitionManager am)

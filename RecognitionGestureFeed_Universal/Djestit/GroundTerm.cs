@@ -6,28 +6,36 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    
+    //
+    public delegate bool Accepts(Token token);
+
     public class GroundTerm : Term
     {
         public String type = "ground";
+        public Accepts _accepts;
+        public Accepts accepts;
         //private qualcosa modality = null; per JS this.modality = undefined;
-        //non ho minimamente capito l'utilità di questa classe
 
-        public virtual bool _accepts(Token token)
+        public virtual bool _accepts2(Token token)
         {
-            //if(token != null) return true; else return false;
-            return true;
+            if(this._accepts != null) 
+                return this._accepts(token); 
+            else 
+                return true;
         }
 
-        public virtual bool accepts(Token token)
+        public virtual bool accepts2(Token token)
         {
-            //if(token != null) return true; else return false;
-            return true;
+            if (this.accepts != null)
+                return this.accepts(token);
+            else
+                return true;
         }
 
         public override bool lookahead(Token token)
         {
-            return (this._accepts(token) && this.accepts(token));
+            
+            return (this._accepts2(token) && this.accepts2(token));
         }
     }
     

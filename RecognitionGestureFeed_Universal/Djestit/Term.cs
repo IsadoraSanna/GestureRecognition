@@ -41,7 +41,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public void complete(Token token){
 		    this.state = expressionState.Complete;
             GestureEventArgs e = new GestureEventArgs(this);
-            //this.Complete += 
             onComplete(e);
         }
 
@@ -63,8 +62,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public virtual void onComplete(GestureEventArgs t)
         {
-            //GestureEventHandler _complete = Complete;
-            //t.state = expressionState.Complete;
             if (Complete != null)
             {
                 Complete(this, t);
@@ -73,7 +70,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public virtual void onError(GestureEventArgs t)
         {            
-            //t.state = expressionState.Error;
             if (Error != null)
             {
                 Error(this, t);
