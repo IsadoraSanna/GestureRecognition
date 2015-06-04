@@ -123,7 +123,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     break;
                 case DisplayFrameType.BodyIndex:
                     if (bodyIndexBitmap != null)
-                        valReturn = true;
+                        valReturn = true; 
                     break;
             }
             return valReturn;

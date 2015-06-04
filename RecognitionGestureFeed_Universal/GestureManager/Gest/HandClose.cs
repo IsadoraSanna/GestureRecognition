@@ -12,7 +12,7 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gest
 {
-    class HandClose : GroundTerm
+    public class HandClose : GroundTerm
     {
         public HandClose() : base()
         {

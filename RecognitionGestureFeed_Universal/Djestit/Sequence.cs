@@ -76,7 +76,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 case expressionState.Complete:
                     this.index++;
-                    Debug.WriteLine(index);
                     if(index >= this.children.Count)
                         this.complete(token);
                     break;

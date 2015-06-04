@@ -99,7 +99,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
 
-            s = new SensorInterface(this);
+            //s = new SensorInterface(this);
         }
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -187,9 +187,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 if(bodyIndexFrame != null)
                 {
                     bodyIndexData.update(bodyIndexFrame);
-                    this.bodyFrameManaged(this);
+                    //this.OnBodyFrameManaged(this);
                 }
-                //this.OnBodyFrameManaged(this);
             }
             
 
