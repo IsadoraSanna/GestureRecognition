@@ -20,6 +20,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
     {
         // Attributi
         public Sensor jointSensor;
+        public SkeletonToken token;
+        public Choice choicePan;
+
 
         internal bool close(Token token)
         {
@@ -124,7 +127,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listaPan.Add(panY);
 
             //gesture contenente i 2 tipi di pan
-            Choice choicePan = new Choice(listaPan);
+            this.choicePan = new Choice(listaPan);
 
 
 
@@ -138,17 +141,19 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             foreach(Skeleton skeleton in am.skeletonList)
             {
+
                 if (skeleton.getStatus())
                 {
                     if (jointSensor.checkSkeleton(skeleton.getIdSkeleton()))
-                        jointSensor.generateToken(TypeToken.Move, skeleton);
+                        token = (SkeletonToken)jointSensor.generateToken(TypeToken.Move, skeleton);
                     else
-                        jointSensor.generateToken(TypeToken.Start, skeleton);
+                        token = (SkeletonToken)jointSensor.generateToken(TypeToken.Start, skeleton);
                 }
                 else if (jointSensor.checkSkeleton(skeleton.getIdSkeleton()))
-                    jointSensor.generateToken(TypeToken.End, skeleton);
+                    token = (SkeletonToken)jointSensor.generateToken(TypeToken.End, skeleton);
                 //else if(jointSensor.checkJoint(ji.getType()))
                 //rimuovi token
+                this.choicePan.fire(token);
             }
         }
 
