@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -47,7 +48,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //imposto lo stato dell'espressione come errore
         public void error(Token token){
 		    this.state = expressionState.Error;
-            GestureEventArgs e = new GestureEventArgs(this);
+            GestureEventArgs e = new GestureEventArgs(this);            
             onError(e);
         }
 

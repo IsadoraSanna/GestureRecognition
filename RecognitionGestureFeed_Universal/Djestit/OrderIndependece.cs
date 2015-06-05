@@ -29,20 +29,20 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         public override bool lookahead(Token token)
-        {
-            if(this.state == expressionState.Complete || this.state == expressionState.Error)
-                return false;
-            if(this.children != null && this.children.GetType() == typeof(List<Term>))
-            {
-                for(int index = 0; index < this.children.Count; index++)
-                {
-                    if(!this.children[index].once && this.children[index].lookahead(token))
-                        return true;
-                }
-            }
-            return false;
-
-        }
+         {   
+             if(this.state == expressionState.Complete || this.state == expressionState.Error)
+                 return false;
+             if(this.children != null && this.children.GetType() == typeof(List<Term>))
+             {
+                 for(int index = 0; index < this.children.Count; index++)
+                 {
+                     if(!this.children[index].once && this.children[index].lookahead(token))
+                         return true;
+                 }
+             }
+             return false;
+            
+         }
 
         public override void fire(Token token)
         {

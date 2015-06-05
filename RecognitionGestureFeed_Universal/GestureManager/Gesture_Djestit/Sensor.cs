@@ -75,24 +75,26 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             switch(type)
             {
                 case TypeToken.Start:
-                    int skeletonId = this.firstId(skeleton.getIdSkeleton());
-                    this.eventToGesture.Add(skeletonId);// Perché non insert(jointToken.identifier, jointId);?
-                    this.gestureToEvent[skeletonId] = skeleton.getIdSkeleton();
-                    token.identifier = skeletonId;
+                    //int skeletonId = this.firstId(skeleton.getIdSkeleton());
+                    //this.eventToGesture.Add(skeletonId);// Perché non insert(jointToken.identifier, jointId);?
+                    //this.gestureToEvent[skeletonId] = skeleton.getIdSkeleton();
+                    //token.identifier = skeletonId;
                     break;
                 case TypeToken.Move:
-                    token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
+                    List<SkeletonToken> listToken;
+                    sequence.moves.TryGetValue(token.identifier, out listToken);
+                    token.sOld = listToken.ElementAt(listToken.Count - 1).skeleton;
+                    //token.jointsOld = listToken.ElementAt(listToken.Count-2).skeleton.getListJointInformation();
                     break;
                 case TypeToken.End:
-                    token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
-                    this.eventToGesture.RemoveAt(skeleton.getIdSkeleton());
-                    this.gestureToEvent.RemoveAt(skeleton.getIdSkeleton());
+                    //token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
+                    //this.eventToGesture.RemoveAt(skeleton.getIdSkeleton());
+                    //this.gestureToEvent.RemoveAt(skeleton.getIdSkeleton());
                     break;
                 default:
                     break;
             }
             this.sequence.push(token);
-            token.moves = this.sequence.moves;//token.sequence = this.sequence;
             return token;
         }
         /*

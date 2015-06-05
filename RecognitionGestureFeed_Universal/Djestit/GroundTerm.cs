@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -26,6 +27,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public virtual bool accepts2(Token token)
         {
+            //Debug.WriteLine("Porcamadonna");
             if (this.accepts != null)
                 return this.accepts(token);
             else

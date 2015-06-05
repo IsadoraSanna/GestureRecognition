@@ -22,12 +22,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// status che indica se lo scheletro è rilevato o meno
         /// </summary>
         private ulong idBody;
-        private int idSkeleton;
-        public HandState leftHandStatus {get; private set;}
-        public HandState rightHandStatus {get; private set;}
-        private List<JointInformation> joints;
+        private int idSkeleton = -1;
+        public HandState leftHandStatus {get; set;}
+        public HandState rightHandStatus {get; set;}
+        public List<JointInformation> joints;
         private List<Bone> bones = new List<Bone>();
-        private bool status;
+        public bool status { get; set; }
 
         /// <summary>
         /// Costruttori

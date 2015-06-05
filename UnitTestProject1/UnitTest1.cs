@@ -113,8 +113,10 @@ namespace UnitTestProject1
         [TestMethod]
         public void ParallelOperator1()
         {
-            GroundTermA term1 = new GroundTermA();
-            GroundTermB term2 = new GroundTermB();
+            GroundTerm term1 = new GroundTerm();
+            term1.accepts = acceptsA;
+            GroundTerm term2 = new GroundTerm();
+            term2.accepts = acceptsB;
             Iterative iterative1 = new Iterative(term1);
             Iterative iterative2 = new Iterative(term1);
             List<Term> listTerm = new List<Term>();
@@ -141,10 +143,13 @@ namespace UnitTestProject1
         [TestMethod]
         public void ChoiceOperator()
         {
-           GroundTermA term1 = new GroundTermA();
+           GroundTerm term1 = new GroundTerm();
+           term1.accepts = acceptsA;
            GroundTerm term2 = new GroundTerm();
-           GroundTermB term3 = new GroundTermB();
-           GroundTermB term4 = new GroundTermB();
+           GroundTerm term3 = new GroundTerm();
+           term3.accepts = acceptsB;
+           GroundTerm term4 = new GroundTerm();
+           term4.accepts = acceptsB;
 
            List<Term> listTerm1 = new List<Term>();
            List<Term> listTerm2 = new List<Term>();
@@ -181,10 +186,13 @@ namespace UnitTestProject1
         [TestMethod]
         public void OrderIndependenceOperator()
         {
-            GroundTermA term1 = new GroundTermA();
+            GroundTerm term1 = new GroundTerm();
+            term1.accepts = acceptsA;
             GroundTerm term2 = new GroundTerm();
-            GroundTermB term3 = new GroundTermB();
-            GroundTermA term4 = new GroundTermA();
+            GroundTerm term3 = new GroundTerm();
+            term3.accepts = acceptsB;
+            GroundTerm term4 = new GroundTerm();
+            term4.accepts = acceptsA;
 
             List<Term> listTerm1 = new List<Term>();
             List<Term> listTerm2 = new List<Term>();
@@ -236,11 +244,14 @@ namespace UnitTestProject1
     [TestMethod]
     public void DisablingOperator()
         {
-            GroundTermA term1 = new GroundTermA();
+            GroundTerm term1 = new GroundTerm();
+            term1.accepts = acceptsA;
             Iterative iterative1 = new Iterative(term1);
-            GroundTermB term2 = new GroundTermB();
+            GroundTerm term2 = new GroundTerm();
+            term2.accepts = acceptsB;
             Iterative iterative2 = new Iterative(term2);
-            GroundTermC term3 = new GroundTermC();
+            GroundTerm term3 = new GroundTerm();
+            term3.accepts = acceptsC;
 
             List<Term> listTerm = new List<Term>();
             listTerm.Add(iterative1);
@@ -311,31 +322,18 @@ namespace UnitTestProject1
             Assert.IsTrue(expressionState.Complete == t.t.state, "Sequence completed");
         }
 
-        //classi
-        public class GroundTermA : GroundTerm
+        // Accepts
+        internal bool acceptsA(Token token)
         {
-            public override bool accepts(Token token)
-            {
-
-                return (token.type != null && token.type == "A");
-            }
-
+            return (token.type != null && token.type == "A");
         }
-        public class GroundTermB : GroundTerm
+        internal bool acceptsB(Token token)
         {
-            public override bool accepts(Token token)
-            {
-
-                return (token.type != null && token.type == "B");
-            }
+            return (token.type != null && token.type == "B");
         }
-        public class GroundTermC : GroundTerm
+        internal bool acceptsC(Token token)
         {
-            public override bool accepts(Token token)
-            {
-
-                return (token.type != null && token.type == "C");
-            }
+            return (token.type != null && token.type == "C");
         }
     #endregion
 

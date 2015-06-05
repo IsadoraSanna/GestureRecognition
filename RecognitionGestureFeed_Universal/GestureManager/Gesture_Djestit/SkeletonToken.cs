@@ -12,17 +12,17 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
     public class SkeletonToken : Token
     {
-        internal Dictionary<int, List<JointToken>> joints;
-        internal Skeleton skeleton;
-        internal TypeToken type;
-        internal Dictionary<int, List<SkeletonToken>> moves;
-        internal int identifier;
+        public Skeleton skeleton;
+        public TypeToken type;
+        public List<JointInformation> jointsOld;
+        public Skeleton sOld;
+        public int identifier;
 
         /* Costruttore */
         public SkeletonToken(TypeToken type, Skeleton sklt)
         {
             this.skeleton = (Skeleton)sklt.Clone();
-            joints = new Dictionary<int,List<JointToken>>();
+            jointsOld = new List<JointInformation>();
             this.type = type;
             this.identifier = skeleton.getIdSkeleton();//(int)skeleton.getId();
         }

@@ -40,7 +40,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public override bool lookahead(Token token)
         {
-            if (this.state == expressionState.Complete || this.state == expressionState.Error)
+            if (this.state == expressionState.Complete)// || this.state == expressionState.Error)
             {
                 return false;
             }
@@ -48,7 +48,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             if ((this.children != null) && (this.children[index] != null))// && (this.children[index].lookahead(token) != null))
             {
                 //if (this.children[index] != null)
-                    return this.children[index].lookahead(token);
+                return this.children[index].lookahead(token);
             }
 
             return false;
@@ -56,7 +56,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public override void fire(Token token)
         {
-
             if (this.lookahead(token))
             {
                 this.children[index].fire(token);

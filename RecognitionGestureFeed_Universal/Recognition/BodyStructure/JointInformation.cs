@@ -91,6 +91,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             
         }
+        public JointInformation(int idSkeleton)
+        {
+            this.status = TrackingState.Tracked;
+            this.idSkeleton = idSkeleton;
+        }
 
         /// <summary>
         /// Aggiorna le informazioni del JointInformation.

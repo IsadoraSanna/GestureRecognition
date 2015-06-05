@@ -30,6 +30,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Lookahead
         public override bool lookahead(Token token)
         {
+            
             if(this.state == expressionState.Complete || this.state== expressionState.Error)
                 return false;
             if(this.children !=null && this.children.GetType() == typeof(List<Term>))
@@ -41,6 +42,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 }
             }
             return false;
+             
         }
 
         // Fire
