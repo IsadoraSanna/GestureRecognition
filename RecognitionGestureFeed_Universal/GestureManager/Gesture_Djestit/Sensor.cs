@@ -15,7 +15,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         //public event GestureEventArgs onSkeletonStart;
         //public event GestureEventArgs onSkeletonMove;
         //public event GestureEventArgs onSkeletonEnd;
-        //element...
         private int capacity;
         public Term root;
         public SkeletonStateSequence sequence;
@@ -26,21 +25,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         {
             this.capacity = capacity;
             this.root = root;
-            //statesequence e gesturestatesequence hanno il tipo di capacity diverso. controllare!!
             this.sequence = new SkeletonStateSequence(this.capacity);
-            this.eventToGesture = new List<int>();
-            this.gestureToEvent = new List<int>();
-            this.gestureToEvent.Add(-1);
-        }
-        public Sensor(int capacity)
-        {
-            this.capacity = capacity;
-            //this.root = root;
-            //statesequence e gesturestatesequence hanno il tipo di capacity diverso. controllare!!
-            this.sequence = new SkeletonStateSequence(this.capacity);
-            this.eventToGesture = new List<int>();
-            this.gestureToEvent = new List<int>();
-            this.gestureToEvent.Add(-1);
         }
 /*
         public Token generateToken(TypeToken type, JointInformation jointInformation)
@@ -75,26 +60,20 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
             switch(type)
             {
                 case TypeToken.Start:
-                    //int skeletonId = this.firstId(skeleton.getIdSkeleton());
-                    //this.eventToGesture.Add(skeletonId);// Perché non insert(jointToken.identifier, jointId);?
-                    //this.gestureToEvent[skeletonId] = skeleton.getIdSkeleton();
-                    //token.identifier = skeletonId;
                     break;
                 case TypeToken.Move:
                     List<SkeletonToken> listToken;
                     sequence.moves.TryGetValue(token.identifier, out listToken);
                     token.sOld = listToken.ElementAt(listToken.Count - 1).skeleton;
-                    //token.jointsOld = listToken.ElementAt(listToken.Count-2).skeleton.getListJointInformation();
                     break;
                 case TypeToken.End:
-                    //token.identifier = this.eventToGesture[skeleton.getIdSkeleton()];
-                    //this.eventToGesture.RemoveAt(skeleton.getIdSkeleton());
-                    //this.gestureToEvent.RemoveAt(skeleton.getIdSkeleton());
+                    //sequence.moves.Remove(token.identifier);
                     break;
                 default:
                     break;
             }
-            this.sequence.push(token);
+            if(type != TypeToken.End)
+                this.sequence.push(token);
             return token;
         }
         /*

@@ -51,8 +51,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
                 // 
                 JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
+                float confidence = Math.Abs(jiNew.position.X - jiOld.position.X);
                 //
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && skeletonToken.sOld.rightHandStatus == HandState.Closed && jiNew.position.X > jiOld.position.X)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && (confidence < 0.2))
                     return true;
                 else
                     return false;
@@ -66,8 +67,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 // 
                 SkeletonToken skeletonToken = (SkeletonToken)token;
                 // 
-                //JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Open && skeletonToken.sOld.rightHandStatus == HandState.Closed)
+                JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)// && skeletonToken.sOld.rightHandStatus == HandState.Closed)
                     return true;
                 else
                     return false;
@@ -82,17 +83,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
             termx1.accepts = close;
-            termx1.Complete += Close;
+            //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
-            termx2.Complete += MoveX;
+            //termx2.Complete += MoveX;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
-            termx3.Complete += Open;
+            //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
             listTermx.Add(iterativex);
@@ -132,6 +133,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
                 if (token != null)
                     this.sensor.root.fire(token);
+
+                if (this.sensor.root.state == expressionState.Error)
+                    this.sensor.root.reset();
             }
         }
 
@@ -153,15 +157,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
         }
         void Close(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Ho la mano sinistra chiusa.");
+            Debug.WriteLine("Ho la mano destra chiusa.");
         }
         void MoveX(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Ho mosso la mano sinistra chiusa.");
+            Debug.WriteLine("Ho mosso la mano destra chiusa.");
         }
         void Open(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Ho la mano sinistra chiusa.");
+            Debug.WriteLine("Ho la mano destra chiusa.");
         }
 
     }

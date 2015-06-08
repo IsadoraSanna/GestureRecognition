@@ -70,5 +70,10 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 
             return t[pos];
         }
+
+        public void removeById(int id)
+        {
+            this.moves.Remove(id);
+        }
     }
 }
