@@ -48,7 +48,7 @@ namespace UnitTestProject1
                 // 
                 //JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
                 //
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && skeletonToken.sOld.rightHandStatus == HandState.Closed && skeletonToken.skeleton.positionX > skeletonToken.sOld.positionX)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)// && skeletonToken.sOld.rightHandStatus == HandState.Closed && skeletonToken.skeleton.positionX > skeletonToken.sOld.positionX)
                     return true;
                 else
                     return false;
@@ -59,11 +59,8 @@ namespace UnitTestProject1
         {
             if (token.GetType() == typeof(SkeletonToken))
             {
-                // 
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // 
-                //JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Open && skeletonToken.sOld.rightHandStatus == HandState.Closed)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
                     return true;
                 else
                     return false;

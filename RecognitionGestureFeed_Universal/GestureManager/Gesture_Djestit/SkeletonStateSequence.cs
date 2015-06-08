@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
+// Debug
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
@@ -36,22 +38,17 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                 case TypeToken.End:
                     List<SkeletonToken> t;
                     this.moves.TryGetValue(token.identifier, out t);
+                    int index;
+                    this.m_index.TryGetValue(token.identifier, out index);
 
-                    if (t.Count < this.capacity)//this.moves[(int)token.identifier].tokens.Count() < this.capacity)
+                    if (t.Count < this.capacity)
                         t.Add(token);
-                    //this.moves[(int)token.identifier].tokens.Add(token);
                     else
-                    {
-                        t.Insert(this.m_index[token.identifier], token);/******************************** Modificare */
-                        //this.moves[(int)token.identifier].tokens.Insert(this.m_index[token.identifier], token);
-                    }
+                        t[index] = token;
 
-                    int c;
-                    this.m_index.TryGetValue(token.identifier, out c);
-                    c = (c + 1) % this.capacity;
-                    m_index[token.identifier] = c;
+                    index = (index + 1) % this.capacity;
+                    m_index[token.identifier] = index;
                     break;
-
             }
         }
 

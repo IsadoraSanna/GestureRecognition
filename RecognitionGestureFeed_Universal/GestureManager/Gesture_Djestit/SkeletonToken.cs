@@ -16,7 +16,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
     {
         public Skeleton skeleton;
         public TypeToken type;
-        public Skeleton sOld;
+        public List<SkeletonToken> oldSkeletonTokens;
         public int identifier;
 
         /* Costruttore */

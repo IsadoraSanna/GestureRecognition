@@ -19,7 +19,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /* Attributi */
         public ulong idBody { get; set; }
         public JointType type { get; set; }
-        public Joint joint { get; set; }
         public CameraSpacePoint position { get; set; }
         public Vector4 orientation { get; set; }
         public TrackingState status { get; set; }
@@ -40,7 +39,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         {
             this.idBody = jointInformation.getId();
             this.type = jointInformation.getType();
-            this.joint = jointInformation.getJoint();
             this.position = jointInformation.getPosition();
             this.orientation = jointInformation.getOrientation();
             this.status = jointInformation.getStatus();

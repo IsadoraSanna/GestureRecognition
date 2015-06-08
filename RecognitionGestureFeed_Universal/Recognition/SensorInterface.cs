@@ -26,11 +26,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
            
             if (token.GetType() == typeof(SkeletonToken))
             {
-                //
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                //
-                //JointInformation i = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                //Debug.WriteLine(skeletonToken.skeleton.rightHandStatus);
+                // La gesture inizia se l'utente chiude la mano destra
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
                 {
                     return true;
@@ -45,15 +42,35 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             if (token.GetType() == typeof(SkeletonToken))
             {
-                // 
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                //
+                // Prende dallo SkeletonToken corrente il JointInformation che descrive la mano destra
                 JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                // 
-                JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
+                // Prende dallo SkeletonToken precedente il JointInformation che descrive la mano destra
+                JointInformation jiOld = skeletonToken.oldSkeletonTokens[0].skeleton.getJointInformation(JointType.HandRight);
+                // Quindi calcola la differenza di posizione tra nuovo e vecchio frame
                 float confidence = Math.Abs(jiNew.position.X - jiOld.position.X);
-                //
+                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && (confidence < 0.2))
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
+        internal bool moveY(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // Prende dallo SkeletonToken corrente il JointInformation che descrive la mano destra
+                JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                // Prende dallo SkeletonToken precedente il JointInformation che descrive la mano destra
+                JointInformation jiOld = skeletonToken.oldSkeletonTokens[0].skeleton.getJointInformation(JointType.HandRight);
+                // Quindi calcola la differenza di posizione tra nuovo e vecchio frame
+                float confidenceX = Math.Abs(jiNew.position.X - jiOld.position.X);
+                float confidenceY = Math.Abs(jiNew.position.Y - jiOld.position.Y);
+                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && (confidenceY < 0.2) && confidenceX < 0.01)
                     return true;
                 else
                     return false;
@@ -64,11 +81,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             if (token.GetType() == typeof(SkeletonToken))
             {
-                // 
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // 
-                JointInformation jiOld = skeletonToken.sOld.getJointInformation(JointType.HandRight);
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)// && skeletonToken.sOld.rightHandStatus == HandState.Closed)
+                // La gesture termina quando l'utente apre la mano destra
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
                     return true;
                 else
                     return false;
@@ -78,7 +93,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
         public SensorInterface(AcquisitionManager am)
         {
-            /* Pan Asse x */
+            /* Pan Asse X */
             // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
@@ -88,7 +103,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
-            //termx2.Complete += MoveX;
+            //termx2.Complete += Move;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
@@ -99,14 +114,46 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTermx.Add(iterativex);
             listTermx.Add(termx3);
             Disabling disablingx = new Disabling(listTermx);
-            List<Term> listTerm2 = new List<Term>();
-            listTerm2.Add(termx1);
-            listTerm2.Add(disablingx);
-            Sequence panX = new Sequence(listTerm2);
+            List<Term> listTermx2 = new List<Term>();
+            listTermx2.Add(termx1);
+            listTermx2.Add(disablingx);
+            Sequence panX = new Sequence(listTermx2);
             panX.Complete += PanX;
+            /* Pan Asse Y */
+            // Close
+            GroundTerm termy1 = new GroundTerm();
+            termy1.type = "Start";
+            termy1.accepts = close;
+            //termy1.Complete += Close;
+            // Move
+            GroundTerm termy2 = new GroundTerm();
+            termy2.type = "Move";
+            termy2.accepts = moveY;
+            //termy2.Complete += Move;
+            // Open
+            GroundTerm termy3 = new GroundTerm();
+            termy3.type = "End";
+            termy3.accepts = open;
+            //termy3.Complete += Open;
+            Iterative iterativey = new Iterative(termy2);
+            List<Term> listTermy = new List<Term>();
+            listTermx.Add(iterativey);
+            listTermx.Add(termy3);
+            Disabling disablingy = new Disabling(listTermy);
+            List<Term> listTermy2 = new List<Term>();
+            listTermy2.Add(termy1);
+            listTermy2.Add(disablingx);
+            Sequence panY = new Sequence(listTermy2);
+            panY.Complete += PanY;
 
-            this.sensor = new Sensor(panX, 3);
-            //am.OnSkeletonFrameManaged+= updateJoint;
+            List<Term> listTerm = new List<Term>();
+            
+            listTerm.Add(panY);
+            listTerm.Add(panX);
+            Choice choice = new Choice(listTerm);
+
+            this.sensor = new Sensor(choice, 3);
+            //am.OnFrameManaged += updateSkeleton;
         }
 
         public void updateSkeleton(AcquisitionManager am)
@@ -122,44 +169,35 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     }
                     else
                     {
-                        //Debug.WriteLine("Start");
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
                     }
                 }
                 else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                 {
-                    token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
+                    sensor.generateToken(TypeToken.End, skeleton);
                 }
 
                 if (token != null)
                     this.sensor.root.fire(token);
 
-                if (this.sensor.root.state == expressionState.Error)
+                if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
                     this.sensor.root.reset();
             }
         }
 
-        /*
-        public void removeAllJoints(AcquisitionManager am)
-        {
-            foreach(JointInformation ji in am.skeletonList[0].getListJointInformation())
-            {
-                jointSensor.generateToken(TypeToken.End, ji);
-            }
-        }*/
         void PanX(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("PorcamadonnaX");
+            Debug.WriteLine("Pan X");
         }
         void PanY(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("PorcoddioY");
+            Debug.WriteLine("Pan Y");
         }
         void Close(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho la mano destra chiusa.");
         }
-        void MoveX(object sender, GestureEventArgs t)
+        void Move(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho mosso la mano destra chiusa.");
         }

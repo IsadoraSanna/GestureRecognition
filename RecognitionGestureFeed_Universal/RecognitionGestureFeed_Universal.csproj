@@ -90,6 +90,7 @@
     <Compile Include="GestureManager\Gesture_Djestit\Sensor.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStart.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointStateSequence.cs" />
+    <Compile Include="GestureManager\Gesture_Djestit\SkeletonEventArgs.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\SkeletonToken.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\JointToken.cs" />
