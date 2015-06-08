@@ -28,6 +28,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         public List<JointInformation> joints;
         private List<Bone> bones = new List<Bone>();
         public bool status { get; set; }
+        ///// Prova Test PanX
+        public float positionX;
 
         /// <summary>
         /// Costruttori
@@ -46,6 +48,14 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             boneBuilder(bones);
             // Inizializzo a false lo status
             status = false;
+        }
+        // Prova Test PanX
+        public Skeleton(int i, HandState hrs, float posX)
+        {
+            this.idSkeleton = i;
+            this.rightHandStatus = hrs;
+            this.status = true;
+            this.positionX = posX;
         }
 
         /// <summary>

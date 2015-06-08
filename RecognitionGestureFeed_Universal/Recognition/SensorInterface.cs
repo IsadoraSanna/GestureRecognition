@@ -19,9 +19,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
     public class SensorInterface
     {
         // Attributi
-        public Sensor jointSensor;
-        public Choice choicePan;
-        public Sequence sequence;
+        public Sensor sensor;
 
         internal bool close(Token token)
         {
@@ -106,39 +104,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             Sequence panX = new Sequence(listTerm2);
             panX.Complete += PanX;
 
-
-            /* Pan Asse Y *
-            // Close
-            GroundTerm termy1 = new GroundTerm();
-            termy1.type = "BodyStart";
-            // Move
-            GroundTerm termy2 = new GroundTerm();
-            termy2.type = "BodyMove";
-            // Open
-            GroundTerm termy3 = new GroundTerm();
-            termy3.type = "BodyEnd";
-            Iterative iterativey = new Iterative(termy2);
-            List<Term> listTermy = new List<Term>();
-            listTermy.Add(iterativey);
-            listTermy.Add(termy3);
-            Disabling disablingy = new Disabling(listTermy);
-            List<Term> listTermy2 = new List<Term>();
-            listTerm2.Add(termy1);
-            listTerm2.Add(disablingy);
-            Sequence panY = new Sequence(listTerm2);
-            panY.Complete += PanY;
-            */
-            List<Term> listaPan = new List<Term>();
-            listaPan.Add(panX);
-            //listaPan.Add(panY);
-            
-            //gesture contenente i 2 tipi di pan
-            //this.choicePan = new Choice(listaPan);
-            this.sequence = panX;
-            
-            // Dichiarazione Joint
-            //jointSensor = new Sensor(choicePan, 3);
-            jointSensor = new Sensor(this.sequence, 3);
+            this.sensor = new Sensor(panX, 3);
             //am.OnSkeletonFrameManaged+= updateJoint;
         }
 
@@ -146,55 +112,30 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             foreach(Skeleton skeleton in am.skeletonList)
             {
+                SkeletonToken token = null;
                 if (skeleton.getStatus())
                 {
-                    if (jointSensor.checkSkeleton(skeleton.getIdSkeleton()))
+                    if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                     {
-                        //Debug.WriteLine("Move");
-                        this.sequence.fire((SkeletonToken)jointSensor.generateToken(TypeToken.Move, skeleton));//token = (SkeletonToken)jointSensor.generateToken(TypeToken.Move, skeleton);
+                        token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
                     }
                     else
                     {
                         //Debug.WriteLine("Start");
-                        SkeletonToken token = (SkeletonToken)jointSensor.generateToken(TypeToken.Start, skeleton);
-                        this.sequence.fire(token);//token = (SkeletonToken)jointSensor.generateToken(TypeToken.Start, skeleton);
+                        token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
                     }
                 }
-                else if (jointSensor.checkSkeleton(skeleton.getIdSkeleton()))
+                else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                 {
-                    //Debug.WriteLine("End");
-                    this.sequence.fire((SkeletonToken)jointSensor.generateToken(TypeToken.End, skeleton));//token = (SkeletonToken)jointSensor.generateToken(TypeToken.End, skeleton);
+                    token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
                 }
-                //else if(jointSensor.checkJoint(ji.getType()))
-                //rimuovi token
-                //if(token != null)
-                    //this.choicePan.fire(token);
+
+                if (token != null)
+                    this.sensor.root.fire(token);
             }
         }
 
         /*
-        public void updateJoint(AcquisitionManager am)
-        {       
-            foreach (Skeleton sk in am.skeletonList)
-            {
-                if (sk.getStatus())
-                {
-                    foreach (JointInformation ji in sk.getListJointInformation())
-                    {
-                        if (ji.getStatus() == TrackingState.Tracked)
-                        {
-                            if (jointSensor.checkJoint(ji.getType() + 1))
-                                jointSensor.generateToken(TypeToken.Move, ji);
-                            else
-                                jointSensor.generateToken(TypeToken.Start, ji);
-                        }
-                        //else if(jointSensor.checkJoint(ji.getType()))
-                        //rimuovi token
-                    }
-                    return;
-                }
-            }
-        }
         public void removeAllJoints(AcquisitionManager am)
         {
             foreach(JointInformation ji in am.skeletonList[0].getListJointInformation())

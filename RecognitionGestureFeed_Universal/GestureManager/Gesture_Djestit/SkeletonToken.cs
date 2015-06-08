@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Djestit;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+// Kinect - Prova
+using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
@@ -14,7 +16,6 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
     {
         public Skeleton skeleton;
         public TypeToken type;
-        public List<JointInformation> jointsOld;
         public Skeleton sOld;
         public int identifier;
 
@@ -22,9 +23,8 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         public SkeletonToken(TypeToken type, Skeleton sklt)
         {
             this.skeleton = (Skeleton)sklt.Clone();
-            jointsOld = new List<JointInformation>();
             this.type = type;
-            this.identifier = skeleton.getIdSkeleton();//(int)skeleton.getId();
+            this.identifier = skeleton.getIdSkeleton();
         }
     }
 }

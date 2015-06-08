@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         //public event GestureEventArgs onSkeletonEnd;
         //element...
         private int capacity;
-        private Term root;
+        public Term root;
         public SkeletonStateSequence sequence;
         private List<int> gestureToEvent;
         private List<int> eventToGesture;

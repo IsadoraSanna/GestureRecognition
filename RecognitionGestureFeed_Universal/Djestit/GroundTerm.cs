@@ -27,7 +27,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public virtual bool accepts2(Token token)
         {
-            //Debug.WriteLine("Porcamadonna");
             if (this.accepts != null)
                 return this.accepts(token);
             else
@@ -36,7 +35,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public override bool lookahead(Token token)
         {
-            
             return (this._accepts2(token) && this.accepts2(token));
         }
     }
