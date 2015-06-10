@@ -16,7 +16,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
     {
         public Skeleton skeleton;
         public TypeToken type;
-        public List<SkeletonToken> oldSkeletonTokens;
+        public List<Skeleton> precSkeletons;
         public int identifier;
 
         /* Costruttore */
@@ -24,7 +24,8 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         {
             this.skeleton = (Skeleton)sklt.Clone();
             this.type = type;
-            this.identifier = skeleton.getIdSkeleton();
+            this.precSkeletons = new List<Skeleton>();
+            this.identifier = sklt.getIdSkeleton();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
     /// <summary>
     /// La classe bone rappresenta un osso della classe scheletro
     /// </summary>
-    public class Bone// : Tuple<JointType, JointType>
+    public class Bone : ICloneable// : Tuple<JointType, JointType>
     {
         /* Attributi */
         // Le joint dell'osso (i due estremi)
@@ -101,6 +101,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             
             // Ritorna l'angolo appena calcolato
             return degree * (180.0 / Math.PI);
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

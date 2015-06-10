@@ -20,6 +20,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
     {
         // Attributi
         public Sensor sensor;
+        public int i = 0;
 
         internal bool close(Token token)
         {
@@ -43,14 +44,21 @@ namespace RecognitionGestureFeed_Universal.Recognition
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // Prende dallo SkeletonToken corrente il JointInformation che descrive la mano destra
-                JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                // Prende dallo SkeletonToken precedente il JointInformation che descrive la mano destra
-                JointInformation jiOld = skeletonToken.oldSkeletonTokens[0].skeleton.getJointInformation(JointType.HandRight);
-                // Quindi calcola la differenza di posizione tra nuovo e vecchio frame
-                float confidence = Math.Abs(jiNew.position.X - jiOld.position.X);
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && (confidence < 0.2))
+                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                List<float> listConfidenceX = new List<float>();
+                List<float> listConfidenceY = new List<float>();
+                // Calcolo la differenza lungo l'asse X e l'asse Y
+                foreach(Skeleton sOld in skeletonToken.precSkeletons)
+                {
+                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
+                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
+                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+                }
+                //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
                     return true;
                 else
                     return false;
@@ -62,15 +70,20 @@ namespace RecognitionGestureFeed_Universal.Recognition
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // Prende dallo SkeletonToken corrente il JointInformation che descrive la mano destra
-                JointInformation jiNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                // Prende dallo SkeletonToken precedente il JointInformation che descrive la mano destra
-                JointInformation jiOld = skeletonToken.oldSkeletonTokens[0].skeleton.getJointInformation(JointType.HandRight);
-                // Quindi calcola la differenza di posizione tra nuovo e vecchio frame
-                float confidenceX = Math.Abs(jiNew.position.X - jiOld.position.X);
-                float confidenceY = Math.Abs(jiNew.position.Y - jiOld.position.Y);
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && (confidenceY < 0.2) && confidenceX < 0.01)
+                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                List<float> listConfidenceX = new List<float>();
+                List<float> listConfidenceY = new List<float>();
+                // Calcolo la differenza lungo l'asse X e l'asse Y
+                foreach (Skeleton sOld in skeletonToken.precSkeletons)
+                {
+                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
+                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
+                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+                }
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
                     return true;
                 else
                     return false;
@@ -137,19 +150,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
             //termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();
-            listTermx.Add(iterativey);
-            listTermx.Add(termy3);
+            listTermy.Add(iterativey);
+            listTermy.Add(termy3);
             Disabling disablingy = new Disabling(listTermy);
             List<Term> listTermy2 = new List<Term>();
             listTermy2.Add(termy1);
-            listTermy2.Add(disablingx);
+            listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
             panY.Complete += PanY;
 
             List<Term> listTerm = new List<Term>();
-            
-            listTerm.Add(panY);
             listTerm.Add(panX);
+            listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
 
             this.sensor = new Sensor(choice, 3);
@@ -163,6 +175,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 SkeletonToken token = null;
                 if (skeleton.getStatus())
                 {
+                    i++;
+                    if(i > 100)
+                        i++;
+
                     if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                     {
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
@@ -176,9 +192,12 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     sensor.generateToken(TypeToken.End, skeleton);
                 }
+                
 
                 if (token != null)
+                {
                     this.sensor.root.fire(token);
+                }
 
                 if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
                     this.sensor.root.reset();
@@ -199,11 +218,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
         }
         void Move(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Ho mosso la mano destra chiusa.");
+            Debug.WriteLine("Ho mosso la mano destra.");
         }
         void Open(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Ho la mano destra chiusa.");
+            Debug.WriteLine("Ho la mano destra aperta.");
         }
 
     }

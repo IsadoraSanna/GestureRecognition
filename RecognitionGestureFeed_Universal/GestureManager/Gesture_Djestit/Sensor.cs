@@ -43,15 +43,15 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                     break;
                 case TypeToken.Move:
                     // Genero l'evento onSkeletonStart
-                    _onSkeletonStart(e);
+                    _onSkeletonMove(e);
                     // Copio la lista di vecchi token
                     List<SkeletonToken> listToken;
                     sequence.moves.TryGetValue(token.identifier, out listToken);
-                    token.oldSkeletonTokens = listToken;
+                    token.precSkeletons = listToken.Select(item =>(Skeleton)item.skeleton.Clone()).ToList();
                     break;
                 case TypeToken.End:
                     // Genero l'evento onSkeletonStart
-                    _onSkeletonStart(e);
+                    _onSkeletonEnd(e);
                     // Rimuovo lo scheletro in questione dalla mappa
                     sequence.removeById(token.identifier);
                     break;

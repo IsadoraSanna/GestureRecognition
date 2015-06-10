@@ -20,7 +20,7 @@ namespace UnitTestProject1
     [TestClass]
     public class Djestit_Skeleton
     {
-
+        /*
         internal bool close(Token token)
         {
             if (token.GetType() == typeof(SkeletonToken))
@@ -121,7 +121,7 @@ namespace UnitTestProject1
             Sequence panX = new Sequence(listTerm2);
             panX.Complete += PanX;
             // Assoccio l'espressione panX al sensor
-            sensor = new Sensor(panX, 3);
+            sensor = new Sensor(panX, 5);
 
             /// Simulazione Gesti
             // Simulo 1 gesto di start
@@ -135,8 +135,11 @@ namespace UnitTestProject1
                 Skeleton sMove = null;
                 /*if (i == 140)
                     sMove = new Skeleton(0, HandState.Closed, (0.0f - 1000f));
-                else*/
-                    sMove = new Skeleton(0, HandState.Closed, (1f + i));
+                else*
+                if (i == 50) 
+                    i = 51;
+                sMove = new Skeleton(0, HandState.Closed, (1f + i));
+                    
 
                 // Creo il gesto
                 SkeletonToken tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
@@ -151,6 +154,6 @@ namespace UnitTestProject1
 
             /// Controllo lo stato dell'espressione
             Assert.IsTrue(sensor.root.state == expressionState.Complete, "Pan X eseguita");
-        }
+        }*/
     }
 }

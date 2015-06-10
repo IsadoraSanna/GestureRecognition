@@ -42,9 +42,13 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
                     this.m_index.TryGetValue(token.identifier, out index);
 
                     if (t.Count < this.capacity)
+                    {
                         t.Add(token);
+                        index++;
+                    }
                     else
                         t[index] = token;
+
 
                     index = (index + 1) % this.capacity;
                     m_index[token.identifier] = index;

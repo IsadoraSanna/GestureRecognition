@@ -28,12 +28,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         public List<JointInformation> joints;
         private List<Bone> bones = new List<Bone>();
         public bool status { get; set; }
-        ///// Prova Test PanX
-        public float positionX;
+        public TimeSpan timeSpan;
 
         /// <summary>
-        /// Costruttori
+        /// Costruttore.
         /// </summary>
+        /// <param name="i"></param>
         public Skeleton(int i)
         {
             // Inizializzo l'idBody e l'idSkeleton
@@ -49,20 +49,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Inizializzo a false lo status
             status = false;
         }
-        // Prova Test PanX
-        public Skeleton(int i, HandState hrs, float posX)
-        {
-            this.idSkeleton = i;
-            this.rightHandStatus = hrs;
-            this.status = true;
-            this.positionX = posX;
-        }
 
         /// <summary>
         /// Funzione di aggiornamento delle compenenti dello scheletro
         /// </summary>
         /// <param name="body"></param>
-        public void updateSkeleton(Body body, int idSkeleton)
+        public void updateSkeleton(Body body, int idSkeleton, TimeSpan ts)
         {
             // Aggiorno lo stato
             if (body.IsTracked)
@@ -96,6 +88,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                     joints.Add(new JointInformation(idBody, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
                 }
             }
+            timeSpan = ts;
         }
 
         /// <summary>
@@ -136,7 +129,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// <returns></returns>
         public JointInformation getJointInformation(JointType jointType)
         {
-            return this.joints[(int)jointType];
+            return (JointInformation)this.joints[(int)jointType].Clone();
         } 
         /// <summary>
         /// Restituisci la lista di ossa associata a quello scheletro
@@ -153,7 +146,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         public List<JointInformation> getListJointInformation()
         {
             if (this.getStatus())
-                return this.joints;
+                return this.joints;//.Select(item => (JointInformation)item.Clone()).ToList();
             else
                 return null;
         }
@@ -171,10 +164,16 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// <returns></returns>
         public object Clone()
         {
-            return this.MemberwiseClone();
+            // Creo una prima copia dello scheletro
+            Skeleton clone = (Skeleton)this.MemberwiseClone();
+            // Creo una copia delle liste
+            this.joints = this.joints.Select(item => (JointInformation)item.Clone()).ToList();
+            this.bones = this.bones.Select(item => (Bone)item.Clone()).ToList();
+            // Restituisco il valore
+            return clone;
         }
         
-        #region utilities
+        #region bone
         private static void boneBuilder(List<Bone> bones)
         {
             // Torso

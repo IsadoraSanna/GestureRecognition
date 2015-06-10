@@ -97,7 +97,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
                             // entire expression is completed
                             this.complete(token);
                             return;
-
                         case expressionState.Error:
                             // this case is never executed, since
                             // feedToken excludes the subterms in error state
