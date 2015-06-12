@@ -8,11 +8,15 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class GestureEventArgs : EventArgs
     {
-        public readonly Term t;
+        /* Attributi */
+        public readonly Term term;
+        public readonly Token token;
 
-        public GestureEventArgs(Term t)
+        /* Costruttore */
+        public GestureEventArgs(Term term, Token token)
         {
-            this.t = t;
+            this.term = term;
+            this.token = token;
         }
     }
 }

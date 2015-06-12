@@ -16,10 +16,10 @@ namespace RecognitionGestureFeed_Universal.GestureManager
     {
         /**** Attributi ****/
         // Valore di confidenza entro cui deve ricadere il jointInformation
-        double confidenceMin = 0.7;        
+        //double confidenceMin = 0.7;        
         // Lista di gesture lette dal database
         private List<GestureXML> gestureList = new List<GestureXML>();
-        string path2 = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
+        //string path2 = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
 
         /**** Costruttore ****/
         public GestureDetectorXML(string path){

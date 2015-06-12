@@ -12,6 +12,13 @@ using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
 {
+    public enum TypeToken
+    {
+        Start,
+        Move,
+        End
+    }
+
     public class SkeletonToken : Token
     {
         public Skeleton skeleton;

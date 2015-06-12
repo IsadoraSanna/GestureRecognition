@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 // Kinect
 using Microsoft.Kinect;
+using Microsoft.Kinect.Face;
 // RecognitionGestureFeed
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition.Stream;
@@ -36,7 +37,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
     public class AcquisitionManager
     {
-        /****** Attributi ******/
+        /**** Eventi ****/
         // Evento che indica quando un frame è stato gestito
         public event FrameManaged frameManaged;
         public event FrameManaged bodyFrameManaged;
@@ -45,16 +46,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public event FrameManaged colorFrameManaged;
         public event FrameManaged skeletonFrameManaged;
 
+        /****** Attributi ******/
         // Variabile usata per la comunicazione con la kinect
         private KinectSensor kinectSensor = null;
-
         // Numero massimo di scheletri gestibili contemporaneamente
-        internal const ulong n_max_skeleton = 6;
+        internal int numSkeletons;
         //private IList<Body> bodyList; // Lista di Body
         internal Body[] bodyList = null;
         // Array che contiene gli n_max_skeleton rilevati dalla kinect 
-        internal Skeleton[] skeletonList = new Skeleton[n_max_skeleton];
-
+        internal Skeleton[] skeletonList;
+        // Array che contiene i colori con cui verranno rappresentati i vari scheletri su bitmap
+        private Pen[] skeletonColors = {(new Pen(Brushes.Red, 6)), (new Pen(Brushes.Orange, 6)), (new Pen(Brushes.Green, 6)), (new Pen(Brushes.Blue, 6)), (new Pen(Brushes.Indigo, 6)), (new Pen(Brushes.Violet, 6))};
         /// <summary>
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
@@ -69,11 +71,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /****** Costruttore ******/
         public AcquisitionManager(KinectSensor ks)
         {
-            kinectSensor = ks;
+            // Associo a kinectSensor la variabile KinectSensor in input
+            this.kinectSensor = ks;
 
+            // Numero massimo di scheletri gestibili
+            this.numSkeletons = kinectSensor.BodyFrameSource.BodyCount;           
             // Iniziliazza l'array di skeleton
-            for (int i = 0; i < (int)n_max_skeleton; i++)
-                skeletonList[i] = new Skeleton(i);
+            this.skeletonList = new Skeleton[this.numSkeletons];
+            for (int index = 0; index < this.numSkeletons; index++)
+            {
+                // Creo il singolo scheletro
+                skeletonList[index] = new Skeleton(index, kinectSensor, skeletonColors[index]);
+            }
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
                 this.bodyList = new Body[kinectSensor.BodyFrameSource.BodyCount];
@@ -121,7 +130,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     colorData.update(colorFrame);
-                    //this.OnColorFrameManaged(this);
+                    this.OnColorFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Depth frame
@@ -132,7 +141,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se il depthFrame non è vuoto, allora aggiorno il contenuto dell'oggetto depthData
                     depthData.update(depthFrame);
-                    //this.OnDepthFrameManaged(this);
+                    this.OnDepthFrameManaged(this);
                 }
             }
             // Nel caso in cui venga letto un Infrared frame
@@ -143,7 +152,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     infraredData.update(infraredFrame);
-                    //this.OnInfraredFrameManaged(this);
+                    this.OnInfraredFrameManaged(this);
                 }   
             }
             // Nel caso in cui venga letto un LongExposureInfrared frame
@@ -163,23 +172,28 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Aggiorno la lista con i nuovi elementi
                     bodyFrame.GetAndRefreshBodyData(bodyList);
-                    /// Indice per accedere ai vari elementi dell'array di scheletri
-                    int index = 0;
                     // Aggiorno lo scheletro associato ad ogni body
-                    foreach (Body body in this.bodyList)
+                    for (int index = 0; index < this.numSkeletons; index++)
+                    {
+                        if(bodyList[index].IsTracked)
+                            skeletonList[index].updateSkeleton(bodyList[index], bodyFrame.RelativeTime);
+                        else
+                            skeletonList[index].updateSkeleton();
+                    }
+                    /*foreach (Body body in this.bodyList)
                     {
                         /// Se il corpo in oggetto è effettivamente presente, 
                         /// allora aggiorno l'oggetto di tipo Skeleton 
                         /// (che contiene tutte le informazioni sul corpo rilevato)
                         if (body.IsTracked)
-                            skeletonList[index].updateSkeleton(body, index, bodyFrame.RelativeTime);
+                            skeletonList[index].updateSkeleton(body, bodyFrame.RelativeTime);
                         else
                             skeletonList[index].updateSkeleton();
                         /// Aggiorno l'indice
                         index++;
-                    }                    
+                    }      */              
                 }
-                //this.OnSkeletonFrameManaged(this);
+                this.OnSkeletonFrameManaged(this);
             }
             //
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
@@ -187,7 +201,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 if(bodyIndexFrame != null)
                 {
                     bodyIndexData.update(bodyIndexFrame);
-                    //this.OnBodyFrameManaged(this);
+                    this.OnBodyFrameManaged(this);
                 }
             }
             

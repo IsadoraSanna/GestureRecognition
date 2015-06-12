@@ -18,10 +18,9 @@ namespace RecognitionGestureFeed_Universal.GestureManager
 {
     public class AddNewGestureXML
     {
-        // Attributi
-        string path2 = "C:/Users/BatCave/Copy/Tesi/DatabaseGesture/DatabaseGesture_1.xml";
+        /* Attributi */
 
-        // Costruttore
+        /* Costruttore */
         public AddNewGestureXML(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList, string path)
         {
             // Inizializzo la nuova GestureXML che verrà inserita nel database
@@ -58,7 +57,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager
             }
         }
 
-        // Metodi
+        /* Metodi */
         private void SerializeToXML(GestureXML newGesture, string path)
         {
             // Serializer usato per leggere/scrivere dal file

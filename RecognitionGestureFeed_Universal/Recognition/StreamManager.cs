@@ -22,8 +22,16 @@ using System.ComponentModel;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    public delegate void BitmapUpdate(WriteableBitmap bitmap);
+
     public static class StreamManager
     {
+        /**** Eventi ****/
+
         /**** Attributi ****/
         // Immagine che contiene il frame da stampare (depth, infrared, color e skeleton)
         private static WriteableBitmap bodyIndexBitmap = null;
@@ -31,12 +39,59 @@ namespace RecognitionGestureFeed_Universal.Recognition
         private static WriteableBitmap infraredBitmap = null;
         private static WriteableBitmap colorBitmap = null;
         private static WriteableBitmap skeletonBitmap = null;
+        private static ImageSource skeletonBitmapProve = null;
         // Mapper che viene utilizzato per passare da una rappresentazione all'altra.
         private static CoordinateMapper coordinateMapper;
 
         /**** Metodi ****/
         /// <summary>
-        /// Inizializzo le WritableBitmap e associo all'evento frameManaged il suo handler.
+        /// Gestisce la sola stampa del BodyIndexStream.
+        /// </summary>
+        /// <param name="am"></param>
+        public static void startBodyIndexStream(AcquisitionManager am)
+        {
+            initBodyIndexStream(am);
+            am.bodyFrameManaged += updateBodyIndexStream;
+        }
+        /// <summary>
+        /// Gestisce la sola stampa del DepthStream.
+        /// </summary>
+        /// <param name="am"></param>
+        public static void startDepthStream(AcquisitionManager am)
+        {
+            initDepthStream(am);
+            am.frameManaged += updateDepthStream;
+        }
+        /// <summary>
+        /// Gestisce la sola stampa del InfraredStream.
+        /// </summary>
+        /// <param name="am"></param>
+        public static void startInfraredStream(AcquisitionManager am)
+        {
+            initInfraredStream(am);
+            am.frameManaged += updateInfraredStream;
+        }
+        /// <summary>
+        /// Gestisce la sola stampa del ColorStream.
+        /// </summary>
+        /// <param name="am"></param>
+        public static void startColorStream(AcquisitionManager am)
+        {
+            initColorStream(am);
+            am.frameManaged += updateColorStream;
+        }
+        /// <summary>
+        /// Gestisce la sola stampa del SkeletonStream.
+        /// </summary>
+        /// <param name="am"></param>
+        /// <param name="kinectSensor"></param>
+        public static void startSkeletonStream(AcquisitionManager am, KinectSensor kinectSensor)
+        {
+            initSkeletonStream(am, kinectSensor);
+            am.frameManaged += updateSkeletonStream;
+        }
+        /// <summary>
+        /// Gestisce la stampa di tutte le WritableBitmap e associo all'evento frameManaged il suo handler.
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
@@ -47,12 +102,52 @@ namespace RecognitionGestureFeed_Universal.Recognition
             initDepthStream(am);
             initInfraredStream(am);
             initColorStream(am);
-            initSkeletonStream(kinectSensor);
+            initSkeletonStream(am, kinectSensor);
 
             // Associo l'handler updateStream all'evento frameManaged
             am.frameManaged += updateAllStream;
         }
 
+        /// <summary>
+        /// Aggiorna solo la stampa del BodyIndexStream
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void updateBodyIndexStream(AcquisitionManager sender)
+        {
+            bodyIndexBitmap.convertBitmap(sender.bodyIndexData);
+        }
+        /// <summary>
+        /// Aggiorna solo la stampa del DepthStream
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void updateDepthStream(AcquisitionManager sender)
+        {
+            depthBitmap.convertBitmap(sender.depthData);
+        }
+        /// <summary>
+        /// Aggiorna solo la stampa dell'InfraredStream
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void updateInfraredStream(AcquisitionManager sender)
+        {
+            infraredBitmap.convertBitmap(sender.infraredData);
+        }
+        /// <summary>
+        /// Aggiorna solo la stampa del ColorStream
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void updateColorStream(AcquisitionManager sender)
+        {
+            colorBitmap.convertBitmap(sender.colorData);
+        }
+        /// <summary>
+        /// Aggiorna solo la stampa dello SkeletonStream
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void updateSkeletonStream(AcquisitionManager sender)
+        {
+            skeletonBitmap.drawSkeletons(sender.skeletonList, coordinateMapper);
+        }
         /// <summary>
         /// Aggiorno le WritableBitmap in base ai nuovi valori acquisiti dalla kinect.
         /// </summary>
@@ -63,8 +158,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
  	        depthBitmap.convertBitmap(sender.depthData);
             infraredBitmap.convertBitmap(sender.infraredData);
             colorBitmap.convertBitmap(sender.colorData);
-            skeletonBitmap.drawSkeletons(sender.skeletonList, coordinateMapper);
+            skeletonBitmapProve = skeletonBitmap.drawSkeletons(sender.skeletonList, coordinateMapper);
         }
+
         #region Bitmap Stream
         /****** Metodi ******/
         /// <summary>
@@ -83,8 +179,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 case DisplayFrameType.Color:
                     return colorBitmap;
                 case DisplayFrameType.Body:
-                    //return this.skeletonImage as BitmapImage;
-                    return skeletonBitmap;
+                    return skeletonBitmapProve;
                 case DisplayFrameType.BodyIndex:
                     return bodyIndexBitmap;
                 default:
@@ -131,6 +226,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
         #endregion
 
         #region Init Stream
+        /// <summary>
+        /// Inizializza bodyIndexBitmap
+        /// </summary>
+        /// <param name="am"></param>
         private static void initBodyIndexStream(AcquisitionManager am)
         {
             bodyIndexBitmap = new WriteableBitmap(am.bodyIndexData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
@@ -165,60 +264,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <summary>
         /// Inizializza skeletonBitmap
         /// </summary>
-        private static void initSkeletonStream(KinectSensor kinectSensor)
+        private static void initSkeletonStream(AcquisitionManager am, KinectSensor kinectSensor)
         {
-            skeletonBitmap = new WriteableBitmap(800, 600, 96.0, 96.0, PixelFormats.Bgr32, null);
+            skeletonBitmap = new WriteableBitmap(am.depthData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
+            skeletonBitmapProve = new WriteableBitmap(am.depthData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
             // Prendo dalla variabile kinectSensor, il CoordinateMapper che verrà usata per la stampa degli scheletri
             coordinateMapper = kinectSensor.CoordinateMapper;
         }
         #endregion Init Stream
-
-        /************************************************** In Prova *********************************/
-        public static void startBodyIndexStream(AcquisitionManager am)
-        {
-            initBodyIndexStream(am);
-            am.bodyFrameManaged += updateBodyIndexStream;
-        }
-        public static void startDepthStream(AcquisitionManager am)
-        {
-            initDepthStream(am);
-            am.frameManaged += updateDepthStream;
-        }
-        public static void startInfraredStream(AcquisitionManager am)
-        {
-            initInfraredStream(am);
-            am.frameManaged += updateInfraredStream;
-        }
-        public static void startColorStream(AcquisitionManager am)
-        {
-            initColorStream(am);
-            am.frameManaged += updateColorStream;
-        }
-        public static void startSkeletonStream(AcquisitionManager am, KinectSensor kinectSensor)
-        {
-            initSkeletonStream(kinectSensor);
-            am.frameManaged += updateSkeletonStream;
-        }
-
-        private static void updateBodyIndexStream(AcquisitionManager sender)
-        {
-            bodyIndexBitmap.convertBitmap(sender.bodyIndexData);
-        }
-        private static void updateDepthStream(AcquisitionManager sender)
-        {
-            depthBitmap.convertBitmap(sender.depthData);
-        }
-        private static void updateInfraredStream(AcquisitionManager sender)
-        {
-            infraredBitmap.convertBitmap(sender.infraredData);
-        }
-        private static void updateColorStream(AcquisitionManager sender)
-        {
-            colorBitmap.convertBitmap(sender.colorData);
-        }
-        private static void updateSkeletonStream(AcquisitionManager sender)
-        {
-            skeletonBitmap.drawSkeletons(sender.skeletonList, coordinateMapper);
-        }
     }
 }

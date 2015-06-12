@@ -10,6 +10,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class Token
     {
-        public string type { get; set; }
+
     }
 }

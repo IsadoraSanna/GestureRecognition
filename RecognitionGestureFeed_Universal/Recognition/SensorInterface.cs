@@ -19,8 +19,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
     public class SensorInterface
     {
         // Attributi
-        public Sensor sensor;
-        public int i = 0;
+        internal Sensor sensor;
 
         internal bool close(Token token)
         {
@@ -175,10 +174,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 SkeletonToken token = null;
                 if (skeleton.getStatus())
                 {
-                    i++;
-                    if(i > 100)
-                        i++;
-
                     if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                     {
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
