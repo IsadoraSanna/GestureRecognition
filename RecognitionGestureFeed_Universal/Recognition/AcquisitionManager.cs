@@ -69,7 +69,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
         SensorInterface s = null;
         /****** Costruttore ******/
-        public AcquisitionManager(KinectSensor ks)
+        public AcquisitionManager(KinectSensor ks, FrameSourceTypes enabledFrameSourceTypes)
         {
             // Associo a kinectSensor la variabile KinectSensor in input
             this.kinectSensor = ks;
@@ -104,7 +104,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Attivo il lettore di multiframe
-            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body | FrameSourceTypes.BodyIndex);
+            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(enabledFrameSourceTypes);//FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body | FrameSourceTypes.BodyIndex);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
 
@@ -179,19 +179,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                             skeletonList[index].updateSkeleton(bodyList[index], bodyFrame.RelativeTime);
                         else
                             skeletonList[index].updateSkeleton();
-                    }
-                    /*foreach (Body body in this.bodyList)
-                    {
-                        /// Se il corpo in oggetto è effettivamente presente, 
-                        /// allora aggiorno l'oggetto di tipo Skeleton 
-                        /// (che contiene tutte le informazioni sul corpo rilevato)
-                        if (body.IsTracked)
-                            skeletonList[index].updateSkeleton(body, bodyFrame.RelativeTime);
-                        else
-                            skeletonList[index].updateSkeleton();
-                        /// Aggiorno l'indice
-                        index++;
-                    }      */              
+                    }             
                 }
                 this.OnSkeletonFrameManaged(this);
             }
