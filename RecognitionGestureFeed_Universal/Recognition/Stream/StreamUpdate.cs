@@ -19,6 +19,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
 {
     public static class StreamUpdate
     {
+        //private static DrawingGroup drawingGroup = new DrawingGroup();
+        //private static ImageSource imageSkeleton = new DrawingImage(drawingGroup);
         /* Infrared Data */
         // The highest value that can be returned in the InfraredFrame.
         // It is cast to a float for readability in the visualization code.
@@ -207,108 +209,32 @@ namespace RecognitionGestureFeed_Universal.Recognition.Stream
             bitmap.Unlock();
         }
 
-        static public DrawingGroup m = new DrawingGroup();
-        static ImageSource imageSkeleton = new DrawingImage(m);
         /// <summary>
         /// Disegna lo scheletro
         /// </summary>
         /// <param name="skeleton"></param>
         /// <param name="drawingContext"></param>
-        public static ImageSource drawSkeletons(this WriteableBitmap bitmap, Skeleton[] skeletonList, CoordinateMapper coordinateMapper)
-        //public static ImageSource drawSkeletons(Skeleton[] skeletonList, double width, double height, CoordinateMapper coordinateMapper)
+        //public static ImageSource drawSkeletons(this ImageSource imageSource, DrawingGroup drawingGroup, Skeleton[] skeletonList, CoordinateMapper coordinateMapper)
+        public static void drawSkeletons(this ImageSource imageSource, Skeleton[] skeletonList, DrawingGroup drawingGroup, CoordinateMapper coordinateMapper)
         {
-            using (DrawingContext dc = m.Open())
+            using (DrawingContext dc = drawingGroup.Open())
             {
                 // Creo uno sfondo nero per settare la dimensione del render (serve per la stampa degli scheletri)
                 dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, 1024, 800));
-                // Creo uno sfondo nero
-                bitmap.Clear(Colors.Black);
 
                 // Disegno le ossa e le joints
                 foreach (Skeleton skeleton in skeletonList)
                 {
                     if (skeleton.getStatus())
                     {
-                        bitmap.drawBones(skeleton, coordinateMapper);
                         dc.drawBones(skeleton, coordinateMapper);
                     }
                 }
                 // prevent drawing outside of our render area
-                m.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, 1024, 800));
-            }
-            return imageSkeleton;
-        }
-
-        /// <summary>
-        /// drawBones è la funzione che dato uno scheletro e un DrawingContext disegna le varie ossa, disegnando
-        /// una linea da un estremo all'altro, e le varie joints (come punti).
-        /// </summary>
-        /// <param name="skeleton"></param>
-        /// <param name="drawingContext"></param>
-        //private static void drawBones(this Skeleton skeleton, DrawingContext drawingContext, CoordinateMapper coordinateMapper)
-        private static void drawBones(this WriteableBitmap bitmap, Skeleton skeleton, CoordinateMapper coordinateMapper)
-        {
-            Point point0, point1;
-            JointInformation joint0, joint1;
-
-            // Prendo la lista dallo scheletro
-            List<Bone> bones = skeleton.getBones();
-            // Creo una lista di tuple, in cui per ogni jointType indichiamo il suo point
-            List<Tuple<JointType, Point>> jointCoordinate = new List<Tuple<JointType, Point>>();
-
-            // Determino per ogni joint in Skeleton la loro effettiva posizione
-            foreach (var joint in skeleton.getListJointInformation())
-            {
-                /// Position è la variabile che conterrà i dati relativi alla posizione del joint
-                CameraSpacePoint position = joint.getPosition();
-                //
-                if (position.Z < 0)
-                    position.Z = InferredZPositionClamp;
-
-                /// depthSpacePoint (that represents pixel coordinates within a depth image) è la variabile costruita a partire dal coordinateMapper (ottenuto dalla kinect) e dall'oggetto position
-                DepthSpacePoint depthSpacePoint = coordinateMapper.MapCameraPointToDepthSpace(position);
-                // point è l'oggetto costruito a partire dalle coordinate X e Y di depthSpacePoint
-                Point point = new Point(depthSpacePoint.X, depthSpacePoint.Y);
-                // Quindi, aggiungo nella lista il JointType e il relativo point. (Creiamo una lista di tuple(JointType, Point) per poter poi accedere più 
-                // facilmente all'oggetto point (che verrà usato per la stampa del corpo e delle joint stesse).
-                jointCoordinate.Add(new Tuple<JointType, Point>(joint.getType(), point));
-            }
-            // Per ogni osso presente nella lista bones
-            foreach (var bone in bones)
-            {
-                joint0 = skeleton.getJointInformation(bone.start);
-                joint1 = skeleton.getJointInformation(bone.end);
-                /// Prendo i due position associati ai JointType che sono estremi dell'osso, ovvero:
-                /// prendo dalla lista jointCoordinate il secondo elemento della tupla (Point, ovvero le coordinate del punto) 
-                /// che è associato al JoinType che forma l'osso. 
-                point0 = jointCoordinate[(int)bone.start].Item2;
-                point1 = jointCoordinate[(int)bone.end].Item2;
-                // Se entrambe le joint sono rilevate, allora disegno l'osso,
-                // altrimenti la disegno ma in maniera molto più leggera.
-                if (joint0.getStatus() == TrackingState.Tracked && joint1.getStatus() == TrackingState.Tracked)
-                    bitmap.DrawLineAa((int)point0.X, (int)point0.Y, (int)point1.X, (int)point1.Y, Colors.Red, 6);
-                    ///****drawingContext.DrawLine(penTracked, point0, point1);
-                else
-                    bitmap.DrawLineAa((int)point0.X, (int)point0.Y, (int)point1.X, (int)point1.Y, Colors.LightGray, 1);
-                    ///****drawingContext.DrawLine(penNotTracked, point0, point1);
-            }
-            // Disegna le palline delle joints
-            foreach (JointInformation jointInformation in skeleton.getListJointInformation())
-            {
-                // TrackingState
-                TrackingState trackingState = jointInformation.getStatus();
-                // Prendi il point
-                Point point = jointCoordinate[(int)jointInformation.getType()].Item2;
-                // Se il Joint è tracciato, allora lo disegno
-                if (trackingState == TrackingState.Tracked)
-                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 3, 3, Colors.Aquamarine);
-                    ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, trackedJointThickness, trackedJointThickness);
-                // Se il Joint è nello stato Inferred allora lo disegno, però con 
-                else if (trackingState == TrackingState.Inferred)
-                    bitmap.FillEllipseCentered((int)point.X, (int)point.Y, 1, 1, Colors.Aquamarine);
-                    ///****drawingContext.DrawEllipse(trackedJointBrush, null, point, inferredJointThickness, inferredJointThickness);
+                drawingGroup.ClipGeometry = new RectangleGeometry(new Rect(0.0, 0.0, 1024, 800));
             }
         }
+
         /// <summary>
         /// drawBones è la funzione che dato uno scheletro e un DrawingContext disegna le varie ossa, disegnando
         /// una linea da un estremo all'altro, e le varie joints (come punti).

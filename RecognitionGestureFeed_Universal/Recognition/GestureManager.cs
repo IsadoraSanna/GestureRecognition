@@ -37,7 +37,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
 
             // Associo l'handler updateStream all'evento frameManaged
-            am.frameManaged += updateGesture;
+            am.FrameManaged += updateGesture;
         }
 
         public static void updateGesture(AcquisitionManager sender)

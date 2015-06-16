@@ -39,12 +39,12 @@ namespace RecognitionGestureFeed_Universal.Recognition
     {
         /**** Eventi ****/
         // Evento che indica quando un frame è stato gestito
-        public event FrameManaged frameManaged;
-        public event FrameManaged bodyFrameManaged;
-        public event FrameManaged depthFrameManaged;
-        public event FrameManaged infraredFrameManaged;
-        public event FrameManaged colorFrameManaged;
-        public event FrameManaged skeletonFrameManaged;
+        public event FrameManaged FrameManaged;
+        public event FrameManaged BodyFrameManaged;
+        public event FrameManaged DepthFrameManaged;
+        public event FrameManaged InfraredFrameManaged;
+        public event FrameManaged ColorFrameManaged;
+        public event FrameManaged SkeletonFrameManaged;
 
         /****** Attributi ******/
         // Variabile usata per la comunicazione con la kinect
@@ -229,7 +229,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender">Passa in input l'oggetto di tipo AcquisitionManager, che contiene tutte le informazioni necessarie per la stampa.</param>
         protected virtual void OnFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = frameManaged;
+            FrameManaged handler = FrameManaged;
             if (handler != null)
                 handler(sender);
         }
@@ -239,7 +239,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         protected virtual void OnBodyFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = depthFrameManaged;
+            FrameManaged handler = DepthFrameManaged;
             if (handler != null)
                 handler(sender);
         }
@@ -249,7 +249,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         protected virtual void OnDepthFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = bodyFrameManaged;
+            FrameManaged handler = BodyFrameManaged;
             if (handler != null)
                 handler(sender);
         }
@@ -259,7 +259,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         protected virtual void OnInfraredFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = infraredFrameManaged;
+            FrameManaged handler = InfraredFrameManaged;
             if (handler != null)
                 handler(sender);
         }
@@ -269,7 +269,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         protected virtual void OnColorFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = colorFrameManaged;
+            FrameManaged handler = ColorFrameManaged;
             if (handler != null)
                 handler(sender);
         }
@@ -279,7 +279,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <param name="sender"></param>
         protected virtual void OnSkeletonFrameManaged(AcquisitionManager sender)
         {
-            FrameManaged handler = skeletonFrameManaged;
+            FrameManaged handler = SkeletonFrameManaged;
             if (handler != null)
                 handler(sender);
         }
