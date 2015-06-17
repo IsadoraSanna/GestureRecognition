@@ -19,16 +19,6 @@ using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
-    // Indentifico la tipologia di dati che voglio stampare.
-    public enum DisplayFrameType
-    {
-        Body,
-        BodyIndex,
-        Color,
-        Infrared,
-        Depth
-    }
-
     /// <summary>
     /// Delegate per l'evento di tipo FrameManaged.
     /// </summary>
@@ -48,7 +38,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
         /****** Attributi ******/
         // Variabile usata per la comunicazione con la kinect
-        private KinectSensor kinectSensor = null;
+        internal KinectSensor kinectSensor = null;
         // Numero massimo di scheletri gestibili contemporaneamente
         internal int numSkeletons;
         //private IList<Body> bodyList; // Lista di Body
@@ -66,16 +56,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
         internal DepthData depthData = null;
         internal InfraredData infraredData = null;
         internal LongExposureInfraredData longExposureInfraredData = null;
+        // Reader utilizzato per selezionare e leggere i frame in arrivo dalla kinect
+        MultiSourceFrameReader multiSourceFrameReader = null;
 
         SensorInterface s = null;
         /****** Costruttore ******/
-        public AcquisitionManager(KinectSensor ks, FrameSourceTypes enabledFrameSourceTypes)
+        public AcquisitionManager(KinectSensor kinectSensor, FrameSourceTypes enabledFrameSourceTypes)
         {
-            // Associo a kinectSensor la variabile KinectSensor in input
-            this.kinectSensor = ks;
+            // Avvio il collegamento con la Kinect
+            this.kinectSensor = kinectSensor;
 
             // Numero massimo di scheletri gestibili
-            this.numSkeletons = kinectSensor.BodyFrameSource.BodyCount;           
+            this.numSkeletons = kinectSensor.BodyFrameSource.BodyCount;
             // Iniziliazza l'array di skeleton
             this.skeletonList = new Skeleton[this.numSkeletons];
             for (int index = 0; index < this.numSkeletons; index++)
@@ -104,7 +96,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Attivo il lettore di multiframe
-            MultiSourceFrameReader multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(enabledFrameSourceTypes);//FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared | FrameSourceTypes.Body | FrameSourceTypes.BodyIndex);
+            multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(enabledFrameSourceTypes);
             // e vi associo il relativo handler
             multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
 
@@ -193,14 +185,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
             }
             
-
             // Prova Aggiunta GestureXML
             //List<JointType> patagherru = new List<JointType>();
             //patagherru.Add(JointType.Head);
             //patagherru.Add(JointType.Neck);
             //AddNewGestureXML cacca = new AddNewGestureXML("ie!", patagherru, skeletonList);
-            
-
             //prova stampa da XML
             //GestureDetectorXML filemanager = new GestureDetectorXML();
             //filemanager.printXML();
@@ -208,6 +197,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // Richiamo l'evento
             this.OnFrameManaged(this);
             s.updateSkeleton(this);
+        }
+
+        /// <summary>
+        /// Chiude il collegamento con la Kinect e resetta l'handler.
+        /// </summary>
+        public void Close()
+        {
+            multiSourceFrameReader.MultiSourceFrameArrived -= Reader_MultiSourceFrameArrived;
+            Init.Close(this.kinectSensor);
         }
 
         #region Events
@@ -272,5 +270,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 handler(sender);
         }
         #endregion
+
+
     }
 }

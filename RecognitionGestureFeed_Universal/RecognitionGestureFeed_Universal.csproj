@@ -99,6 +99,7 @@
     <Compile Include="GestureManager\Gesture_Djestit\SkeletonToken.cs" />
     <Compile Include="GestureManager\GestureDetector.cs" />
     <Compile Include="GestureManager\Gesture_Djestit\SkeletonStateSequence.cs" />
+    <Compile Include="Recognition\AcquisitionManagerAudio.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />

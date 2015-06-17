@@ -18,7 +18,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             kinectSensor = KinectSensor.GetDefault();
             kinectSensor.Open();
-            return kinectSensor;
+            if (kinectSensor.IsAvailable == false)
+                return kinectSensor;
+            else
+                throw new System.ArgumentException("Kinect not be connect.", "Connect the Kinect at PC");
         }
 
         /// <summary>

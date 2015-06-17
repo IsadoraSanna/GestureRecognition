@@ -13,17 +13,17 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
     /// <summary>
     /// La classe bone rappresenta un osso della classe scheletro
     /// </summary>
-    public class Bone : ICloneable// : Tuple<JointType, JointType>
+    public class Bone : ICloneable
     {
         /* Attributi */
         // Le joint dell'osso (i due estremi)
         public JointType start { get; private set; }
         public JointType end { get; private set; }
-        //public JointInformation start;
-        //public JointInformation end;
         // Coordinate in Vector4 dell'osso
         public Vector3D position { get; private set; }
         public Double lenght { get; private set; }
+        // High (Fully tracked) or Low (Not tracked)
+        public TrackingState trackingState { get; private set; }
 
         /* Costruttore */
         /// <summary>
@@ -50,6 +50,22 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Aggiorna la posizione dell'osso e la lunghezza
             this.position = JointInformation.returnVector3D(jI1, jI2);
             this.lenght = this.position.Length;
+            // Aggiorna lo stato
+            if (jI1.status == TrackingState.Tracked && jI2.status == TrackingState.Tracked)
+                this.trackingState = TrackingState.Tracked;
+            else if (jI1.status == TrackingState.Inferred || jI2.status == TrackingState.Inferred)
+                this.trackingState = TrackingState.Inferred;
+            else
+                this.trackingState = TrackingState.NotTracked;
+        }
+        /// <summary>
+        /// Aggiorna la posizione dell'osso quando il body non è più rilevabile
+        /// </summary>
+        public void update()
+        {
+            this.position = new Vector3D();
+            this.lenght = 0f;
+            this.trackingState = TrackingState.NotTracked;
         }
 
         /// <summary>
@@ -62,20 +78,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Prevedere l'inversione mannaggi!
             return calculateAngle(boneA.position, boneB.position);
         }
-
-        
-        /*/// <summary>
-        /// Ritorna la distanza tra due ossa (intesa come la distanza tra l'end joint del primo osso e lo start joint del secondo osso
-        /// </summary>
-        /// <param name="boneA"></param>
-        /// <param name="boneB"></param>
-        /// <returns></returns>
-        public static double returnDistance(Bone boneA, Bone boneB)
-        {
-            // Vector3D calcolato tra l'end di boneA e lo start di BoneB
-            Vector3D vector = returnVector3D(boneA.end, )
-        }
-        */
 
         /// <summary>
         /// Calcola l'angolo tra due Vector3D
@@ -103,6 +105,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             return degree * (180.0 / Math.PI);
         }
 
+        /// <summary>
+        /// Crea il clone associato
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return this.MemberwiseClone();

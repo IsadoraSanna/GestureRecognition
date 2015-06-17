@@ -20,10 +20,13 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         /// <summary>
         /// idBody: id del body associato dalla kinect
         /// idSkeleton: id dello scheletro
+        /// clippedEdges: indica se un qualche joint "esce" fuori dallo spazio visivo della camera
         /// leftHandStatus: status della mano sinistra (unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
         /// rightHandStatus: status della mano destra (unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
         /// joints:  è la lista che riporta per ogni "giuntura" rilevata dalla kinect 
         /// bones: è la lista di tutte le ossa
+        /// lean: rappresenta il body lean
+        /// leanTrackingState: indica lo stato di tracciamento del lean (not tracked = 0, infeered = 1, tracked = 2)
         /// status: che indica se lo scheletro è rilevato o meno
         /// timeSpan: è il tempo di rilevamento dell'ultimo frame utilizzato per aggiornare lo scheletro
         /// faceFrameReader: reader per i FaceFrame in arrivo dalla kinect
@@ -38,11 +41,14 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
         // Skeleton
         private ulong idBody;
         private int idSkeleton;
+        public FrameEdges clippedEdges { get; private set; }
         public HandState leftHandStatus {get; private set;}
         public HandState rightHandStatus {get; private set;}
         internal List<JointInformation> joints;
         internal List<Bone> bones = new List<Bone>();
         public bool status { get; private set; }
+        public PointF lean { get; private set; }
+        public TrackingState leandTrackingState { get; private set; }
         public TimeSpan timeSpan { get; private set; }
         // Face Information
         private FaceFrameReader faceFrameReader = null;
@@ -108,6 +114,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                 this.faceFrameSource.TrackingId = idBody;
                 this.highDefinitionFaceFrameSource.TrackingId = idBody;
             }
+            // Aggiorno le informazioni riguardanti il clippedEdge e il lean 
+            this.clippedEdges = body.ClippedEdges;
+            this.lean = body.Lean;
+            this.leandTrackingState = body.LeanTrackingState;
             // Aggiorno lo stato delle mani (HandSideState restituisce: unknown = 0, not tracked = 1, aperta = 2, chiusa = 3, lasso = 4)
             this.leftHandStatus = body.HandLeftState;
             this.rightHandStatus = body.HandRightState;
@@ -117,6 +127,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             {
                 foreach (JointInformation jInf in this.getListJointInformation())
                     jInf.Update(body.Joints[jInf.getType()], body.JointOrientations[jInf.getType()].Orientation);
+                
             }
             else
             {
@@ -128,6 +139,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                     // 4° elemento: Orientamento del joint
                     joints.Add(new JointInformation(idBody, body.Joints[((JointType)index)], body.JointOrientations[((JointType)index)].Orientation, idSkeleton));
                 }
+            }
+
+            // Aggiorno lo scheletro
+            foreach(Bone bone in this.bones)
+            {
+                bone.update(this.getJointInformation(bone.start), this.getJointInformation(bone.end));
             }
             // Aggiorno il timespan
             timeSpan = ts;
@@ -142,12 +159,21 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             this.idBody = 0;
             this.faceFrameSource.TrackingId = idBody;
             this.highDefinitionFaceFrameSource.TrackingId = idBody;
-            // Aggiorna lo stato delle mani pongo lo HandSideState come: unknown = 0)
+            // Aggiorna lo stato delle mani, pone lo HandSideState come: unknown = 0)
             this.leftHandStatus = HandState.NotTracked;
             this.rightHandStatus = HandState.NotTracked;
+            // Aggiorno le informazioni riguardanti il clippedEdge e il lean 
+            this.clippedEdges = FrameEdges.None;
+            this.lean = new PointF();
+            this.leandTrackingState = TrackingState.NotTracked;
             // Cancella le coordinate delle varie joint rilevate
             if (joints.Count > 0)
                 joints.Clear();
+            // Aggiorno lo scheletro
+            foreach (Bone bone in this.bones)
+            {
+                bone.update();
+            }
         }
 
         /// <summary>

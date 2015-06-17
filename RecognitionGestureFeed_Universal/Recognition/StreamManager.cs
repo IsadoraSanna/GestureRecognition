@@ -90,9 +90,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        public static void startSkeletonStream(AcquisitionManager am, KinectSensor kinectSensor)
+        public static void startSkeletonStream(AcquisitionManager am)
         {
-            initSkeletonStream(am, kinectSensor);
+            initSkeletonStream(am, am.kinectSensor);
             am.FrameManaged += updateSkeletonStream;
         }
         /// <summary>
@@ -100,15 +100,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        public static void startAllStream(AcquisitionManager am, KinectSensor kinectSensor)
+        public static void startAllStream(AcquisitionManager am)
         {
             /* Inizializzazione WritableBitmap */
             initBodyIndexStream(am);
             initDepthStream(am);
             initInfraredStream(am);
             initColorStream(am);
-            initSkeletonStream(am, kinectSensor);
-            
+            initSkeletonStream(am, am.kinectSensor);
+
             // Associo l'handler updateStream all'evento frameManaged
             am.FrameManaged += updateAllStream;
         }
@@ -218,21 +218,21 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// <summary>
         /// Funzione che restituisce il WritableBitmap associato ad ogni tipo di frame
         /// </summary>
-        /// <param name="displayFrameType"></param>
+        /// <param name="frameType"></param>
         /// <returns></returns>
-        public static ImageSource updateStream(DisplayFrameType displayFrameType)
+        public static ImageSource updateStream(FrameSourceTypes frameType)
         {
-            switch (displayFrameType)
+            switch (frameType)
             {
-                case DisplayFrameType.Depth:
+                case FrameSourceTypes.Depth:
                     return depthBitmap;
-                case DisplayFrameType.Infrared:
+                case FrameSourceTypes.Infrared:
                     return infraredBitmap;
-                case DisplayFrameType.Color:
+                case FrameSourceTypes.Color:
                     return colorBitmap;
-                case DisplayFrameType.Body:
+                case FrameSourceTypes.Body:
                     return skeletonBitmap;
-                case DisplayFrameType.BodyIndex:
+                case FrameSourceTypes.BodyIndex:
                     return bodyIndexBitmap;
                 default:
                     return null;
@@ -246,31 +246,31 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// </summary>
         /// <param name="displayFrameType"></param>
         /// <returns></returns>
-        public static bool isStreamReady(DisplayFrameType displayFrameType)
+        public static bool isStreamReady(FrameSourceTypes frameType)
         {
             bool valReturn = false;
 
-            switch (displayFrameType)
+            switch (frameType)
             {
-                case DisplayFrameType.Depth:
+                case FrameSourceTypes.Depth:
                     if (depthBitmap != null)
                         valReturn = true;
                     break;
-                case DisplayFrameType.Infrared:
+                case FrameSourceTypes.Infrared:
                     if (infraredBitmap != null)
                         valReturn = true;
                     break;
-                case DisplayFrameType.Color:
+                case FrameSourceTypes.Color:
                     if (colorBitmap != null)
                         valReturn = true;
                     break;
-                case DisplayFrameType.Body:
+                case FrameSourceTypes.Body:
                     if (skeletonBitmap != null)
                         valReturn = true;
                     break;
-                case DisplayFrameType.BodyIndex:
+                case FrameSourceTypes.BodyIndex:
                     if (bodyIndexBitmap != null)
-                        valReturn = true; 
+                        valReturn = true;
                     break;
             }
             return valReturn;
@@ -324,6 +324,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
         }
         #endregion Init Stream
 
-        
+
     }
 }
