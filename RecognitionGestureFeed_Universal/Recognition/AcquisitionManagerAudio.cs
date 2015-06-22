@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.Kinect;
 // Data
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
+// Speech Engine
+using System.Speech;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
@@ -24,7 +26,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         private AudioSource audioSource = null;
         public List<AudioData> audioDataList { get; private set; }
         // Speech
-
+        
         /* Costruttore */
         public AcquisitionManagerAudio(KinectSensor kinectSensor)
         {

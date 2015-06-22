@@ -28,7 +28,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public bool excluded;
         public bool once;
         // Indica quante volte è stato eseguito il Term in questione, da quando il programma è stato avviato
-        public int num_execution_gesture {get; private set;}
+        public int num_total {get; private set;}
+        // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
+        public int num_discrete { get; private set; }
 
         /* Metodi */
         public virtual void fire(Token token)
@@ -39,12 +41,15 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Reinizializzo il termine dell'espressione
         public virtual void reset()
         {
+            this.num_total = this.num_discrete = 0;
             this.state = expressionState.Default;
         }
 
         // Imposta lo stato dell'espressione come completo
         public void complete(Token token){
-            this.num_execution_gesture++;
+            // Aggiorna i contatori e genera l'evento Complete
+            this.num_total++;
+            this.num_discrete++;
 		    this.state = expressionState.Complete;
             GestureEventArgs e = new GestureEventArgs(this, token);
             onComplete(e);
@@ -52,6 +57,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         // Imposta lo stato dell'espressione come errore
         public void error(Token token){
+            this.num_discrete = 0;
 		    this.state = expressionState.Error;
             GestureEventArgs e = new GestureEventArgs(this, token);            
             onError(e);

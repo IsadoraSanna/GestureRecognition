@@ -8,14 +8,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class StateSequence
     {
-        //attributi
+        /* Attributi */
         public int capacity {set; get;}
         public List<Token> tokens = new List<Token>();
         public int index {set;get;}
 
 
-        //metodi
-        //nel JS si chiamava init ma credo si possa utilizzare come un costruttore
+        /* Metodi */
         public StateSequence(int capacity)
         {
             this.capacity = capacity != 0 ? capacity : 2;

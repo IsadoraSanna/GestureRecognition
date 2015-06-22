@@ -72,9 +72,14 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
             return t[pos];
         }
 
+        /// <summary>
+        /// Cancella tutti i riferimenti in moves e m_index dello scheletro con quel token
+        /// </summary>
+        /// <param name="id"></param>
         public void removeById(int id)
         {
             this.moves.Remove(id);
+            this.m_index.Remove(id);
         }
     }
 }

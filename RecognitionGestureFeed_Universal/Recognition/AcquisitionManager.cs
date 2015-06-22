@@ -26,7 +26,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
     /// <param name="sender"></param>
     public delegate void FramesManaged(BodyIndexData bodyData, DepthData depthData, InfraredData infraredData, ColorData colorData, Skeleton[] skeletons);
     public delegate void FrameManaged(FrameData sender);
-    public delegate void BodyManaged(Skeleton[] sender);
+    public delegate void BodyManaged(Skeleton sender);
+    public delegate void BodiesManaged(Skeleton[] sender);
 
     public class AcquisitionManager
     {
@@ -38,7 +39,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public event FrameManaged InfraredFrameManaged;
         public event FrameManaged ColorFrameManaged;
         public event FrameManaged LongExpsoureFrameManaged;
-        public event BodyManaged SkeletonFrameManaged;
+        public event BodyManaged SkeletonFrameManged;
+        public event BodiesManaged SkeletonsFrameManaged;
         
         /****** Attributi ******/
         // Variabile usata per la comunicazione con la kinect
@@ -177,13 +179,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     // Aggiorno lo scheletro associato ad ogni body
                     for (int index = 0; index < this.numSkeletons; index++)
                     {
-                        if(bodyList[index].IsTracked)
+                        if (bodyList[index].IsTracked)
+                        {
                             skeletonList[index].updateSkeleton(bodyList[index], bodyFrame.RelativeTime);
-                        else
+                        }
+                        else if (skeletonList[index].status)
+                        {
                             skeletonList[index].updateSkeleton();
-                    }             
+                        }
+                        this.OnSkeletonFrameManaged(index);
+                    }  
                 }
-                this.OnSkeletonFrameManaged();
+                this.OnSkeletonsFrameManaged();
             }
             //
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
@@ -264,13 +271,21 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 LongExpsoureFrameManaged(this.longExposureInfraredData);
         }
         /// <summary>
-        /// Evento che avvisa la gestione di un SkeletonFrame.
+        /// Evento che avvisa la gestione di tutti gli scheletri
+        /// </summary>
+        private void OnSkeletonFrameManaged(int index)
+        {
+            if (SkeletonFrameManged != null)
+                SkeletonFrameManged(this.skeletonList[index]);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un singolo scheletro.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnSkeletonFrameManaged()
+        protected virtual void OnSkeletonsFrameManaged()
         {
-            if (SkeletonFrameManaged != null)
-                SkeletonFrameManaged(this.skeletonList);
+            if (SkeletonsFrameManaged != null)
+                SkeletonsFrameManaged(this.skeletonList);
         }
 
         #endregion

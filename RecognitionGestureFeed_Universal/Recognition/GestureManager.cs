@@ -42,7 +42,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
 
             // Associo l'handler updateStream all'evento frameManaged
-            am.SkeletonFrameManaged += updateGesture;
+            am.SkeletonsFrameManaged += updateGesture;
         }
         /// <summary>
         /// Avvia il rilevamento di Gesture tramite i metodi forniti dalla Kinect delle sole gesture specificate dall'utente
@@ -64,7 +64,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
 
             // Associo l'handler updateStream all'evento frameManaged
-            am.SkeletonFrameManaged += updateGesture;
+            am.SkeletonsFrameManaged += updateGesture;
         }
 
         public static void updateGesture(Skeleton[] sender)

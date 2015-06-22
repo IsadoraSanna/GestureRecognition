@@ -54,6 +54,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
                     _onSkeletonEnd(e);
                     // Rimuovo lo scheletro in questione dalla mappa
                     sequence.removeById(token.identifier);
+
                     break;
             }
             // Se lo scheletro gestito non è di tipo end, allora si provvede ad inserirlo nel buffer

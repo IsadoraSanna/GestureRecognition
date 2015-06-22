@@ -21,7 +21,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         // Attributi
         internal SkeletonSensor sensor;
 
-        public SensorInterface(AcquisitionManager am, Term expression)
+        public SensorInterface(AcquisitionManager am)
         {
             /* Pan Asse X */
             // Close
@@ -81,9 +81,14 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
 
+            this.sensor = new SkeletonSensor(choice, 3);
+            am.SkeletonsFrameManaged += updateSkeleton;
+        }
 
+        public SensorInterface(AcquisitionManager am, Term expression)
+        {
             this.sensor = new SkeletonSensor(expression, 3);
-            am.SkeletonFrameManaged += updateSkeleton;
+            am.SkeletonsFrameManaged += updateSkeleton;
         }
 
         public void updateSkeleton(Skeleton[] skeletonList)
@@ -109,7 +114,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 // Se è stato creato un token, lo sparo al motore
                 if (token != null)
                 {
-                    this.sensor.root.fire(token);
+                    if(token.type != TypeToken.End)
+                        this.sensor.root.fire(token);
                 }
 
                 // Se lo stato della choice è in error o complete allora lo riazzero

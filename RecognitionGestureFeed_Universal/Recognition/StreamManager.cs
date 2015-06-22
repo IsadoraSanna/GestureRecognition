@@ -94,7 +94,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public static void startSkeletonStream(AcquisitionManager am)
         {
             initSkeletonStream(am, am.kinectSensor);
-            am.SkeletonFrameManaged += updateSkeletonStream;
+            am.SkeletonsFrameManaged += updateSkeletonStream;
         }
         /// <summary>
         /// Gestisce la stampa di tutte le WritableBitmap e associo all'evento frameManaged il suo handler.
@@ -167,10 +167,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
         private static void updateAllStream(BodyIndexData bodyData, DepthData depthData, InfraredData infraredData, ColorData colorData, Skeleton[] skeletons)
         {
             updateBodyIndexStream(bodyData);
+            _OnBodyIndexStream();
             updateDepthStream(depthData);
+            _OnDepthStream();
             updateInfraredStream(infraredData);
+            _OnInfraredStream();
             updateColorStream(colorData);
+            _OnColorStream();
             updateSkeletonStream(skeletons);
+            _OnSkeletonStream();
         }
 
         #region Eventi BitmapUpdate
