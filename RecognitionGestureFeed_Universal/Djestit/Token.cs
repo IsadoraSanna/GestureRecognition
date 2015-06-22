@@ -1,4 +1,4 @@
-﻿using RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit;
+﻿using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

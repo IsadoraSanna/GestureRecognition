@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.GestureManager
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
 {
     public class AddNewGestureXML
     {

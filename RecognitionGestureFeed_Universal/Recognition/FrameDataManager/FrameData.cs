@@ -29,5 +29,9 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
             this.height = frameDescription.Height;
             this.width = frameDescription.Width;
         }
+        public FrameData()
+        {
+
+        }
     }
 }

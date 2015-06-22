@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
 {
     public class SkeletonEventArgs : EventArgs
     {
-        public readonly Sensor sensor;
+        public readonly SkeletonSensor sensor;
 
-        public SkeletonEventArgs(Sensor sensor)
+        public SkeletonEventArgs(SkeletonSensor sensor)
         {
             this.sensor = sensor;
         }

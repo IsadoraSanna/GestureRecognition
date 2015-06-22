@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
 // Djestit Kinect
-using RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit;
+using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 // Kinect
@@ -19,91 +19,9 @@ namespace RecognitionGestureFeed_Universal.Recognition
     public class SensorInterface
     {
         // Attributi
-        internal Sensor sensor;
+        internal SkeletonSensor sensor;
 
-        internal bool close(Token token)
-        {
-           
-            if (token.GetType() == typeof(SkeletonToken))
-            {
-                SkeletonToken skeletonToken = (SkeletonToken)token;
-                // La gesture inizia se l'utente chiude la mano destra
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
-                {
-                    return true;
-                }
-                else
-                    return false;
-            }
-            return false;
-
-        }
-        internal bool moveX(Token token)
-        {
-            if (token.GetType() == typeof(SkeletonToken))
-            {
-                SkeletonToken skeletonToken = (SkeletonToken)token;
-                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
-                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
-                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                List<float> listConfidenceX = new List<float>();
-                List<float> listConfidenceY = new List<float>();
-                // Calcolo la differenza lungo l'asse X e l'asse Y
-                foreach(Skeleton sOld in skeletonToken.precSkeletons)
-                {
-                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
-                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
-                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
-                }
-                //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
-                    return true;
-                else
-                    return false;
-            }
-            return false;
-        }
-        internal bool moveY(Token token)
-        {
-            if (token.GetType() == typeof(SkeletonToken))
-            {
-                SkeletonToken skeletonToken = (SkeletonToken)token;
-                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
-                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
-                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                List<float> listConfidenceX = new List<float>();
-                List<float> listConfidenceY = new List<float>();
-                // Calcolo la differenza lungo l'asse X e l'asse Y
-                foreach (Skeleton sOld in skeletonToken.precSkeletons)
-                {
-                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
-                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
-                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
-                }
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
-                    return true;
-                else
-                    return false;
-            }
-            return false;
-        }
-        internal bool open(Token token)
-        {
-            if (token.GetType() == typeof(SkeletonToken))
-            {
-                SkeletonToken skeletonToken = (SkeletonToken)token;
-                // La gesture termina quando l'utente apre la mano destra
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
-                    return true;
-                else
-                    return false;
-            }
-            return false;
-        }
-
-        public SensorInterface(AcquisitionManager am)
+        public SensorInterface(AcquisitionManager am, Term expression)
         {
             /* Pan Asse X */
             // Close
@@ -157,48 +75,130 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
             panY.Complete += PanY;
-
+            //
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
             listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
 
-            this.sensor = new Sensor(choice, 3);
-            //am.OnFrameManaged += updateSkeleton;
+
+            this.sensor = new SkeletonSensor(expression, 3);
+            am.SkeletonFrameManaged += updateSkeleton;
         }
 
-        public void updateSkeleton(AcquisitionManager am)
+        public void updateSkeleton(Skeleton[] skeletonList)
         {
-            foreach(Skeleton skeleton in am.skeletonList)
+            // Per ogni scheletro rilevato avvio il motorino
+            foreach(Skeleton skeleton in skeletonList)
             {
+                // Creo uno skeleton token
                 SkeletonToken token = null;
+                // Determino il tipo (Start, Move o End) e ne creo il token, e quindo lo genero
                 if (skeleton.getStatus())
                 {
                     if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
-                    {
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
-                    }
                     else
-                    {
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
-                    }
                 }
                 else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
                 {
-                    sensor.generateToken(TypeToken.End, skeleton);
+                    token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
                 }
                 
-
+                // Se è stato creato un token, lo sparo al motore
                 if (token != null)
                 {
                     this.sensor.root.fire(token);
                 }
 
+                // Se lo stato della choice è in error o complete allora lo riazzero
                 if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
                     this.sensor.root.reset();
             }
         }
 
+        // Example
+        internal bool close(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // La gesture inizia se l'utente chiude la mano destra
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return false;
+
+        }
+        internal bool moveX(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
+                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                List<float> listConfidenceX = new List<float>();
+                List<float> listConfidenceY = new List<float>();
+                // Calcolo la differenza lungo l'asse X e l'asse Y
+                foreach (Skeleton sOld in skeletonToken.precSkeletons)
+                {
+                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
+                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
+                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+                }
+                //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
+        internal bool moveY(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
+                // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                List<float> listConfidenceX = new List<float>();
+                List<float> listConfidenceY = new List<float>();
+                // Calcolo la differenza lungo l'asse X e l'asse Y
+                foreach (Skeleton sOld in skeletonToken.precSkeletons)
+                {
+                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
+                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
+                    listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+                }
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
+        internal bool open(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                SkeletonToken skeletonToken = (SkeletonToken)token;
+                // La gesture termina quando l'utente apre la mano destra
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
         void PanX(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Pan X");

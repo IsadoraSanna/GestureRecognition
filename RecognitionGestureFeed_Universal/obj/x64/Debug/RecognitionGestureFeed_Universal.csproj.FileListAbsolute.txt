@@ -37,7 +37,6 @@ C:\Users\Alessandro\Copy\Tesi\Carca\GestureRecognition\RecognitionGestureFeed_Un
 C:\Users\BatCave\Copy\Tesi\Carca\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\WriteableBitmapEx.Wpf.dll
 C:\Users\BatCave\Copy\Tesi\Carca\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\WriteableBitmapEx.Wpf.pdb
 C:\Users\BatCave\Copy\Tesi\Carca\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\WriteableBitmapEx.Wpf.xml
-C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.dll
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.pdb
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\RecognitionGestureFeed_Universal.dll
@@ -86,3 +85,6 @@ C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universa
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.dll
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.xml
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
+C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.dll
+C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.xml
+C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
 // Djestit Kinect
-using RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit;
+using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 // Kinect

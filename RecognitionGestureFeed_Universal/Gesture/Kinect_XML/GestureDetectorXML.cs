@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 // Skeleton
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 
-namespace RecognitionGestureFeed_Universal.GestureManager
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
 {
     public class GestureDetectorXML
     {

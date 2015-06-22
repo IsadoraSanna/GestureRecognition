@@ -10,7 +10,7 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 // Kinect - Prova
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
 {
     public enum TypeToken
     {

@@ -13,29 +13,33 @@ using Microsoft.Kinect.Face;
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition.Stream;
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
-using RecognitionGestureFeed_Universal.GestureManager;
+using RecognitionGestureFeed_Universal.Gesture;
 // Debug
 using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
     /// <summary>
-    /// Delegate per l'evento di tipo FrameManaged.
+    /// Delegate per gli eventi di tipo FrameManaged(tutti i tipi di frame, esclusi Audio e Body) e BodyManaged (quando vengono gestiti
+    /// gli scheletri rilevati dalla kinect).
     /// </summary>
     /// <param name="sender"></param>
-    public delegate void FrameManaged(AcquisitionManager sender);
+    public delegate void FramesManaged(BodyIndexData bodyData, DepthData depthData, InfraredData infraredData, ColorData colorData, Skeleton[] skeletons);
+    public delegate void FrameManaged(FrameData sender);
+    public delegate void BodyManaged(Skeleton[] sender);
 
     public class AcquisitionManager
     {
         /**** Eventi ****/
         // Evento che indica quando un frame è stato gestito
-        public event FrameManaged FrameManaged;
+        public event FramesManaged FramesManaged;
         public event FrameManaged BodyFrameManaged;
         public event FrameManaged DepthFrameManaged;
         public event FrameManaged InfraredFrameManaged;
         public event FrameManaged ColorFrameManaged;
-        public event FrameManaged SkeletonFrameManaged;
-
+        public event FrameManaged LongExpsoureFrameManaged;
+        public event BodyManaged SkeletonFrameManaged;
+        
         /****** Attributi ******/
         // Variabile usata per la comunicazione con la kinect
         internal KinectSensor kinectSensor = null;
@@ -58,13 +62,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
         internal LongExposureInfraredData longExposureInfraredData = null;
         // Reader utilizzato per selezionare e leggere i frame in arrivo dalla kinect
         MultiSourceFrameReader multiSourceFrameReader = null;
+        // Booleano che indica se l'utente ha avviato la lettura di tutti i frame
+        bool allFrames;
 
-        SensorInterface s = null;
         /****** Costruttore ******/
         public AcquisitionManager(KinectSensor kinectSensor, FrameSourceTypes enabledFrameSourceTypes)
         {
             // Avvio il collegamento con la Kinect
-            this.kinectSensor = kinectSensor;
+            if(kinectSensor == null)
+                throw new ArgumentNullException("Kinect not be connect.");
+            else
+                this.kinectSensor = kinectSensor;
 
             // Numero massimo di scheletri gestibili
             this.numSkeletons = kinectSensor.BodyFrameSource.BodyCount;
@@ -95,12 +103,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
             // Inizializza l'oggetto LongExposureData
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
+            //
+            if (enabledFrameSourceTypes.Equals(FrameSourceTypes.Body | FrameSourceTypes.BodyIndex | FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared))
+                this.allFrames = true;
             // Attivo il lettore di multiframe
-            multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(enabledFrameSourceTypes);
+            this.multiSourceFrameReader = kinectSensor.OpenMultiSourceFrameReader(enabledFrameSourceTypes);
             // e vi associo il relativo handler
-            multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
-
-            s = new SensorInterface(this);
+            this.multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
@@ -122,7 +131,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     colorData.update(colorFrame);
-                    this.OnColorFrameManaged(this);
+                    this.OnColorFrameManaged();
                 }
             }
             // Nel caso in cui venga letto un Depth frame
@@ -133,7 +142,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se il depthFrame non è vuoto, allora aggiorno il contenuto dell'oggetto depthData
                     depthData.update(depthFrame);
-                    this.OnDepthFrameManaged(this);
+                    this.OnDepthFrameManaged();
                 }
             }
             // Nel caso in cui venga letto un Infrared frame
@@ -144,7 +153,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se l'infraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     infraredData.update(infraredFrame);
-                    this.OnInfraredFrameManaged(this);
+                    this.OnInfraredFrameManaged();
                 }   
             }
             // Nel caso in cui venga letto un LongExposureInfrared frame
@@ -155,6 +164,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 {
                     // Se il LongExposureInfraredFrame non è vuoto, allora aggiorno il contenuto dell'oggetto infraredData
                     longExposureInfraredData.update(longExposureInfraredFrame);
+                    this.LongExpsoureFrameManaged(longExposureInfraredData);
                 }
             }
             // Nel caso in cui stiamo leggendo un Body frame
@@ -173,7 +183,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                             skeletonList[index].updateSkeleton();
                     }             
                 }
-                this.OnSkeletonFrameManaged(this);
+                this.OnSkeletonFrameManaged();
             }
             //
             using (BodyIndexFrame bodyIndexFrame = multiSourceFrame.BodyIndexFrameReference.AcquireFrame())
@@ -181,22 +191,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 if(bodyIndexFrame != null)
                 {
                     bodyIndexData.update(bodyIndexFrame);
-                    this.OnBodyFrameManaged(this);
+                    this.OnBodyFrameManaged();
                 }
             }
-            
-            // Prova Aggiunta GestureXML
-            //List<JointType> patagherru = new List<JointType>();
-            //patagherru.Add(JointType.Head);
-            //patagherru.Add(JointType.Neck);
-            //AddNewGestureXML cacca = new AddNewGestureXML("ie!", patagherru, skeletonList);
-            //prova stampa da XML
-            //GestureDetectorXML filemanager = new GestureDetectorXML();
-            //filemanager.printXML();
 
-            // Richiamo l'evento
-            this.OnFrameManaged(this);
-            s.updateSkeleton(this);
+            // Richiamo l'evento FramesManaged, solo se tutti i frame sono effettivamente gestiti
+            if(this.allFrames)
+                this.OnFramesManaged();
         }
 
         /// <summary>
@@ -213,64 +214,65 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// Evento che avvisa la gestione di un Frame prelevato dalla kinect.
         /// </summary>
         /// <param name="sender">Passa in input l'oggetto di tipo AcquisitionManager, che contiene tutte le informazioni necessarie per la stampa.</param>
-        protected virtual void OnFrameManaged(AcquisitionManager sender)
+        protected virtual void OnFramesManaged()
         {
-            FrameManaged handler = FrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (FramesManaged != null)
+                FramesManaged(this.bodyIndexData, this.depthData, this.infraredData, this.colorData, this.skeletonList);
         }
         /// <summary>
         /// Evento che avvisa la gestione di un BodyFrame.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnBodyFrameManaged(AcquisitionManager sender)
+        protected virtual void OnBodyFrameManaged()
         {
-            FrameManaged handler = DepthFrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (BodyFrameManaged != null)
+                BodyFrameManaged(this.bodyIndexData);
         }
         /// <summary>
         /// Evento che avvisa la gestione di un DephtFrame.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnDepthFrameManaged(AcquisitionManager sender)
+        protected virtual void OnDepthFrameManaged()
         {
-            FrameManaged handler = BodyFrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (DepthFrameManaged != null)
+                DepthFrameManaged(this.depthData);
         }
         /// <summary>
         /// Evento che avvisa la gestione di un InfraredFrame.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnInfraredFrameManaged(AcquisitionManager sender)
+        protected virtual void OnInfraredFrameManaged()
         {
-            FrameManaged handler = InfraredFrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (InfraredFrameManaged != null)
+                InfraredFrameManaged(this.infraredData);
         }
         /// <summary>
         /// Evento che avvisa la gestione di un ColorFrame.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnColorFrameManaged(AcquisitionManager sender)
+        protected virtual void OnColorFrameManaged()
         {
-            FrameManaged handler = ColorFrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (ColorFrameManaged != null)
+                ColorFrameManaged(this.colorData);
+        }
+        /// <summary>
+        /// Evento che avvisa la gestione di un LongExposureData
+        /// </summary>
+        protected virtual void OnLongExposure()
+        {
+            if (LongExpsoureFrameManaged != null)
+                LongExpsoureFrameManaged(this.longExposureInfraredData);
         }
         /// <summary>
         /// Evento che avvisa la gestione di un SkeletonFrame.
         /// </summary>
         /// <param name="sender"></param>
-        protected virtual void OnSkeletonFrameManaged(AcquisitionManager sender)
+        protected virtual void OnSkeletonFrameManaged()
         {
-            FrameManaged handler = SkeletonFrameManaged;
-            if (handler != null)
-                handler(sender);
+            if (SkeletonFrameManaged != null)
+                SkeletonFrameManaged(this.skeletonList);
         }
+
         #endregion
-
-
     }
 }

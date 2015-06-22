@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 // Kinect
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
 {
     public delegate void SkeletonEventHandler(object sender, SkeletonEventArgs s);
 
-    public class Sensor
+    public class SkeletonSensor
     {
         // Eventi generati all'arrivo di un scheletro
         public event SkeletonEventHandler onSkeletonStart;
@@ -23,7 +23,7 @@ namespace RecognitionGestureFeed_Universal.GestureManager.Gesture_Djestit
         public Term root;
         public SkeletonStateSequence sequence;
 
-        public Sensor(Term root, int capacity)
+        public SkeletonSensor(Term root, int capacity)
         {
             this.capacity = capacity;
             this.root = root;
