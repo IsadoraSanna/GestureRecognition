@@ -39,7 +39,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
         public event FrameManaged InfraredFrameManaged;
         public event FrameManaged ColorFrameManaged;
         public event FrameManaged LongExpsoureFrameManaged;
-        public event BodyManaged SkeletonFrameManged;
+        public event BodyManaged SkeletonFrameManaged;
+        public event BodyManaged SkeletonLoseManaged;
         public event BodiesManaged SkeletonsFrameManaged;
         
         /****** Attributi ******/
@@ -181,11 +182,13 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     {
                         if (bodyList[index].IsTracked)
                         {
-                            skeletonList[index].updateSkeleton(bodyList[index], bodyFrame.RelativeTime);
+                            skeletonList[index].updateSkeleton(bodyList[index], bodyFrame.RelativeTime);// Aggiorna lo scheletro
+                            this.OnSkeletonFrameManaged(index);// Avvisa che lo scheletro è stato aggiornato
                         }
-                        else if (skeletonList[index].status)
+                        else if (skeletonList[index].status)// Se lo scheletro è stato perso
                         {
-                            skeletonList[index].updateSkeleton();
+                            this.OnSkeletonLoseManaged(index);// Avvisa che lo scheletro in questione è stato perso
+                            skeletonList[index].updateSkeleton();// Resetto lo scheletro
                         }
                         this.OnSkeletonFrameManaged(index);
                     }  
@@ -271,15 +274,20 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 LongExpsoureFrameManaged(this.longExposureInfraredData);
         }
         /// <summary>
-        /// Evento che avvisa la gestione di tutti gli scheletri
+        /// Evento che avvisa la gestione di uno scheletro
         /// </summary>
         private void OnSkeletonFrameManaged(int index)
         {
-            if (SkeletonFrameManged != null)
-                SkeletonFrameManged(this.skeletonList[index]);
+            if (SkeletonFrameManaged != null)
+                SkeletonFrameManaged(this.skeletonList[index]);
+        }
+        private void OnSkeletonLoseManaged(int index)
+        {
+            if (SkeletonLoseManaged != null)
+                SkeletonLoseManaged(this.skeletonList[index]);
         }
         /// <summary>
-        /// Evento che avvisa la gestione di un singolo scheletro.
+        /// Evento che avvisa la gestione degli scheletri.
         /// </summary>
         /// <param name="sender"></param>
         protected virtual void OnSkeletonsFrameManaged()
