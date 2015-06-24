@@ -190,7 +190,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
                             this.OnSkeletonLoseManaged(index);// Avvisa che lo scheletro in questione è stato perso
                             skeletonList[index].updateSkeleton();// Resetto lo scheletro
                         }
-                        this.OnSkeletonFrameManaged(index);
                     }  
                 }
                 this.OnSkeletonsFrameManaged();
