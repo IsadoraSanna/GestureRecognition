@@ -86,6 +86,8 @@
     <Compile Include="Djestit\StateSequence.cs" />
     <Compile Include="Djestit\Term.cs" />
     <Compile Include="Djestit\Token.cs" />
+    <Compile Include="Feed\FeedBack\Feedback.cs" />
+    <Compile Include="Feed\FeedForward\Segment.cs" />
     <Compile Include="Gesture\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureDetectorXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureXML.cs" />
@@ -130,10 +132,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Feed\FeedBack\" />
-    <Folder Include="Feed\FeedForward\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
