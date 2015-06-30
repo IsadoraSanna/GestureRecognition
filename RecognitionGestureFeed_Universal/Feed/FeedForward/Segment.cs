@@ -10,14 +10,15 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedForward
 {
     public class Segment
     {
-        //possiede una lunghezza e una direzione
-        public int size { set; get; }
+        //possiede una lunghezza e una inclinazione (
+        //public int size { set; get; }
         public float length { set; get; }
+        //l'inclinazione nella retta è costante per ogni segmento mentre nella curva cambia per ogni segmento 
         public float inclination { set; get; }
 
-        public Segment(int size, float length, float inclination)
+        public Segment(float length, float inclination)
         {
-            this.size = size;
+            //this.size = size;
             this.length = length;
             this.inclination = inclination;
         }

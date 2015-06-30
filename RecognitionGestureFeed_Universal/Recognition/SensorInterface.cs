@@ -13,6 +13,8 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using Microsoft.Kinect;
 // Debug
 using System.Diagnostics;
+//Segment
+using RecognitionGestureFeed_Universal.Feed.FeedForward;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
@@ -21,22 +23,67 @@ namespace RecognitionGestureFeed_Universal.Recognition
         // Attributi
         internal SkeletonSensor sensor;
 
+        public SensorInterface(AcquisitionManager am, Term expression)
+        {
+            this.sensor = new SkeletonSensor(expression, 3);
+            am.SkeletonsFrameManaged += updateSkeleton;
+        }
+
+        public void updateSkeleton(Skeleton[] skeletonList)
+        {
+            // Per ogni scheletro rilevato avvio il motorino
+            foreach (Skeleton skeleton in skeletonList)
+            {
+                // Creo uno skeleton token
+                SkeletonToken token = null;
+                // Determino il tipo (Start, Move o End) e ne creo il token, e quindo lo genero
+                if (skeleton.getStatus())
+                {
+                    if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
+                        token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
+                    else
+                        token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
+                }
+                else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
+                {
+                    token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
+                }
+
+                // Se è stato creato un token, lo sparo al motore
+                if (token != null)
+                {
+                    if (token.type != TypeToken.End)
+                        this.sensor.root.fire(token);
+                }
+
+                // Se lo stato della choice è in error o complete allora lo riazzero
+                if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
+                    this.sensor.root.reset();
+            }
+        }
+
         public SensorInterface(AcquisitionManager am)
         {
+
+            #region def panX e panY
             /* Pan Asse X */
             // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
+            termx1.segments.AddLast(new Segment(0, 0)); 
             termx1.accepts = close;
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
+            for (int i = 0; i < 5; i++)
+                termx2.segments.AddLast(new Segment(0.5f, 0));
             termx2.accepts = moveX;
             //termx2.Complete += Move;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
+            termx2.segments.AddLast(new Segment(0, 0)); 
             termx3.accepts = open;
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
@@ -84,46 +131,11 @@ namespace RecognitionGestureFeed_Universal.Recognition
             this.sensor = new SkeletonSensor(choice, 3);
             am.SkeletonsFrameManaged += updateSkeleton;
         }
+            #endregion
 
-        public SensorInterface(AcquisitionManager am, Term expression)
-        {
-            this.sensor = new SkeletonSensor(expression, 3);
-            am.SkeletonsFrameManaged += updateSkeleton;
-        }
 
-        public void updateSkeleton(Skeleton[] skeletonList)
-        {
-            // Per ogni scheletro rilevato avvio il motorino
-            foreach(Skeleton skeleton in skeletonList)
-            {
-                // Creo uno skeleton token
-                SkeletonToken token = null;
-                // Determino il tipo (Start, Move o End) e ne creo il token, e quindo lo genero
-                if (skeleton.getStatus())
-                {
-                    if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
-                        token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
-                    else
-                        token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
-                }
-                else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
-                {
-                    token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
-                }
-                
-                // Se è stato creato un token, lo sparo al motore
-                if (token != null)
-                {
-                    if(token.type != TypeToken.End)
-                        this.sensor.root.fire(token);
-                }
 
-                // Se lo stato della choice è in error o complete allora lo riazzero
-                if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
-                    this.sensor.root.reset();
-            }
-        }
-
+        #region descrizione panX e pan Y
         // Example
         internal bool close(Token token)
         {
@@ -149,21 +161,26 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
                 JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                //Debug.WriteLine("mano X: " +jNew.position.X);
                 List<float> listConfidenceX = new List<float>();
                 List<float> listConfidenceY = new List<float>();
+
                 // Calcolo la differenza lungo l'asse X e l'asse Y
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+                    
                 }
                 //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
                     return true;
                 else
+
                     return false;
+                    
             }
             return false;
         }
@@ -181,7 +198,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
                 }
@@ -205,6 +222,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
             return false;
         }
+
+        #endregion
+
+        #region stmapa
         void PanX(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Pan X");
@@ -225,6 +246,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             Debug.WriteLine("Ho la mano destra aperta.");
         }
+        #endregion
 
     }
 }

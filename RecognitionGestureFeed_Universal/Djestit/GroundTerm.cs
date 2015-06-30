@@ -20,7 +20,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public Accepts<Token> _accepts;
         public Accepts<Token> accepts;
         //segmento per la traccia del ground term
-        public List<Segment> segments;
+        public LinkedList<Segment> segments = new LinkedList<Segment>();
         //private qualcosa modality = null; per JS this.modality = undefined;
 
         public virtual bool _accepts2(Token token)

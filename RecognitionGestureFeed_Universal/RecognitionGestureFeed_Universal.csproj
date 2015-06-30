@@ -87,6 +87,7 @@
     <Compile Include="Djestit\Term.cs" />
     <Compile Include="Djestit\Token.cs" />
     <Compile Include="Feed\FeedBack\Feedback.cs" />
+    <Compile Include="Feed\FeedForward\GestureSegments.cs" />
     <Compile Include="Feed\FeedForward\Segment.cs" />
     <Compile Include="Gesture\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureDetectorXML.cs" />
