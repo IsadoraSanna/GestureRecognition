@@ -12,7 +12,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class Sequence : CompositeTerm
     {
-        //public List<Term> children;
         private int index = 0;
 
         //COSTRUTTORI

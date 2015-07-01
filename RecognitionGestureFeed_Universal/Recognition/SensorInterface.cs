@@ -155,7 +155,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
                 }
@@ -181,7 +181,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
                 }

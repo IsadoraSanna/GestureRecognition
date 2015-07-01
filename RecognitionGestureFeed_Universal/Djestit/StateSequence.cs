@@ -13,7 +13,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public List<Token> tokens = new List<Token>();
         public int index {set;get;}
 
-
         /* Metodi */
         public StateSequence(int capacity)
         {
