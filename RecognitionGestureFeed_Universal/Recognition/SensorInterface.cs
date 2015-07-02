@@ -13,8 +13,6 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using Microsoft.Kinect;
 // Debug
 using System.Diagnostics;
-//Segment
-using RecognitionGestureFeed_Universal.Feed.FeedForward;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
@@ -62,28 +60,23 @@ namespace RecognitionGestureFeed_Universal.Recognition
             }
         }
 
+        #region def panX e panY
         public SensorInterface(AcquisitionManager am)
         {
-
-            #region def panX e panY
             /* Pan Asse X */
             // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
-            termx1.segments.AddLast(new Segment(0, 0)); 
             termx1.accepts = close;
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
-            for (int i = 0; i < 5; i++)
-                termx2.segments.AddLast(new Segment(0.5f, 0));
             termx2.accepts = moveX;
             //termx2.Complete += Move;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
-            termx2.segments.AddLast(new Segment(0, 0)); 
             termx3.accepts = open;
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
@@ -131,10 +124,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
             this.sensor = new SkeletonSensor(choice, 3);
             am.SkeletonsFrameManaged += updateSkeleton;
         }
-            #endregion
-
-
-
+        #endregion
+        
         #region descrizione panX e pan Y
         // Example
         internal bool close(Token token)

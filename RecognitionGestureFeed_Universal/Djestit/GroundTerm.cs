@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows;
 
-
-using RecognitionGestureFeed_Universal.Feed.FeedForward;
-
 namespace RecognitionGestureFeed_Universal.Djestit
 {
     //
@@ -19,9 +16,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public String type = "ground";
         public Accepts<Token> _accepts;
         public Accepts<Token> accepts;
-        //segmento per la traccia del ground term
-        public LinkedList<Segment> segments = new LinkedList<Segment>();
-        //private qualcosa modality = null; per JS this.modality = undefined;
 
         public virtual bool _accepts2(Token token)
         {

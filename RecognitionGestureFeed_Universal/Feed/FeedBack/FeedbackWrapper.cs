@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 {
-    class FeedbackWrapper
+    public class FeedbackWrapper
     {
+        /* Costruttore */
+        public FeedbackWrapper()
+        {
 
+        }
     }
 }

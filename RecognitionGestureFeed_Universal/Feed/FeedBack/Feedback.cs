@@ -15,21 +15,28 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
     /* Dichiarazione Eventi */
     public delegate void TermUpdate(List<Term> GestureActive);
 
-    class Feedback
+    public class Feedback
     {
         /* Eventi */
         public event TermUpdate TermUpdate;
 
         /* Attributi */
+        // Albero dei Feedback costruito a partire dalle gesture
+        public FeedbackRoot tree { get; private set; }
+        public FeedbackGroup tree2 { get; private set; }
+
         List<Term> listExpressions = new List<Term>();
         List<Term> GestureActive = new List<Term>();
         //List<Term> listTermEvent = new List<Term>();
 
         /* Costruttore */
-        public Feedback(AcquisitionManager aquisitionManager, CompositeTerm expr)
+        public Feedback(Term expr)
         {
-            createList(expr);
-            aquisitionManager.SkeletonFrameManaged += updateFeedback;
+            //
+            this.tree = new FeedbackRoot(expr);
+            this.tree2 = new FeedbackGroup(expr);
+            //
+            //aquisitionManager.SkeletonFrameManaged += updateFeedback;
         }
 
         private void createList(CompositeTerm expression)
@@ -67,6 +74,11 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         {
             if (this.TermUpdate != null)
                 TermUpdate(this.GestureActive);
+        }
+
+        public void visitingTree()
+        {
+            this.tree2.visitingTree();
         }
     }
 }
