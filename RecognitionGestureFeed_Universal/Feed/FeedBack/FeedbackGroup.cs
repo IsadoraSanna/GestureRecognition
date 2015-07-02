@@ -55,13 +55,15 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 
             /// Se il term ha degli altri elementi al suo interno (e quindi è un compositeTerm) allora 
             /// provvede a creare i nuovi rami del sottalbero
-            if(term.GetType() == typeof(CompositeTerm))
+            if(term.GetType() != typeof(GroundTerm))
             {
                 CompositeTerm compositeTerm = (CompositeTerm)term;
-                // Creo un FeedbackGroup per ogni sottocomponente di term e lo metto nella lista children
-                foreach(var child in compositeTerm.children)
-                {
-                    this.children.Add(new FeedbackGroup(child));
+                if (compositeTerm.children.Count > 0)
+                {// Creo un FeedbackGroup per ogni sottocomponente di term e lo metto nella lista children
+                    foreach (var child in compositeTerm.children)
+                    {
+                        this.children.Add(new FeedbackGroup(child));
+                    }
                 }
             }
         }
@@ -75,9 +77,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 
         public void visitingTree()
         {
+            Debug.WriteLine(term.GetType().ToString());
             foreach (var child in this.children)
             {
-                Debug.WriteLine(term.GetType().ToString());
+                Debug.WriteLine(child.term.GetType().ToString());
             }
         }
     }

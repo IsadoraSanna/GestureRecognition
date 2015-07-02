@@ -74,7 +74,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Djestit_Skeleton.cs" />
-    <Compile Include="FeedbackTest.cs" />
     <Compile Include="GestureTest.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

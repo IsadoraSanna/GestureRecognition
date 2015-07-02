@@ -9,6 +9,8 @@ using RecognitionGestureFeed_Universal.Djestit;
 using RecognitionGestureFeed_Universal.Recognition;
 // Skeleton
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+// Debug
+using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 {
@@ -30,11 +32,12 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         //List<Term> listTermEvent = new List<Term>();
 
         /* Costruttore */
-        public Feedback(Term expr)
+        public Feedback(CompositeTerm expr)
         {
             //
             this.tree = new FeedbackRoot(expr);
-            this.tree2 = new FeedbackGroup(expr);
+
+            //this.tree2 = new FeedbackGroup(expr);
             //
             //aquisitionManager.SkeletonFrameManaged += updateFeedback;
         }
@@ -78,7 +81,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 
         public void visitingTree()
         {
-            this.tree2.visitingTree();
+            this.tree.visitingTree();
         }
     }
 }

@@ -13,6 +13,8 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using Microsoft.Kinect;
 // Debug
 using System.Diagnostics;
+// Feedback
+using RecognitionGestureFeed_Universal.Feed.FeedBack;
 
 namespace RecognitionGestureFeed_Universal.Recognition
 {
@@ -123,6 +125,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
 
             this.sensor = new SkeletonSensor(choice, 3);
             am.SkeletonsFrameManaged += updateSkeleton;
+            Feedback fb = new Feedback(choice);
+            fb.visitingTree();
         }
         #endregion
         
