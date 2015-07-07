@@ -15,7 +15,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
      */
     public class Choice : CompositeTerm
     {
-        // Costruttori
+        /* Costruttori */
         public Choice(Term terms)
         {
             this.children = new List<Term>();
@@ -25,7 +25,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             this.children = terms;
         }
 
-        // Metodi
+        /* Metodi */
         public override void reset()
         {
             this.state = expressionState.Default;
@@ -108,6 +108,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 this.error(token);
             }
+            
+            //
+            TokenFireArgs args = new TokenFireArgs();
+            IsTokenFire(args);
         }
     }
 }

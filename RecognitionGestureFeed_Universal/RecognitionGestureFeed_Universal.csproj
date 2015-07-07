@@ -86,8 +86,10 @@
     <Compile Include="Djestit\StateSequence.cs" />
     <Compile Include="Djestit\Term.cs" />
     <Compile Include="Djestit\Token.cs" />
+    <Compile Include="Djestit\TokenFireArgs.cs" />
     <Compile Include="Feed\FeedBack\Feedback.cs" />
     <Compile Include="Feed\FeedBack\FeedbackGroup.cs" />
+    <Compile Include="Feed\FeedBack\FeedbackNode.cs" />
     <Compile Include="Feed\FeedBack\FeedbackRoot.cs" />
     <Compile Include="Feed\FeedBack\FeedbackWrapper.cs" />
     <Compile Include="Gesture\Kinect_XML\AddNewGestureXML.cs" />

@@ -102,6 +102,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
                     }
                 }
             }
+            //
+            TokenFireArgs args = new TokenFireArgs();
+            IsTokenFire(args);
         }
     }
 }

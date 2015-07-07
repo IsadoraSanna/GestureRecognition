@@ -23,7 +23,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         /* Attributi */
         // Albero dei Feedback costruito a partire dalle gesture
         public FeedbackRoot tree { get; private set; }
-        public FeedbackGroup tree2 { get; private set; }
 
         List<Term> listExpressions = new List<Term>();
         List<Term> GestureActive = new List<Term>();
@@ -34,7 +33,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         {
             //
             this.tree = new FeedbackRoot(expr);
-            this.tree2 = new FeedbackGroup(expr);
             //
             //aquisitionManager.SkeletonFrameManaged += updateFeedback;
         }
@@ -78,7 +76,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
 
         public void visitingTree()
         {
-            this.tree2.visitingTree();
+            this.tree.visitingTree();
         }
     }
 }

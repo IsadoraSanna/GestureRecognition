@@ -8,7 +8,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class CompositeTerm : Term
     {
-        public List<Term> children;
+        public List<Term> children = new List<Term>();
 
         public override void reset()
         {
@@ -17,6 +17,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
 	        {
 		        child.reset();
 	        }
-        } 
+        }
     }
 }

@@ -13,71 +13,100 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
     // Enum state
     public enum StateGroup
     {
-        True = 1,
+        True = 2,
+        Continue = 1,
         Default = 0,
         False = -1
     }
 
-    public delegate void FeedGroupUpdate(Term term);
+    //
+    public delegate void FeedbackGroupUpdate(Term term);
+    //
+    public delegate void FeedbackGroupTrue(FeedbackWrapper wrapper);
 
-    public class FeedbackGroup
+    public class FeedbackGroup : FeedbackNode
     {
         /* Eventi */
+        FeedbackGroupTrue FeedbackGroupTrue;
 
         /* Attributi */
         // Term associato al Group in questione
         public Term term { get; private set; }
-        // Se il Term ha a sua volta dei figli, li metto nella lista
-        public List<FeedbackGroup> children {get; private set;}
         // Wrapper associato al Group in questione
         public FeedbackWrapper wrapper;
         // Probabilità associata al Term
-        public float likelihood {get; private set;}
+        public float likelihood { get; private set; }
         /// Flag per indicare lo stato del term:
         /// Se assume il valore True vuol dire che è ancora valido e quindi può essere visualizzato;
         /// Se assume il valore Default vuol dire che il sistema sta aspettando che l'utente esegua una gesture;
         /// Se assume il valore False vuol dire che l'utente sta eseguendo una gesture totalmente dissimile, e quindi non dev'essere visualizzato.
         public StateGroup state { get; private set; }
+        //
+        int index = 0;
 
         /* Costruttore */
         public FeedbackGroup(Term term)
+            : base(term)
         {
             // Term associato al FeedbackGroup
             this.term = term;
             // Inizializzo il Wrapper
             //this.wrapper = new FeedbackWrapper();
-            // Inizializzo la lista di children
-            this.children = new List<FeedbackGroup>();
             // Probabilità dell'evento
             //this.likelihood
             // Inizialmente si pone state sempre a Default
             this.state = StateGroup.Default;
-
-            /// Se il term ha degli altri elementi al suo interno (e quindi è un compositeTerm) allora 
-            /// provvede a creare i nuovi rami del sottalbero
-            if(term.GetType() == typeof(CompositeTerm))
-            {
-                CompositeTerm compositeTerm = (CompositeTerm)term;
-                // Creo un FeedbackGroup per ogni sottocomponente di term e lo metto nella lista children
-                foreach(var child in compositeTerm.children)
-                {
-                    this.children.Add(new FeedbackGroup(child));
-                }
-            }
         }
 
         /* Metodi */
-        public void update()
+        public virtual void update(object obj, TokenFireArgs sender)
         {
-            if (term.state == expressionState.Error)
-                state = StateGroup.False;
+            if (this.children.Count > 0)
+            {
+                foreach (FeedbackGroup child in this.children)
+                {
+                    child.update(obj, sender);
+                    if (child.state == StateGroup.False)
+                    {
+                        this.state = StateGroup.False;
+                        return;
+                    }
+                }
+                if (this.children.Count == this.children.Where(this.ChildTrue).Count())
+                {
+                    this.state = StateGroup.True;
+                    OnFeedbackGroupTrue();
+                }
+                /*else if(numberChildTrue > 0)
+                {
+                    this.state = StateGroup.Continue;
+                }*/
+            }
+            else
+            {
+                if (this.term.state == expressionState.Error)
+                    this.state = StateGroup.False;
+                else if (this.term.state == expressionState.Complete)
+                {
+                    this.state = StateGroup.True;
+                    OnFeedbackGroupTrue();
+                }
+            }            
+        }
+
+        //
+        private void OnFeedbackGroupTrue()
+        {
+            if (this.FeedbackGroupTrue != null)
+                this.FeedbackGroupTrue(this.wrapper);
         }
 
         public void visitingTree()
         {
+            this.term.GetType().ToString();
             foreach (var child in this.children)
             {
-                Debug.WriteLine(term.GetType().ToString());
+                Debug.WriteLine(child.term.GetType().ToString());
             }
         }
     }

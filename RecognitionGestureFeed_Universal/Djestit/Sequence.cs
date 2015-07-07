@@ -80,7 +80,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 case expressionState.Error:
                     this.error(token);
                     break;
-            }  
+            }
+            //
+            TokenFireArgs args = new TokenFireArgs();
+            IsTokenFire(args);
         }
     }
 }

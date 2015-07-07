@@ -9,7 +9,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class Disabling : Choice
     {
-        // Costruttori
+        /* Costruttori */
         public Disabling(Term term) : base(term)
         {
         }
@@ -17,6 +17,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
         }
 
+        /* Metodi */
         public override void fire(Token token)
         {
             this.feedToken(token);
@@ -58,6 +59,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 this.error(token);
             }
+            //
+            TokenFireArgs args = new TokenFireArgs();
+            IsTokenFire(args);
         }
     }
 }

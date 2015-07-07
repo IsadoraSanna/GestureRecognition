@@ -16,13 +16,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
         Error = -1
     }
     // Delegate per i GestureEventHandler
-    public delegate void GestureEventHandler(object sender, GestureEventArgs t);
+    public delegate void GestureEventHandler(object obj, GestureEventArgs sender);
+    // Delegate per il TokenFire
+    public delegate void TokenFire(object obj, TokenFireArgs sender);
 
-    public class Term
+    public abstract class Term
     {
         /* Eventi */
         public event GestureEventHandler Complete;
-        public event GestureEventHandler Error;  
+        public event GestureEventHandler Error;
+        public event TokenFire TokenFire;
         /* Attributi */
         public expressionState state = expressionState.Default;
         public bool excluded;
@@ -87,6 +90,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 Error(this, t);
             }
         }
- 
+        // IsTokenFire
+        public virtual void IsTokenFire(TokenFireArgs sender)
+        {
+            if (this.TokenFire != null)
+                this.TokenFire(this, sender);
+        } 
     }
 }
