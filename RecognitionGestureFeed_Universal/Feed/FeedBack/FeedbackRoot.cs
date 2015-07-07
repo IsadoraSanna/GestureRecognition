@@ -38,9 +38,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         /// <param name="sender"></param>
         protected override void update(object obj, TokenFireArgs sender)
         {
-            foreach(FeedbackGroup child in this.children.Where(ChildState))
+            foreach(FeedbackGroup child in this.children.Where(ChildFalse))
             {
                 child.update(obj, sender);
+            }
+            foreach(FeedbackGroup child in this.children.Where(ChildFalse))
+            {
+                TokenFireArgs args = new TokenFireArgs();
+                Debug.WriteLine("Porcamadonna");
             }
         }
 
