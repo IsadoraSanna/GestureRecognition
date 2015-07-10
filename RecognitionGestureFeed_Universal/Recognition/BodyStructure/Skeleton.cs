@@ -98,7 +98,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Associo allo scheletro il colore con cui verrà rappresenta in bitmap
             this.colorSkeleton = color;
         }
-
         /* Metodi */
         /// <summary>
         /// Funzione di aggiornamento delle compenenti dello scheletro
@@ -237,7 +236,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Creo una prima copia dello scheletro
             Skeleton clone = (Skeleton)this.MemberwiseClone();
             // Creo una copia delle liste
-            this.joints = this.joints.Select(item => (JointInformation)item.Clone()).ToList();
+            //this.joints = this.joints.Select(item => (JointInformation)item.Clone()).ToList();
             this.bones = this.bones.Select(item => (Bone)item.Clone()).ToList();
             // Restituisco il valore
             return clone;
@@ -320,6 +319,18 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
                     this.faceModel = hdFaceFrame.FaceModel;
                 }
             }
+        }
+        #endregion
+
+        #region Test
+        public float handRightPositionX;
+        public float handRightPositionY;
+        public Skeleton(int i, HandState state, float positionX, float positionY)
+        {
+            this.idSkeleton = i;
+            this.rightHandStatus = state;
+            this.handRightPositionX = positionX;
+            this.handRightPositionY = positionY;
         }
         #endregion
     }

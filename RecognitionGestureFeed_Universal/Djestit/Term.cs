@@ -17,6 +17,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     }
     // Delegate per i GestureEventHandler
     public delegate void GestureEventHandler(object obj, GestureEventArgs sender);
+    public delegate void GestureChangeStateHandler();
     // Delegate per il TokenFire
     public delegate void TokenFire(object obj, TokenFireArgs sender);
 
@@ -25,6 +26,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         /* Eventi */
         public event GestureEventHandler Complete;
         public event GestureEventHandler Error;
+        public event GestureChangeStateHandler ChangeState;
         public event TokenFire TokenFire;
         /* Attributi */
         public expressionState state = expressionState.Default;
@@ -34,6 +36,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public int num_total {get; private set;}
         // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
         public int num_discrete { get; private set; }
+        // Prova
+        public string name;
 
         /* Metodi */
         public virtual void fire(Token token)
@@ -49,21 +53,23 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         // Imposta lo stato dell'espressione come completo
-        public void complete(Token token){
+        public virtual void complete(Token token){
             // Aggiorna i contatori e genera l'evento Complete
             this.num_total++;
             this.num_discrete++;
 		    this.state = expressionState.Complete;
             GestureEventArgs e = new GestureEventArgs(this, token);
             onComplete(e);
+            onChangeState();
         }
 
         // Imposta lo stato dell'espressione come errore
-        public void error(Token token){
+        public virtual void error(Token token){
             this.num_discrete = 0;
 		    this.state = expressionState.Error;
             GestureEventArgs e = new GestureEventArgs(this, token);            
             onError(e);
+            onChangeState();
         }
 
         // Verifica se l'imput puo' essere accettato o no
@@ -89,6 +95,12 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 Error(this, t);
             }
+        }
+
+        public void onChangeState()
+        {
+            if (this.ChangeState != null)
+                this.ChangeState();
         }
         // IsTokenFire
         public virtual void IsTokenFire(TokenFireArgs sender)

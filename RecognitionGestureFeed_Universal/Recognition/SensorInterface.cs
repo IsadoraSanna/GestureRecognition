@@ -57,12 +57,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
 
                 // Se lo stato della choice è in error o complete allora lo riazzero
-                if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
-                    this.sensor.root.reset();
+                //if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
+                    //this.sensor.root.reset();
             }
         }
 
-        #region def panX e panY
+        #region Prove
+        public SensorInterface(Term term)
+        {
+            this.sensor = new SkeletonSensor(term, 5);
+        }
+
         public SensorInterface(AcquisitionManager am)
         {
             /* Pan Asse X */
@@ -126,11 +131,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
             this.sensor = new SkeletonSensor(choice, 3);
             am.SkeletonsFrameManaged += updateSkeleton;
             Feedback fb = new Feedback(choice);
-            fb.visitingTree();
         }
-        #endregion
         
-        #region descrizione panX e pan Y
         // Example
         internal bool close(Token token)
         {
@@ -174,8 +176,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     return true;
                 else
 
-                    return false;
-                    
+                    return false;                
             }
             return false;
         }
@@ -187,8 +188,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
                 JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
+                //Debug.WriteLine("mano X: " +jNew.position.X);
                 List<float> listConfidenceX = new List<float>();
                 List<float> listConfidenceY = new List<float>();
+
                 // Calcolo la differenza lungo l'asse X e l'asse Y
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
@@ -196,6 +199,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
+
                 }
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
                     return true;
@@ -218,9 +222,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
             return false;
         }
 
-        #endregion
-
-        #region stmapa
         void PanX(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Pan X");

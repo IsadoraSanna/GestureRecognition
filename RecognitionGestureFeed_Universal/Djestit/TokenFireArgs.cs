@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
-    class TokenFireArgs : EventArgs
+    public class TokenFireArgs : EventArgs
     {
         /* Attributi */
         Token token;

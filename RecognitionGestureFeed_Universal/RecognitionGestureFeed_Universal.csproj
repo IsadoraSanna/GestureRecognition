@@ -88,10 +88,13 @@
     <Compile Include="Djestit\Token.cs" />
     <Compile Include="Djestit\TokenFireArgs.cs" />
     <Compile Include="Feed\FeedBack\Feedback.cs" />
-    <Compile Include="Feed\FeedBack\FeedbackGroup.cs" />
-    <Compile Include="Feed\FeedBack\FeedbackNode.cs" />
-    <Compile Include="Feed\FeedBack\FeedbackRoot.cs" />
-    <Compile Include="Feed\FeedBack\FeedbackWrapper.cs" />
+    <Compile Include="Feed\FeedBack\Tree\FeedbackComposite.cs" />
+    <Compile Include="Feed\FeedBack\Tree\FeedbackGesture.cs" />
+    <Compile Include="Feed\FeedBack\Tree\FeedbackLeaf.cs" />
+    <Compile Include="Feed\FeedBack\Tree\FeedbackGroup.cs" />
+    <Compile Include="Feed\FeedBack\Tree\FeedbackRoot.cs" />
+    <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackWrapper.cs" />
+    <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackGroupEventArgs.cs" />
     <Compile Include="Gesture\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureDetectorXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureXML.cs" />

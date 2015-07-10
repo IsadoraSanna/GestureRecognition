@@ -8,8 +8,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
 {
     public class CompositeTerm : Term
     {
+        /* Attributi */
         public List<Term> children = new List<Term>();
 
+        /* Metodi */
         public override void reset()
         {
 	        this.state = expressionState.Default;
@@ -17,6 +19,15 @@ namespace RecognitionGestureFeed_Universal.Djestit
 	        {
 		        child.reset();
 	        }
+        }
+
+        public override void error(Token token)
+        {
+            this.state = expressionState.Error;
+            foreach(var child in this.children)
+            {
+                child.error(token);
+            }
         }
     }
 }

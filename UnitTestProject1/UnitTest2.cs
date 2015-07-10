@@ -85,9 +85,6 @@ namespace UnitTestProject1
 
             // Crea Albero
             Feedback feedback = new Feedback(choice);
-
-            // Visita Albero
-            feedback.visitingTree();
         }
 
         // Example

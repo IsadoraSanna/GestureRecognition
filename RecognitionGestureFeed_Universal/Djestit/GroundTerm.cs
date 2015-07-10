@@ -13,10 +13,12 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class GroundTerm : Term
     {
-        public String type = "ground";
+        /* Attributi */
+        public String type;
         public Accepts<Token> _accepts;
         public Accepts<Token> accepts;
 
+        /* Metodi */
         public virtual bool _accepts2(Token token)
         {
             if(this._accepts != null) 
