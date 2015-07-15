@@ -19,6 +19,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public List<FeedbackLeaf> groundTermChildren = new List<FeedbackLeaf>();
         // Lista dei Composite Term associati alla gesture
         public List<FeedbackComposite> compositeTermChildren = new List<FeedbackComposite>();
+        // Handler associato alla Gesture
+        public Handler handlerGesture;
 
         /* Costruttore */
         public FeedbackGesture(Term term) : base(term)
@@ -41,6 +43,35 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                     create(child);
                 }
             }
+
+            // Handler relativi all'aggiornamento di stato del term e al suo fire
+            this.term.TokenFire += updateChild;
+            this.term.ChangeState += updateTerm;
+        }
+
+        public FeedbackGesture(Term term, Handler handler) : base(term)
+        {
+            // Inizializzo il Wrapper
+            this.wrapper = new FeedbackWrapper();
+            // Probabilità dell'evento
+            //this.likelihood
+
+            // Creo la lista dei Ground Term associati qualora il Term sia un Composite Term
+            if (term.GetType() != typeof(GroundTerm))
+            {
+                // Casto il composite term
+                CompositeTerm compositeTerm = (CompositeTerm)term;
+                // Naviga all'interno dell'albero, che definisce il Composite Term in questione, 
+                // per selezionare tutti i Ground Term che lo descrivono.
+                foreach (var child in compositeTerm.children)
+                {
+                    // Lo aggiungo nella lista dei children
+                    create(child);
+                }
+            }
+
+            // Handler della Gesture
+            this.handlerGesture = handler;
 
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;

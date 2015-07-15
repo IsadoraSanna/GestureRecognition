@@ -17,13 +17,16 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
         public FeedbackWrapper wrapper { get; private set; }
         // Group che descrive la gesture
         public FeedbackGroup group { get; private set; }
+        // Handler associata alla gesture
+        public Handler handler { get; private set; }
 
         /* Metodi */
-        public FeedbackGroupEventArgs(Term term, FeedbackWrapper wrapper, FeedbackGroup group)
+        public FeedbackGroupEventArgs(Term term, FeedbackWrapper wrapper, FeedbackGroup group, Handler handler)
         {
             this.term = term;
             this.wrapper = wrapper;
             this.group = group;
+            this.handler = handler;
         }
     }
 }

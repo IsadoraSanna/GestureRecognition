@@ -53,6 +53,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public StateGroup state;// { get; private set; }
         // Probabilità associata al Term
         public float likelihood { get; private set; }
+        // Handler associato alla Gesture
+        public Handler handlerGesture;
 
         /* Costruttore */
         public FeedbackGroup(Term term)
@@ -70,7 +72,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         internal void OnFeedbackGroupComplete()
         {
             // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this);
+            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupComplete != null)
                 this.FeedbackGroupComplete(sender);// Lancia l'evento
@@ -82,7 +84,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         internal void OnFeedbackGroupContinue()
         {
             // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this);
+            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupContinue != null)
                 this.FeedbackGroupContinue(sender);// Lancia l'evento
@@ -94,7 +96,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         internal void OnFeedbackGroupError()
         {
             // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this);
+            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupError != null)
                 this.FeedbackGroupError(sender);// Lancia l'evento
