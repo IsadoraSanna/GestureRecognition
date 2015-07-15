@@ -60,19 +60,19 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
         // If Equals() returns true for a pair of objects 
         // then GetHashCode() must return the same value for these objects.
 
-        public int GetHashCode(Modifies product)
+        public int GetHashCode(Modifies element)
         {
             //Check whether the object is null
-            if (Object.ReferenceEquals(product, null)) return 0;
+            if (Object.ReferenceEquals(element, null)) return 0;
 
             //Get hash code for the Name field if it is not null.
-            int hashProductName = product.name == null ? 0 : product.name.GetHashCode();
+            int hashName = element.name == null ? 0 : element.name.GetHashCode();
 
             //Get hash code for the Code field.
-            int hashProductCode = product.value.GetHashCode();
+            int hashValue = element.value.GetHashCode();
 
             //Calculate the hash code for the product.
-            return hashProductName ^ hashProductCode;
+            return hashName ^ hashValue;
         }
     }
 
