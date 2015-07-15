@@ -13,6 +13,8 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition;
 // Feedback
 using RecognitionGestureFeed_Universal.Feed.FeedBack;
+// Feedback Handler/Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
 // Kinect
 using Microsoft.Kinect;
 // Debug
@@ -207,13 +209,36 @@ namespace UnitTestProject1
             sensor = new SkeletonSensor(choice, 5);
             // Creo l'albero dei feedback
             Feedback tree = new Feedback(choice);
-            
+            // Definisco Modifies & Handler per le due gesture
+            // PanX
+            Modifies a = new Modifies("a", 0);
+            Modifies b = new Modifies("b", 1);
+            Modifies c = new Modifies("c", 2);
+            List<Modifies> listModifiesX = new List<Modifies>();
+            listModifiesX.Add(a);
+            listModifiesX.Add(b);
+            listModifiesX.Add(c);
+            Handler handlerPanX = new Handler("PanX", listModifiesX, this.PanX);
+            // PanY
+            Modifies d = new Modifies("d", 1);
+            Modifies e = new Modifies("e", 2);
+            List<Modifies> listModifiesY = new List<Modifies>();
+            listModifiesY.Add(a);
+            listModifiesY.Add(d);
+            listModifiesY.Add(e);
+            Handler handlerPanY = new Handler("PanY", listModifiesY, this.PanY);
+
+            // Associo gli handler alle due Gesture
+            tree.tree.children[0].handlerGesture = (Handler)handlerPanX.Clone();
+            tree.tree.children[1].handlerGesture = (Handler)handlerPanY.Clone();
+
             /// Simulazione Gesti
             // Simulo 1 gesto di start
             Skeleton sStart = new Skeleton(0, HandState.Closed, 0.0f, 0.0f);
             SkeletonToken tStart = (SkeletonToken)sensor.generateToken(TypeToken.Start, sStart);
             // E lo sparo al motorino
             sensor.root.fire(tStart);
+            tree.tree.print();
 
             // Simulo 20 gesti di move
             for(int i = 0; i < 10; i++)
@@ -242,12 +267,14 @@ namespace UnitTestProject1
                 // E lo sparo
                 sensor.root.fire(tMove);
             }
+            tree.tree.print();
 
             // Simulo 1 gesto di end
             Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
             SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
             // E lo sparo al motorino
             sensor.root.fire(tEnd);
+            tree.tree.print();
         }
     }
 }

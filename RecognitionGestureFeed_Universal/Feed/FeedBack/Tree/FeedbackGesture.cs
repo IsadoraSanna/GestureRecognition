@@ -19,8 +19,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public List<FeedbackLeaf> groundTermChildren = new List<FeedbackLeaf>();
         // Lista dei Composite Term associati alla gesture
         public List<FeedbackComposite> compositeTermChildren = new List<FeedbackComposite>();
-        // Handler associato alla Gesture
-        public Handler handlerGesture;
 
         /* Costruttore */
         public FeedbackGesture(Term term) : base(term)
@@ -75,13 +73,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
-            this.term.ChangeState += updateTerm;
+            this.term.ChangeState += updateTerm2;
 
             // Prova esecuzione
-            FeedbackGroupContinue += OnContinue;
-            FeedbackGroupComplete += OnComplete;
+            //FeedbackGroupContinue += OnContinue;
+            //FeedbackGroupComplete += OnComplete;
         }
 
+        /* Metodi */
         /// <summary>
         /// Quando il term associato al FeedbackGesture "spara" un token, si provvede
         /// a controllare se il FeedbackGesture può essere posto in uno stato di Continue.
@@ -98,7 +97,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             }
         }
 
-        /* Metodi */
         /// <summary>
         /// La funzione Create provvede ricorsivamente a popolare le due liste GroundTermChildren e 
         /// CompositeTermChildren. La prima lista contiene tutti i Ground Term che definiscono quel
@@ -183,10 +181,24 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         {
             Debug.WriteLine("Sto continuando :" + sender.term.name.ToString());
         }
-
         private void OnComplete(FeedbackGroupEventArgs sender)
         {
             Debug.WriteLine("Ho completato: " + sender.term.name.ToString());
+        }
+        public void updateTerm2()
+        {
+            if (this.term.state == expressionState.Complete)
+            {
+                // Complete
+                this.state = StateGroup.Complete;// Cambio lo stato
+                this.OnFeedbackGroupComplete();// Genero l'evento
+            }
+            else
+            {
+                // Error
+                this.state = StateGroup.Error;// Cambio lo stato
+                this.OnFeedbackGroupError();// Genero l'evento
+            }
         }
     }
 }

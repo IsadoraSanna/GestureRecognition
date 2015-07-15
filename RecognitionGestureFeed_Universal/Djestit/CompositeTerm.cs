@@ -23,11 +23,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public override void error(Token token)
         {
-            this.state = expressionState.Error;
-            foreach(var child in this.children)
+            foreach (var child in this.children)
             {
                 child.error(token);
             }
+            base.error(token);
         }
     }
 }

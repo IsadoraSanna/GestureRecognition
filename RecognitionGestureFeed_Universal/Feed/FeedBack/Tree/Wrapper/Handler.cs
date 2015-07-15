@@ -8,28 +8,27 @@ using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
 {
-    //
-    public delegate void Handler<T, S>(T obj, S sender) where S : GestureEventArgs;
-
-    public class Handler
+    public class Handler : ICloneable
     {
         /* Attributi */
         //
-        public string nome { get; private set; }
+        public string name { get; private set; }
         //
         public List<Modifies> elementList = new List<Modifies>();
         //
-        public Handler function { get; private set; }
+        public GestureEventHandler function;
 
         /* Costruttore */
-        public Handler(String nome, List<Modifies> list, Handler function)
+        public Handler(String name, List<Modifies> list, GestureEventHandler function)
         {
-            this.nome = nome;
+            this.name = (string)name.Clone();
             this.elementList = list;
-            this.function = function;
+            this.function = (GestureEventHandler)function.Clone();
         }
-
         /* Metodi */
-
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

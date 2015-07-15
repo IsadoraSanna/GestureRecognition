@@ -53,20 +53,23 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         // Imposta lo stato dell'espressione come completo
-        public virtual void complete(Token token){
-            // Aggiorna i contatori e genera l'evento Complete
+        public virtual void complete(Token token)
+        {
+            // Aggiorna i contatori e verifica se deve generare l'evento Complete
             this.num_total++;
             this.num_discrete++;
-		    this.state = expressionState.Complete;
+            this.state = expressionState.Complete;
             GestureEventArgs e = new GestureEventArgs(this, token);
             onComplete(e);
             onChangeState();
         }
 
         // Imposta lo stato dell'espressione come errore
-        public virtual void error(Token token){
+        public virtual void error(Token token)
+        {
+            // Resetta il contatore e verifica se deve generare l'evento Error
             this.num_discrete = 0;
-		    this.state = expressionState.Error;
+            this.state = expressionState.Error;
             GestureEventArgs e = new GestureEventArgs(this, token);            
             onError(e);
             onChangeState();
@@ -90,7 +93,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         public virtual void onError(GestureEventArgs t)
-        {            
+        {
             if (Error != null)
             {
                 Error(this, t);
