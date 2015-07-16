@@ -86,7 +86,6 @@ C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universa
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.xml
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.dll
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.xml
-C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\Interop.SpeechLib.dll
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csproj.ResolveComReference.cache
 C:\Users\BatCave\Desktop\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\RecognitionGestureFeed_Universal.dll
@@ -103,3 +102,4 @@ C:\Users\BatCave\Desktop\GestureRecognition\RecognitionGestureFeed_Universal\obj
 C:\Users\BatCave\Desktop\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.dll
 C:\Users\BatCave\Desktop\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.pdb
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csproj.ResolveComReference.cache
+C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

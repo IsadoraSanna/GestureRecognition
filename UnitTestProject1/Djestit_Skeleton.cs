@@ -15,6 +15,7 @@ using RecognitionGestureFeed_Universal.Recognition;
 using RecognitionGestureFeed_Universal.Feed.FeedBack;
 // Feedback Handler/Modifies
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Kinect
 using Microsoft.Kinect;
 // Debug
@@ -112,14 +113,19 @@ namespace UnitTestProject1
             }
             return false;
         }
+
+        [Modifies("a", 0), Modifies("b", 1), Modifies("c", 2)]
         void PanX(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Eseguito gesto PanX");
         }
+
+        [Modifies("a",0), Modifies("d", 1), Modifies("e", 2)]
         void PanY(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Eseguito gesto PanY");
         }
+
         void Close(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho la mano destra chiusa.");
@@ -169,6 +175,7 @@ namespace UnitTestProject1
             Sequence panX = new Sequence(listTerm2);
             panX.Complete += PanX;
             panX.name = "PanX";
+            panX.likelihood = 1;
 
             /* Pan Asse Y */
             // Close
@@ -200,6 +207,7 @@ namespace UnitTestProject1
             Sequence panY = new Sequence(listTermy2);
             panY.Complete += PanY;
             panY.name = "PanY";
+            panY.likelihood = 0.1f;
             //
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
@@ -210,23 +218,9 @@ namespace UnitTestProject1
             // Creo l'albero dei feedback
             Feedback tree = new Feedback(choice);
             // Definisco Modifies & Handler per le due gesture
-            // PanX
-            Modifies a = new Modifies("a", 0);
-            Modifies b = new Modifies("b", 1);
-            Modifies c = new Modifies("c", 2);
-            List<Modifies> listModifiesX = new List<Modifies>();
-            listModifiesX.Add(a);
-            listModifiesX.Add(b);
-            listModifiesX.Add(c);
-            Handler handlerPanX = new Handler("PanX", listModifiesX, this.PanX);
+            Handler handlerPanX = new Handler("PanX", this.PanX, tree.tree.children[0].likelihood);
             // PanY
-            Modifies d = new Modifies("d", 1);
-            Modifies e = new Modifies("e", 2);
-            List<Modifies> listModifiesY = new List<Modifies>();
-            listModifiesY.Add(a);
-            listModifiesY.Add(d);
-            listModifiesY.Add(e);
-            Handler handlerPanY = new Handler("PanY", listModifiesY, this.PanY);
+            Handler handlerPanY = new Handler("PanY", this.PanY, tree.tree.children[1].likelihood);
 
             // Associo gli handler alle due Gesture
             tree.tree.children[0].handlerGesture = (Handler)handlerPanX.Clone();

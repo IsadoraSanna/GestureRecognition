@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Reflection
+using System.Reflection;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
 {
@@ -17,18 +21,27 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
         public List<Modifies> elementList = new List<Modifies>();
         //
         public GestureEventHandler function;
+        // Probabilità associata alla gesture
+        public float likelihood { get; private set; }
 
         /* Costruttore */
-        public Handler(String name, List<Modifies> list, GestureEventHandler function)
+        public Handler(string name, GestureEventHandler function, float likelihood)
         {
             this.name = (string)name.Clone();
-            this.elementList = list;
             this.function = (GestureEventHandler)function.Clone();
+            this.likelihood = likelihood;
+            this.elementList = this.getModifiesAttribute();
         }
+
         /* Metodi */
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public List<Modifies> getModifiesAttribute()
+        {
+            return this.function.GetMethodInfo().GetCustomAttributes().OfType<Modifies>().ToList();
         }
     }
 
@@ -51,7 +64,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
 
         // If Equals() returns true for a pair of objects 
         // then GetHashCode() must return the same value for these objects.
-
         public int GetHashCode(Handler handler)
         {
             //

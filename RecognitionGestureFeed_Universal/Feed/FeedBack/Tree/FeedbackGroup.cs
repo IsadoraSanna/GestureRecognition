@@ -52,7 +52,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /// Se assume il valore False vuol dire che l'utente sta eseguendo una gesture totalmente dissimile, e quindi non dev'essere visualizzato.
         public StateGroup state;// { get; private set; }
         // Probabilità associata al Term
-        public float likelihood { get; private set; }
+        public float likelihood;
         // Handler associato alla Gesture
         public Handler handlerGesture;
 

@@ -14,7 +14,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class GroundTerm : Term
     {
         /* Attributi */
-        public String type;
+        public String type;// Tipo di ground term
         public Accepts<Token> _accepts;
         public Accepts<Token> accepts;
 

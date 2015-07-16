@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Djestit;
 // Wrapper
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Debug
 using System.Diagnostics;
 
@@ -44,7 +45,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 this.children.Add(createFeedbackGesture(term));
             }
 
+            // Inizializzo la mappa degli handler
             this.mapHandler = new Dictionary<Handler, List<Modifies>>();
+            // Associa al cambiamento di stato del term l'handler resetTree
             this.term.ChangeState += resetTree;
         }
 
@@ -137,6 +140,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             //
             this.mapHandler.Add(newHandler, listModifies);
+            //
+            this.mapHandler.OrderBy(key => key.Key.likelihood);
         }
 
         /// <summary>
@@ -163,6 +168,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                     i.Value.Add(element);
                 }
             }
+
+            //
+            this.mapHandler.OrderBy(key => key.Key.likelihood);
         }
 
         // Prova
@@ -173,7 +181,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             {
                 Debug.WriteLine("Porcamadonna a Dio: - " + child.Key.name);
             }
-
         }
     }
 }

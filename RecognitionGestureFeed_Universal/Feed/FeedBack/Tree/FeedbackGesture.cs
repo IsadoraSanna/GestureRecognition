@@ -25,8 +25,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         {
             // Inizializzo il Wrapper
             this.wrapper = new FeedbackWrapper();
-            // Probabilità dell'evento
-            //this.likelihood
 
             // Creo la lista dei Ground Term associati qualora il Term sia un Composite Term
             if (term.GetType() != typeof(GroundTerm))
@@ -41,6 +39,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                     create(child);
                 }
             }
+
+            // Calcolo della probabilità
 
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
@@ -73,7 +73,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
-            this.term.ChangeState += updateTerm2;
+            this.term.ChangeState += updateTerm;
+
+            // Calcolo della probabilità dell'evento
+            this.determineLikelihood(ProbabilityType.simple);
 
             // Prova esecuzione
             //FeedbackGroupContinue += OnContinue;
@@ -184,21 +187,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void OnComplete(FeedbackGroupEventArgs sender)
         {
             Debug.WriteLine("Ho completato: " + sender.term.name.ToString());
-        }
-        public void updateTerm2()
-        {
-            if (this.term.state == expressionState.Complete)
-            {
-                // Complete
-                this.state = StateGroup.Complete;// Cambio lo stato
-                this.OnFeedbackGroupComplete();// Genero l'evento
-            }
-            else
-            {
-                // Error
-                this.state = StateGroup.Error;// Cambio lo stato
-                this.OnFeedbackGroupError();// Genero l'evento
-            }
         }
     }
 }

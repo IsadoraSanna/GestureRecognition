@@ -17,6 +17,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /* Costruttore */
         public FeedbackLeaf(Term term) : base(term)
         {
+            this.likelihood = term.likelihood;
             this.term.ChangeState += updateTerm;
         }
 

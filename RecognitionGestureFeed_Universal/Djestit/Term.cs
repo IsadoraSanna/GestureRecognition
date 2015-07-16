@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Wrapper 
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Debug
 using System.Diagnostics;
 
@@ -33,9 +35,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public bool excluded;
         public bool once;
         // Indica quante volte è stato eseguito il Term in questione, da quando il programma è stato avviato
-        public int num_total {get; private set;}
+        public int num_total { get; private set; }
         // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
         public int num_discrete { get; private set; }
+        // Probabilità dell'evento
+        public float likelihood;
         // Prova
         public string name;
 
@@ -70,7 +74,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             // Resetta il contatore e verifica se deve generare l'evento Error
             this.num_discrete = 0;
             this.state = expressionState.Error;
-            GestureEventArgs e = new GestureEventArgs(this, token);            
+            GestureEventArgs e = new GestureEventArgs(this, token);
             onError(e);
             onChangeState();
         }
@@ -78,9 +82,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Verifica se l'imput puo' essere accettato o no
         public virtual bool lookahead(Token token)
         {
-	        if(token != null){
-		        return true;
-	        }
+            if (token != null)
+            {
+                return true;
+            }
             return false;
         }
 
@@ -110,6 +115,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             if (this.TokenFire != null)
                 this.TokenFire(this, sender);
-        } 
+        }
     }
 }

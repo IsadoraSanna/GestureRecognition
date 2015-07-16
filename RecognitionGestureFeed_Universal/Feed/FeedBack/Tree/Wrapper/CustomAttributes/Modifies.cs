@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Reflection
+using System.Reflection;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
+namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes
 {
     //
-    [System.AttributeUsage(System.AttributeTargets.Class |
-                       System.AttributeTargets.Struct,
-                       AllowMultiple = true)
-    ]
-
-    public class Modifies : System.Attribute, ICloneable
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+    public class Modifies : Attribute, ICloneable
     {
         /* Attributi */
         // Nome dell'oggetto
         internal string name { get; private set; }
+        //
+        internal object obj { get; private set; }
         // Nome del suo nuovo valore
         internal float value { get; private set; }
 
@@ -26,9 +26,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
             this.name = name; // Nome
             this.value = value; // Valore
         }
+        public Modifies(string name, object obj, float value)
+        {
+            this.name = name; // Nome
+            this.obj = obj; // Object 
+            this.value = value; // Valore
+        }
 
         /* Metodi */
-
         /// <summary>
         /// 
         /// </summary>
