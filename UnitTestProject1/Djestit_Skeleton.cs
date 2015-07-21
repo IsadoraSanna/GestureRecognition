@@ -13,9 +13,10 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition;
 // Feedback
 using RecognitionGestureFeed_Universal.Feed.FeedBack;
-// Feedback Handler/Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
+// Feedback Handler/Modifies/Likelihood
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Kinect
 using Microsoft.Kinect;
 // Debug
@@ -151,18 +152,21 @@ namespace UnitTestProject1
             termx1.type = "Start";
             termx1.accepts = close;
             termx1.name = "GroundTerm CloseX";
+            termx1.likelihood = new Likelihood(0.01f);
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
             termx2.name = "GroundTerm MoveX";
+            termx2.likelihood = new Likelihood(0.02f);
             //termx2.Complete += MoveX;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
             termx3.name = "GroundTerm OpenX";
+            termx3.likelihood = new Likelihood(0.01f);
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
@@ -175,7 +179,8 @@ namespace UnitTestProject1
             Sequence panX = new Sequence(listTerm2);
             panX.Complete += PanX;
             panX.name = "PanX";
-            panX.likelihood = 1;
+            // Handler PanX
+            panX.handler = new Handler(this.PanX);
 
             /* Pan Asse Y */
             // Close
@@ -183,18 +188,21 @@ namespace UnitTestProject1
             termy1.type = "Start";
             termy1.accepts = close;
             termy1.name = "GroundTerm CloseY";
+            termy1.likelihood = new Likelihood(0.01f);
             //termy1.Complete += Close;
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
             termy2.name = "GroundTerm MoveY";
+            termy2.likelihood = new Likelihood(0.3f);
             //termy2.Complete += Move;
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
             termy3.name = "GroundTerm OpenY";
+            termy3.likelihood = new Likelihood(0.01f);
             //termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();
@@ -207,8 +215,10 @@ namespace UnitTestProject1
             Sequence panY = new Sequence(listTermy2);
             panY.Complete += PanY;
             panY.name = "PanY";
-            panY.likelihood = 0.1f;
-            //
+            // PanY
+            panY.handler = new Handler(this.PanY);
+
+            // Choice
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
             listTerm.Add(panY);
@@ -217,14 +227,6 @@ namespace UnitTestProject1
             sensor = new SkeletonSensor(choice, 5);
             // Creo l'albero dei feedback
             Feedback tree = new Feedback(choice);
-            // Definisco Modifies & Handler per le due gesture
-            Handler handlerPanX = new Handler("PanX", this.PanX, tree.tree.children[0].likelihood);
-            // PanY
-            Handler handlerPanY = new Handler("PanY", this.PanY, tree.tree.children[1].likelihood);
-
-            // Associo gli handler alle due Gesture
-            tree.tree.children[0].handlerGesture = (Handler)handlerPanX.Clone();
-            tree.tree.children[1].handlerGesture = (Handler)handlerPanY.Clone();
 
             /// Simulazione Gesti
             // Simulo 1 gesto di start

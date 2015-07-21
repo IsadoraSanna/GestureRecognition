@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
 {
@@ -18,10 +20,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper
         // Group che descrive la gesture
         public FeedbackGroup group { get; private set; }
         // Handler associata alla gesture
-        public Handler handler { get; private set; }
+        public RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler.Handler handler { get; private set; }
 
-        /* Metodi */
-        public FeedbackGroupEventArgs(Term term, FeedbackWrapper wrapper, FeedbackGroup group, Handler handler)
+        /* Costruttore */
+        public FeedbackGroupEventArgs(Term term, FeedbackWrapper wrapper, FeedbackGroup group, Handler.Handler handler)
         {
             this.term = term;
             this.wrapper = wrapper;

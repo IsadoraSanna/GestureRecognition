@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Djestit;
 // Wrapper
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
-
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Likelihood
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Debug
 using System.Diagnostics;
 
@@ -52,7 +55,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /// Se assume il valore False vuol dire che l'utente sta eseguendo una gesture totalmente dissimile, e quindi non dev'essere visualizzato.
         public StateGroup state;// { get; private set; }
         // Probabilità associata al Term
-        public float likelihood;
+        public Likelihood likelihood { get; internal set; }
         // Handler associato alla Gesture
         public Handler handlerGesture;
 
@@ -63,43 +66,52 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             this.term = term;
             // Inizializza la stato del Nodo a Default
             this.state = StateGroup.Default;
+            // Associa al FeedbackGroup l'handler associato term (se questo non è nullo)
+            if (term.handler != null)
+                this.handlerGesture = term.handler;
         }
 
         /* Metodi */
         /// <summary>
         /// Si occupa di lanciare l'evento associato al raggiungimento del Complete da parte di un FeedbackGroup.
         /// </summary>
-        internal void OnFeedbackGroupComplete()
+        internal virtual void OnFeedbackGroupComplete()
         {
-            // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupComplete != null)
+            {
+                // Creo il parametro FeedbackGroupEventArgs
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
                 this.FeedbackGroupComplete(sender);// Lancia l'evento
+            }
         }
 
         /// <summary>
         /// Comunica che la gesture associata al FeedbackGroup è ancora in esecuzione
         /// </summary>
-        internal void OnFeedbackGroupContinue()
+        internal virtual void OnFeedbackGroupContinue()
         {
-            // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupContinue != null)
+            {
+                // Creo il parametro FeedbackGroupEventArgs
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
                 this.FeedbackGroupContinue(sender);// Lancia l'evento
+            }
         }
 
         /// <summary>
         /// Comunica che la gesture associata al FeedbackGroup è andata in error
         /// </summary>
-        internal void OnFeedbackGroupError()
+        internal virtual void OnFeedbackGroupError()
         {
-            // Creo il parametro FeedbackGroupEventArgs
-            FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupError != null)
+            {
+                // Creo il parametro FeedbackGroupEventArgs
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
                 this.FeedbackGroupError(sender);// Lancia l'evento
+            }
         }
 
         /// <summary>

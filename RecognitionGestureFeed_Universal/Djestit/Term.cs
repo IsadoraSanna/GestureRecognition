@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// Wrapper 
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+// Handler 
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Likelihood
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Debug
 using System.Diagnostics;
 
@@ -39,7 +41,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
         public int num_discrete { get; private set; }
         // Probabilità dell'evento
-        public float likelihood;
+        public Likelihood likelihood;
+        // Handler dell'evento
+        public Handler handler;
         // Prova
         public string name;
 

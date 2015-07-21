@@ -15,7 +15,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         /* Attributi */
         // Nome dell'oggetto
         internal string name { get; private set; }
-        //
+        // Oggetto che verrà modificato
         internal object obj { get; private set; }
         // Nome del suo nuovo valore
         internal float value { get; private set; }
@@ -35,7 +35,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
 
         /* Metodi */
         /// <summary>
-        /// 
+        /// Clona l'oggeto di tipo Modifies
         /// </summary>
         /// <returns></returns>
         public object Clone()
@@ -44,40 +44,47 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         }
     }
 
-    // Custom comparer for the Product class
+    // Comparer per la classe Modifies
     class ModifiesComparer : IEqualityComparer<Modifies>
     {
         // Products are equal if their names and product numbers are equal.
         public bool Equals(Modifies x, Modifies y)
         {
-
-            //Check whether the compared objects reference the same data.
-            if (Object.ReferenceEquals(x, y)) return true;
-
-            //Check whether any of the compared objects is null.
+            // Controlla se i due Modifies puntano alla stesso oggetto, restituisce true.
+            if (Object.ReferenceEquals(x, y)) 
+                return true;
+            
+            // Se uno dei due Modifies puntano ad un oggetto nullo, restituisce false.
             if (Object.ReferenceEquals(x, null) || Object.ReferenceEquals(y, null))
                 return false;
 
-            //Check whether the products' properties are equal.
-            return x.value == y.value && x.name == y.name;
+            // Controlla se i due Modifies modificano lo stesso oggetto
+            if ((x.obj != null && y.obj != null) && (x.obj == y.obj))
+                return true;
+            // O se hanno lo stesso nome
+            if ((x.obj == null) || (y.obj == null) && (x.name == y.name))
+                return true;
+
+            return false;
         }
 
-        // If Equals() returns true for a pair of objects 
-        // then GetHashCode() must return the same value for these objects.
-
+        // Calcola l'hashCode di un oggetto di tipo Modifies
         public int GetHashCode(Modifies element)
         {
-            //Check whether the object is null
+            // Controlla se l'oggetto è nullo
             if (Object.ReferenceEquals(element, null)) return 0;
 
-            //Get hash code for the Name field if it is not null.
+            // Se l'oggetto non è nullo allora calcolo l'hashcode dei singoli attributi dell'oggetto stesso
             int hashName = element.name == null ? 0 : element.name.GetHashCode();
 
-            //Get hash code for the Code field.
-            int hashValue = element.value.GetHashCode();
+            // Calcola l'hashcode del valore
+            int hashValue = element.value == null ? 0 : element.value.GetHashCode();
+
+            // Calcola l'hashcode dell'oggetto
+            int hashObj = element.obj == null ? 0 : element.obj.GetHashCode();
 
             //Calculate the hash code for the product.
-            return hashName ^ hashValue;
+            return hashName ^ hashValue ^ hashObj;
         }
     }
 

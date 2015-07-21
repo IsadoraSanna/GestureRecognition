@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Djestit;
 // Wrapper
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Likelihood
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Debug
 using System.Diagnostics;
 
@@ -19,6 +23,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public List<FeedbackLeaf> groundTermChildren = new List<FeedbackLeaf>();
         // Lista dei Composite Term associati alla gesture
         public List<FeedbackComposite> compositeTermChildren = new List<FeedbackComposite>();
+        // Delta utilizzato per aggiornare la probabilità di una gesture
+        private float delta = 0.001f;
 
         /* Costruttore */
         public FeedbackGesture(Term term) : base(term)
@@ -41,46 +47,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             }
 
             // Calcolo della probabilità
-
+            this.handlerGesture.likelihood = this.likelihood = new Likelihood(this, ProbabilityType.composite);
+            //this.determineLikelihood(ProbabilityType.simple);
+            // Quindi aggiorna la probabilità del suo handler
+           // this.handlerGesture.updateLikelihood(this.likelihood);
+            
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
             this.term.ChangeState += updateTerm;
-        }
-
-        public FeedbackGesture(Term term, Handler handler) : base(term)
-        {
-            // Inizializzo il Wrapper
-            this.wrapper = new FeedbackWrapper();
-            // Probabilità dell'evento
-            //this.likelihood
-
-            // Creo la lista dei Ground Term associati qualora il Term sia un Composite Term
-            if (term.GetType() != typeof(GroundTerm))
-            {
-                // Casto il composite term
-                CompositeTerm compositeTerm = (CompositeTerm)term;
-                // Naviga all'interno dell'albero, che definisce il Composite Term in questione, 
-                // per selezionare tutti i Ground Term che lo descrivono.
-                foreach (var child in compositeTerm.children)
-                {
-                    // Lo aggiungo nella lista dei children
-                    create(child);
-                }
-            }
-
-            // Handler della Gesture
-            this.handlerGesture = handler;
-
-            // Handler relativi all'aggiornamento di stato del term e al suo fire
-            this.term.TokenFire += updateChild;
-            this.term.ChangeState += updateTerm;
-
-            // Calcolo della probabilità dell'evento
-            this.determineLikelihood(ProbabilityType.simple);
-
-            // Prova esecuzione
-            //FeedbackGroupContinue += OnContinue;
-            //FeedbackGroupComplete += OnComplete;
         }
 
         /* Metodi */
@@ -157,7 +131,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         }
 
         /// <summary>
-        /// Resetta il FeedbackGroup e i suoi figli (pone il suo stato a Continue)
+        /// Resetta il FeedbackGroup e i suoi figli (pone il suo stato a Default)
         /// </summary>
         internal override void reset()
         {
@@ -178,6 +152,26 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 list.Add(child);
             }
         }
+
+        public override void updateTerm()
+        {
+            if (this.term.state == expressionState.Complete)
+            {
+                // Complete
+                this.state = StateGroup.Complete;// Cambio lo stato
+                this.likelihood.updateLikelihood(this.likelihood.likelihood + this.delta);// Aggiorno la probabilità sommandogli un piccolo delta
+                //this.likelihood += this.delta;
+                //this.handlerGesture.updateLikelihood(this.likelihood);// Aggiorno anche la probabilità dell'handler
+                this.OnFeedbackGroupComplete();// Genero l'evento
+            }
+            else
+            {
+                // Error
+                this.state = StateGroup.Error;// Cambio lo stato
+                this.OnFeedbackGroupError();// Genero l'evento
+            }
+        }
+
 
         // Prova
         private void OnContinue(FeedbackGroupEventArgs sender)
