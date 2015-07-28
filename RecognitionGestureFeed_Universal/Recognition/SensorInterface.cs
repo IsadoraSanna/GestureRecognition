@@ -9,6 +9,10 @@ using RecognitionGestureFeed_Universal.Djestit;
 using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+// Likelihood-Handler-Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Kinect
 using Microsoft.Kinect;
 // Debug
@@ -22,6 +26,8 @@ namespace RecognitionGestureFeed_Universal.Recognition
     {
         // Attributi
         internal SkeletonSensor sensor;
+        // Prova
+        internal Feedback tree;
 
         public SensorInterface(AcquisitionManager am, Term expression)
         {
@@ -57,9 +63,10 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 }
 
                 // Se lo stato della choice è in error o complete allora lo riazzero
-                //if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
-                    //this.sensor.root.reset();
+                if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
+                    this.sensor.root.reset();
             }
+            tree.tree.print();
         }
 
         #region Prove
@@ -75,42 +82,58 @@ namespace RecognitionGestureFeed_Universal.Recognition
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
             termx1.accepts = close;
+            termx1.name = "GroundTerm CloseX";
+            termx1.likelihood = new Likelihood(0.01f);
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
+            termx2.name = "GroundTerm MoveX";
+            termx2.likelihood = new Likelihood(0.02f);
             //termx2.Complete += Move;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
+            termx3.name = "GroundTerm OpenX";
+            termx3.likelihood = new Likelihood(0.01f);
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
             listTermx.Add(iterativex);
             listTermx.Add(termx3);
             Disabling disablingx = new Disabling(listTermx);
-            List<Term> listTermx2 = new List<Term>();
-            listTermx2.Add(termx1);
-            listTermx2.Add(disablingx);
-            Sequence panX = new Sequence(listTermx2);
+            List<Term> listTerm2 = new List<Term>();
+            listTerm2.Add(termx1);
+            listTerm2.Add(disablingx);
+            Sequence panX = new Sequence(listTerm2);
             panX.Complete += PanX;
+            panX.name = "PanX";
+            // Handler PanX
+            panX.handler = new Handler(this.PanX, "PanX");
+
             /* Pan Asse Y */
             // Close
             GroundTerm termy1 = new GroundTerm();
             termy1.type = "Start";
             termy1.accepts = close;
+            termy1.name = "GroundTerm CloseY";
+            termy1.likelihood = new Likelihood(0.01f);
             //termy1.Complete += Close;
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
+            termy2.name = "GroundTerm MoveY";
+            termy2.likelihood = new Likelihood(0.3f);
             //termy2.Complete += Move;
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
+            termy3.name = "GroundTerm OpenY";
+            termy3.likelihood = new Likelihood(0.01f);
             //termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();
@@ -122,24 +145,29 @@ namespace RecognitionGestureFeed_Universal.Recognition
             listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
             panY.Complete += PanY;
-            //
+            panY.name = "PanY";
+            // PanY
+            panY.handler = new Handler(this.PanY, "PanY");
+
+            // Choice
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
             listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
-
-            this.sensor = new SkeletonSensor(choice, 3);
+            // Assoccio l'espressione panX al sensor
+            this.sensor = new SkeletonSensor(choice, 5);
             am.SkeletonsFrameManaged += updateSkeleton;
-            Feedback fb = new Feedback(choice);
+            // Creo l'albero dei feedback
+            this.tree = new Feedback(choice);
         }
-        
+
         // Example
         internal bool close(Token token)
         {
             if (token.GetType() == typeof(SkeletonToken))
             {
+                //
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // La gesture inizia se l'utente chiude la mano destra
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
                 {
                     return true;
@@ -169,14 +197,17 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
-                    
                 }
-                //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
-                    return true;
-                else
 
-                    return false;                
+                if (listConfidenceX.Average() > listConfidenceY.Average()
+                    && Math.Abs(jNew.position.X - skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight).position.X) <= 0.5f
+                    && Math.Abs(jNew.position.Y - skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight).position.Y) <= 0.1f
+                    )
+                {
+                    return true;
+                }
+                else
+                    return false;                      
             }
             return false;
         }
@@ -188,7 +219,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
                 JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
-                //Debug.WriteLine("mano X: " +jNew.position.X);
+
                 List<float> listConfidenceX = new List<float>();
                 List<float> listConfidenceY = new List<float>();
 
@@ -199,10 +230,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
-
                 }
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
+
+                if (listConfidenceY.Average() > listConfidenceX.Average()
+                     && Math.Abs(jNew.position.Y - skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight).position.Y) <= 0.5f
+                     && Math.Abs(jNew.position.X - skeletonToken.precSkeletons[0].getJointInformation(JointType.HandRight).position.X) <= 0.1f
+                    )
+                {
                     return true;
+                }
                 else
                     return false;
             }
@@ -213,7 +249,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                // La gesture termina quando l'utente apre la mano destra
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
                     return true;
                 else
@@ -222,13 +257,16 @@ namespace RecognitionGestureFeed_Universal.Recognition
             return false;
         }
 
+        [Modifies("a", 0), Modifies("b", 1), Modifies("c", 2)]
         void PanX(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Pan X");
+            Debug.WriteLine("Eseguito gesto PanX");
         }
+
+        [Modifies("a", 0), Modifies("d", 1), Modifies("e", 2)]
         void PanY(object sender, GestureEventArgs t)
         {
-            Debug.WriteLine("Pan Y");
+            Debug.WriteLine("Eseguito gesto PanY");
         }
         void Close(object sender, GestureEventArgs t)
         {

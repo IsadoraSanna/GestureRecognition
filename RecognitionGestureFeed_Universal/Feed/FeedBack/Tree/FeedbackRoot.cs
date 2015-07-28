@@ -111,6 +111,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 // Se si, lo si rimuove dalla mappa e si aggiornano di conseguenza anche tutti gli 
                 // elementi dei vari handler presenti nella mappa.
                 this.mapHandler.Remove(sender.handler);
+                Debug.WriteLine("Nome dell'handler: " + sender.handler.name);
                 this.removeNode();
             }
         }
@@ -193,7 +194,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         // Prova
         public void print()
         {
-            Debug.WriteLine("It's Time of Porcoddio");
+            //Debug.WriteLine(this.mapHandler.Count);
             foreach (var child in this.mapHandler)
             {
                 Debug.WriteLine("Porcamadonna a Dio: - " + child.Key.name);

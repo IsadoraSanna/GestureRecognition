@@ -55,10 +55,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LeapCSharp.NET4.0">
+      <HintPath>..\..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="Microsoft.Kinect.VisualGestureBuilder, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
     <Reference Include="Microsoft.Kinect.Wpf.Controls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -98,6 +105,7 @@
     <Compile Include="Feed\FeedBack\Tree\Wrapper\CustomAttributes\Modifies.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackWrapper.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackGroupEventArgs.cs" />
+    <Compile Include="Gesture\Audio_Djestit\AudioToken.cs" />
     <Compile Include="Gesture\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureDetectorXML.cs" />
     <Compile Include="Gesture\Kinect_XML\GestureXML.cs" />
@@ -110,6 +118,7 @@
     <Compile Include="Gesture\Kinect_VisualGestureBuilder\GestureDetector.cs" />
     <Compile Include="Gesture\Kinect_Djestit\SkeletonStateSequence.cs" />
     <Compile Include="Recognition\AcquisitionManagerAudio.cs" />
+    <Compile Include="Recognition\AcquisitionManagerLeap.cs" />
     <Compile Include="Recognition\FrameDataManager\AudioData.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />

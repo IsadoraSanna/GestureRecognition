@@ -126,7 +126,6 @@ namespace UnitTestProject1
         {
             Debug.WriteLine("Eseguito gesto PanY");
         }
-
         void Close(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho la mano destra chiusa.");
@@ -177,10 +176,10 @@ namespace UnitTestProject1
             listTerm2.Add(termx1);
             listTerm2.Add(disablingx);
             Sequence panX = new Sequence(listTerm2);
-            panX.Complete += PanX;
+            //panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
-            panX.handler = new Handler(this.PanX);
+            panX.handler = new Handler(this.PanX, "PanX");
 
             /* Pan Asse Y */
             // Close
@@ -213,10 +212,10 @@ namespace UnitTestProject1
             listTermy2.Add(termy1);
             listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
-            panY.Complete += PanY;
+            //panY.Complete += PanY;
             panY.name = "PanY";
             // PanY
-            panY.handler = new Handler(this.PanY);
+            panY.handler = new Handler(this.PanY, "PanY");
 
             // Choice
             List<Term> listTerm = new List<Term>();

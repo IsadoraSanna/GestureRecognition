@@ -27,12 +27,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         public Likelihood.Likelihood likelihood { get; internal set; }
 
         /* Costruttore */
-        public Handler(GestureEventHandler function)
+        public Handler(GestureEventHandler function, string name)
         {
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
             this.elementList = this.getModifiesAttribute();
+            // Nome associata alla funzione
+            this.name = name;
         }
         /// <summary>
         /// Costruttore che inizializza a zero (o a null), tutti gli elementi dell'handler

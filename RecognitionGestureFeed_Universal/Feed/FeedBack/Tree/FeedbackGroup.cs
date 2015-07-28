@@ -200,7 +200,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 this.state = StateGroup.Complete;// Cambio lo stato
                 this.OnFeedbackGroupComplete();// Genero l'evento
             }
-            else
+            else if(this.term.state == expressionState.Error)
             {
                 // Error
                 this.state = StateGroup.Error;// Cambio lo stato

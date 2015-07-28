@@ -78,7 +78,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
             int hashName = element.name == null ? 0 : element.name.GetHashCode();
 
             // Calcola l'hashcode del valore
-            int hashValue = element.value == null ? 0 : element.value.GetHashCode();
+            int hashValue = element.value == 0 ? 0 : element.value.GetHashCode();
 
             // Calcola l'hashcode dell'oggetto
             int hashObj = element.obj == null ? 0 : element.obj.GetHashCode();

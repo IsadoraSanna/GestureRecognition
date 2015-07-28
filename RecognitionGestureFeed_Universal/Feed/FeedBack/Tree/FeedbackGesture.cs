@@ -48,9 +48,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             // Calcolo della probabilità
             this.handlerGesture.likelihood = this.likelihood = new Likelihood(this, ProbabilityType.composite);
-            //this.determineLikelihood(ProbabilityType.simple);
-            // Quindi aggiorna la probabilità del suo handler
-           // this.handlerGesture.updateLikelihood(this.likelihood);
             
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
@@ -161,7 +158,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 this.state = StateGroup.Complete;// Cambio lo stato
                 this.likelihood.updateLikelihood(this.likelihood.likelihood + this.delta);// Aggiorno la probabilità sommandogli un piccolo delta
                 //this.likelihood += this.delta;
-                //this.handlerGesture.updateLikelihood(this.likelihood);// Aggiorno anche la probabilità dell'handler
                 this.OnFeedbackGroupComplete();// Genero l'evento
             }
             else

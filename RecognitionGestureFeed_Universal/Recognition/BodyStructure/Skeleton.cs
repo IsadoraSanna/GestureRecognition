@@ -236,7 +236,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.BodyStructure
             // Creo una prima copia dello scheletro
             Skeleton clone = (Skeleton)this.MemberwiseClone();
             // Creo una copia delle liste
-            //this.joints = this.joints.Select(item => (JointInformation)item.Clone()).ToList();
+            this.joints = this.joints.Select(item => (JointInformation)item.Clone()).ToList();
             this.bones = this.bones.Select(item => (Bone)item.Clone()).ToList();
             // Restituisco il valore
             return clone;
