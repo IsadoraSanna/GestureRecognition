@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
+// Gesture
+using RecognitionGestureFeed_Universal.Gesture;
 // Djestit Kinect
 using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
 // JointInformation
@@ -179,7 +181,7 @@ namespace UnitTestProject1
             //panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
-            panX.handler = new Handler(this.PanX, "PanX");
+            panX.handler = new Handler(this.PanX);
 
             /* Pan Asse Y */
             // Close
@@ -215,7 +217,7 @@ namespace UnitTestProject1
             //panY.Complete += PanY;
             panY.name = "PanY";
             // PanY
-            panY.handler = new Handler(this.PanY, "PanY");
+            panY.handler = new Handler(this.PanY);
 
             // Choice
             List<Term> listTerm = new List<Term>();

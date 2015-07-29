@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// XML
+using System.Xml;
+using System.Xml.Linq;
 // Memory Stream
 using System.IO;
 // Kinect
 using Microsoft.Kinect;
-// RecognitionGestureFeed_Universal
+// Audio Data
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
+// Speech Data
+using RecognitionGestureFeed_Universal.Gesture.Audio_Djestit;
 // Microsoft Speech Platform
-using Microsoft.Kinect;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
 
@@ -18,25 +22,28 @@ namespace RecognitionGestureFeed_Universal.Recognition
 {
     // Delegate event che indica quando viene gestito un frame di tipo audio  
     public delegate void AudioFrameManaged(AcquisitionManagerAudio sender);
+    // Delegate event che avvisa quando viene gestito un frame che contiene commandi vocali
+    public delegate void SpeechFrameManaged(AcquisitionManagerAudio sender, SpeechRecognizedEventArgs result);
 
     public class AcquisitionManagerAudio
     {
-        /* Eventi */
-        public event AudioFrameManaged AudioFrameManaged;
+            /* Eventi */
+            public event AudioFrameManaged AudioFrameManaged;
+            public event SpeechFrameManaged SpeechUpdate;
 
-        /* Attributi */
-        // Sensore Kinect
-        private KinectSensor kinectSensor = null;
-        // Audio
-        private AudioSource audioSource = null;
-        public List<AudioData> audioDataList { get; private set; }
+            /* Attributi */
+            // Sensore Kinect
+            private KinectSensor kinectSensor = null;
+            // Audio
+            private AudioSource audioSource = null;
+            public List<AudioData> audioDataList { get; private set; }
+            // Speech
+            public SpeechRecognitionEngine speechEngine = null;
+            public KinectAudioStream convertStream = null;
 
-        // Speech
-
-
-        /* Costruttore */
-        public AcquisitionManagerAudio(KinectSensor kinectSensor)
-        {
+            /* Costruttore */
+            public AcquisitionManagerAudio(KinectSensor kinectSensor)
+            {
             // Avvio il collegamento con la Kinect
             if (kinectSensor == null)
                 throw new ArgumentNullException("Kinect not be connect.");
@@ -54,13 +61,15 @@ namespace RecognitionGestureFeed_Universal.Recognition
             /************ Speech Part ************/
             IReadOnlyList<AudioBeam> audioBeamList = this.kinectSensor.AudioSource.AudioBeams;
             System.IO.Stream audioStream = audioBeamList[0].OpenInputStream();
+            // Convert
+            convertStream = new KinectAudioStream(audioStream);
 
+            // Crea il RecognizerInfo
             RecognizerInfo ri = TryGetKinectRecognizer();
+
             if (null != ri)
             {
-                this.recognitionSpans = new List<Span> { forwardSpan, backSpan, rightSpan, leftSpan };
-
-                SpeechRecognitionEngine speechEngine = new SpeechRecognitionEngine(ri.Id);
+                this.speechEngine = new SpeechRecognitionEngine(ri.Id);
 
                 /****************************************************************
                 * 
@@ -84,19 +93,23 @@ namespace RecognitionGestureFeed_Universal.Recognition
                 * 
                 ****************************************************************/
 
+                /////// Letturafile
+                string fileName = @"C:\Users\BatCave\Copy\Tesi\Programmi\Esempi Kinect\SpeechBasics-WPF\SpeechGrammar.xml";
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(fileName);
+                StringWriter sw = new StringWriter();
+	            XmlTextWriter xw = new XmlTextWriter(sw);
+	            doc.WriteTo(xw);
                 // Prende il file XML in cui si trova la grammatica (prenderla da input)
-                using (var memoryStream = new MemoryStream(Encoding.ASCII.GetBytes(Properties.Resources.SpeechGrammar)))
+                using (var memoryStream = new MemoryStream(Encoding.ASCII.GetBytes(sw.ToString())))
                 {
                     var g = new Grammar(memoryStream);
                     speechEngine.LoadGrammar(g);
                 }
 
-                speechEngine.SpeechRecognized += this.SpeechRecognized;
-                speechEngine.SpeechRecognitionRejected += this.SpeechRejected;
-
+                speechEngine.SpeechRecognized += SpeechRecognized;
                 // let the convertStream know speech is going active
                 this.convertStream.SpeechActive = true;
-
                 // For long recognition sessions (a few hours or more), it may be beneficial to turn off adaptation of the acoustic model. 
                 // This will prevent recognition accuracy from degrading over time.
                 ////speechEngine.UpdateRecognizerSetting("AdaptationOn", 0);
@@ -158,7 +171,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
         private static RecognizerInfo TryGetKinectRecognizer()
         {
             IEnumerable<RecognizerInfo> recognizers = SpeechRecognitionEngine.InstalledRecognizers();
-
             foreach (RecognizerInfo recognizer in recognizers)
             {
                 string value;
@@ -168,7 +180,6 @@ namespace RecognitionGestureFeed_Universal.Recognition
                     return recognizer;
                 }
             }
-
             return null;
         }
 
@@ -176,28 +187,18 @@ namespace RecognitionGestureFeed_Universal.Recognition
         /// Handler for recognized speech events.
         /// </summary>
         /// <param name="sender">object sending the event.</param>
-        /// <param name="e">event arguments.</param>
-        private void SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        /// <param name="result">event arguments.</param>
+        private void SpeechRecognized(object obj, SpeechRecognizedEventArgs result)
         {
             // Speech utterance confidence below which we treat speech as if it hadn't been heard
             const double ConfidenceThreshold = 0.3;
 
-            this.ClearRecognitionHighlights();
-
-            if (e.Result.Confidence >= ConfidenceThreshold)
+            if (result.Result.Confidence >= ConfidenceThreshold)
             {
-                
+                // Genera evento collegato al riconoscimento di un comando vocale corretto
+                if (this.SpeechUpdate != null)
+                    this.SpeechUpdate(this, result);
             }
-        }
-
-        /// <summary>
-        /// Handler for rejected speech events.
-        /// </summary>
-        /// <param name="sender">object sending the event.</param>
-        /// <param name="e">event arguments.</param>
-        private void SpeechRejected(object sender, SpeechRecognitionRejectedEventArgs e)
-        {
-            this.ClearRecognitionHighlights();
         }
     }
 }

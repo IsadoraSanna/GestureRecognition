@@ -1,15 +1,16 @@
-﻿using RecognitionGestureFeed_Universal.Djestit;
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// Kinect
-using Microsoft.Kinect;
+// Djestit
+using RecognitionGestureFeed_Universal.Djestit;
+// Skeleton
+using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
 {
+    // Delegate dell'evento che comunica la gestione di uno SkeletonToken
     public delegate void SkeletonEventHandler(object sender, SkeletonEventArgs s);
 
     public class SkeletonSensor

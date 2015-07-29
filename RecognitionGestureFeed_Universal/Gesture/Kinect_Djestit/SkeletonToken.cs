@@ -12,13 +12,6 @@ using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
 {
-    public enum TypeToken
-    {
-        Start,
-        Move,
-        End
-    }
-
     public class SkeletonToken : Token
     {
         public Skeleton skeleton;
@@ -33,12 +26,9 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
             this.type = type;
             this.precSkeletons = new List<Skeleton>();
             this.identifier = sklt.getIdSkeleton();
-            /* Prova del porcoddio */
-            this.positionX = sklt.handRightPositionX;
-            this.positionY = sklt.handRightPositionY;
         }
 
-        /* Prova del porcoddio */
+        /* Prova */
         public float positionX;
         public float positionY;
 
