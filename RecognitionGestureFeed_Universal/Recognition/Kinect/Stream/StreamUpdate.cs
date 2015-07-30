@@ -12,10 +12,10 @@ using System.IO;
 using System.Diagnostics;
 // Kinect
 using Microsoft.Kinect;
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Stream
+namespace RecognitionGestureFeed_Universal.Recognition.Kinect.Stream
 {
     public static class StreamUpdate
     {

@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeapCSharp.NET4.0">
-      <HintPath>..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -89,6 +89,7 @@
     <Compile Include="Djestit\Iterative.cs" />
     <Compile Include="Djestit\OrderIndependece.cs" />
     <Compile Include="Djestit\Parallel.cs" />
+    <Compile Include="Djestit\Sensor.cs" />
     <Compile Include="Djestit\Sequence.cs" />
     <Compile Include="Djestit\StateSequence.cs" />
     <Compile Include="Djestit\Term.cs" />
@@ -105,11 +106,11 @@
     <Compile Include="Feed\FeedBack\Tree\Wrapper\CustomAttributes\Modifies.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackWrapper.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\FeedbackGroupEventArgs.cs" />
-    <Compile Include="Gesture\Audio\Audio_Djestit\AudioEventArg.cs" />
+    <Compile Include="Gesture\Audio\Audio_Djestit\AudioEventArgs.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioStateSequence.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioToken.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\KinectAudioStream.cs" />
-    <Compile Include="Gesture\Audio\Audio_Djestit\AudioSenso.cs" />
+    <Compile Include="Gesture\Audio\Audio_Djestit\AudioSenso2r.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\GestureDetectorXML.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\GestureXML.cs" />
@@ -121,36 +122,41 @@
     <Compile Include="Gesture\Kinect\Kinect_Djestit\SkeletonToken.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureDetector.cs" />
     <Compile Include="Gesture\Kinect\Kinect_Djestit\SkeletonStateSequence.cs" />
-    <Compile Include="Gesture\TypeToken.cs" />
-    <Compile Include="Recognition\AcquisitionManagerAudio.cs" />
-    <Compile Include="Recognition\AcquisitionManagerLeap.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapEventArgs.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensor.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapStateSequence.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapToken.cs" />
+    <Compile Include="Recognition\Audio\AcquisitionManagerAudio.cs" />
+    <Compile Include="Recognition\Leap\AcquisitionManagerLeap.cs" />
     <Compile Include="Recognition\FrameDataManager\AudioData.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
     <Compile Include="Recognition\FrameDataManager\ColorData.cs" />
+    <Compile Include="Recognition\FrameDataManager\LeapData.cs" />
     <Compile Include="Recognition\FrameDataManager\DepthData.cs" />
     <Compile Include="Recognition\FrameDataManager\FrameData.cs" />
     <Compile Include="Recognition\FrameDataManager\InfraredData.cs" />
-    <Compile Include="Recognition\FrameDataManager\LeapData.cs" />
     <Compile Include="Recognition\FrameDataManager\LongExposureInfraredData.cs" />
-    <Compile Include="Recognition\GestureManager.cs" />
-    <Compile Include="Recognition\InitLeap.cs" />
-    <Compile Include="Recognition\SensorInterface.cs" />
-    <Compile Include="Recognition\BodyStructure\Bone.cs" />
-    <Compile Include="Recognition\Init.cs" />
-    <Compile Include="Recognition\BodyStructure\JointInformation.cs" />
+    <Compile Include="Recognition\Kinect\GestureManager.cs" />
+    <Compile Include="Recognition\Leap\HandStructure\FingerClone.cs" />
+    <Compile Include="Recognition\Leap\HandStructure\HandClone.cs" />
+    <Compile Include="Recognition\Leap\HandStructure\PointableClone.cs" />
+    <Compile Include="Recognition\Leap\InitLeap.cs" />
+    <Compile Include="Recognition\Kinect\SensorInterface.cs" />
+    <Compile Include="Recognition\Kinect\BodyStructure\Bone.cs" />
+    <Compile Include="Recognition\Kinect\Init.cs" />
+    <Compile Include="Recognition\Kinect\BodyStructure\JointInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recognition\BodyStructure\Skeleton.cs" />
-    <Compile Include="Recognition\AcquisitionManager.cs" />
-    <Compile Include="Recognition\AudioSensorInterface.cs" />
-    <Compile Include="Recognition\StreamManager.cs" />
-    <Compile Include="Recognition\Stream\StreamUpdate.cs" />
+    <Compile Include="Recognition\Kinect\BodyStructure\Skeleton.cs" />
+    <Compile Include="Recognition\Kinect\AcquisitionManager.cs" />
+    <Compile Include="Recognition\Audio\AudioSensorInterface.cs" />
+    <Compile Include="Recognition\Kinect\StreamManager.cs" />
+    <Compile Include="Recognition\Kinect\Stream\StreamUpdate.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feed\FeedForward\" />
-    <Folder Include="Gesture\Leap\Leap_Djestit\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

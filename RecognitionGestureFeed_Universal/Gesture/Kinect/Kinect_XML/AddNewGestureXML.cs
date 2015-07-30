@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Kinect 
 using Microsoft.Kinect;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // Xml
 using System.Xml;
 using System.Xml.XmlConfiguration;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Recognition
+namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 {
     public class Init
     {

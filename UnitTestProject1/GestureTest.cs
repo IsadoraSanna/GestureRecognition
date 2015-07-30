@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using RecognitionGestureFeed_Universal.Djestit;
 using System.Collections.Generic;
 //using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
-//using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+//using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // Kinect
 using Microsoft.Kinect;
 

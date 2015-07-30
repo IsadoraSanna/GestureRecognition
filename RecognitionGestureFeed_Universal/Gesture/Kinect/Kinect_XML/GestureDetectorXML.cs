@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 // XML
 using System.Xml.Serialization;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
 {

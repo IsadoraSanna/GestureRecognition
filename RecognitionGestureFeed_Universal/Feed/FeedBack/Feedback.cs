@@ -8,7 +8,7 @@ using RecognitionGestureFeed_Universal.Djestit;
 // Acquisition
 using RecognitionGestureFeed_Universal.Recognition;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // FeedbackTree
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree;
 

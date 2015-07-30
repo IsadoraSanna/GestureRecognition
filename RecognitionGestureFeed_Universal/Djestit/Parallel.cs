@@ -69,7 +69,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 this.complete(token);
             }
             //
-            TokenFireArgs args = new TokenFireArgs();
+            TokenFireArgs args = new TokenFireArgs(token, this);
             IsTokenFire(args);
         }
     }

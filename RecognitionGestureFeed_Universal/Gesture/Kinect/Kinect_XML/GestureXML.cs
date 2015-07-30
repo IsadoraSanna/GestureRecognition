@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // JointInformation
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
 {

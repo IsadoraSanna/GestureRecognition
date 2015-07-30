@@ -6,28 +6,17 @@ using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
-    // Delegate dell'evento che comunica la gestione di uno SkeletonToken
-    public delegate void SkeletonEventHandler(object sender, SkeletonEventArgs s);
-
-    public class SkeletonSensor
+    public class SkeletonSensor : Sensor
     {
-        // Eventi generati all'arrivo di un scheletro
-        public event SkeletonEventHandler onSkeletonStart;
-        public event SkeletonEventHandler onSkeletonMove;
-        public event SkeletonEventHandler onSkeletonEnd;
         /* Attributi  */
-        private int capacity;
-        public Term root;
         public SkeletonStateSequence sequence;
 
-        public SkeletonSensor(Term root, int capacity)
+        public SkeletonSensor(Term root, int capacity) : base(root, capacity)
         {
-            this.capacity = capacity;
-            this.root = root;
             this.sequence = new SkeletonStateSequence(this.capacity);
         }
 
@@ -40,11 +29,11 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
             {
                 case TypeToken.Start:
                     // Genero l'evento onSkeletonStart
-                    _onSkeletonStart(e);
+                    _onTokenStart(e);
                     break;
                 case TypeToken.Move:
                     // Genero l'evento onSkeletonStart
-                    _onSkeletonMove(e);
+                    _onTokenMove(e);
                     // Copio la lista di vecchi token
                     List<SkeletonToken> listToken;
                     sequence.moves.TryGetValue(token.identifier, out listToken);
@@ -52,7 +41,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
                     break;
                 case TypeToken.End:
                     // Genero l'evento onSkeletonStart
-                    _onSkeletonEnd(e);
+                    _onTokenEnd(e);
                     // Rimuovo lo scheletro in questione dalla mappa
                     sequence.removeById(token.identifier);
 
@@ -64,41 +53,12 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
             return token;
         }
 
-        /* Handler eventi di start, move ed end */
-        /// <summary>
-        /// Handler per l'evento start
-        /// </summary>
-        /// <param name="sender"></param>
-        public void _onSkeletonStart(SkeletonEventArgs sender)
-        {
-            if (onSkeletonStart != null)
-                onSkeletonStart(this, sender);
-        }
-        /// <summary>
-        /// Handler per l'evento move
-        /// </summary>
-        /// <param name="sender"></param>
-        public void _onSkeletonMove(SkeletonEventArgs sender)
-        {
-            if (onSkeletonMove != null)
-                onSkeletonMove(this, sender);
-        }
-        /// <summary>
-        /// Handler per l'evento end
-        /// </summary>
-        /// <param name="sender"></param>
-        public void _onSkeletonEnd(SkeletonEventArgs sender)
-        {
-            if (onSkeletonEnd != null)
-                onSkeletonEnd(this, sender);
-        }
-
         /// <summary>
         /// Verifica se in state sequence è già presente quello scheletro.
         /// </summary>
         /// <param name="skeletonId"></param>
         /// <returns></returns>
-        public bool checkSkeleton(int skeletonId)
+        public override bool checkId(int skeletonId)
         {
             if (this.sequence.moves.ContainsKey(skeletonId))
                 return true;

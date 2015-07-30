@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
-using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
+using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // Kinect
 using Microsoft.Kinect;
 // FeedBack

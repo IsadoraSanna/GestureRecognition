@@ -13,9 +13,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
         Term term;
 
         /* Costruttore */
-        public TokenFireArgs()
+        public TokenFireArgs(Token token, Term term)
         {
-
+            this.token = token;
+            this.term = term;
         }
     }
 }

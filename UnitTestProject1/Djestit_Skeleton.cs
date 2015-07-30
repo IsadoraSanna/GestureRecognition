@@ -8,9 +8,9 @@ using RecognitionGestureFeed_Universal.Djestit;
 // Gesture
 using RecognitionGestureFeed_Universal.Gesture;
 // Djestit Kinect
-using RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit;
+using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit;
 // JointInformation
-using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // Recognition
 using RecognitionGestureFeed_Universal.Recognition;
 // Feedback

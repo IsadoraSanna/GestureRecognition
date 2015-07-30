@@ -109,8 +109,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 this.error(token);
             }
             
-            //
-            TokenFireArgs args = new TokenFireArgs();
+            // Comunica che è stato sparato un token
+            TokenFireArgs args = new TokenFireArgs(token, this);
             IsTokenFire(args);
         }
     }

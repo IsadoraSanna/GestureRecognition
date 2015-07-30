@@ -24,11 +24,6 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
 
         /* Attributi */
         /// <summary> 
-        /// Il Path del database in cui risiedono le gesture di prova
-        /// </summary>
-        private readonly string gestureDatabase = @"C:\Users\BatCave\Copy\Tesi\Carca\Programma_di_Prova\Programma_di_Prova\Database\database_gesture_burde.gbd";
-
-        /// <summary> 
         /// Rispettivamente:
         /// Gesture Frame Source che verrà legato al body da seguire
         /// Gesture Frame Reader che verrà usato per gestire gli eventi rilevati dalla Kinect
