@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
     class SkeletonStart : GroundTerm
     {

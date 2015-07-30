@@ -10,7 +10,7 @@ using RecognitionGestureFeed_Universal.Recognition.BodyStructure;
 // Kinect - Prova
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
     public class SkeletonToken : Token
     {

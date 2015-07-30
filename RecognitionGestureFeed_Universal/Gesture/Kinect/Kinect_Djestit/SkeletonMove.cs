@@ -1,20 +1,17 @@
-﻿using System;
+﻿using RecognitionGestureFeed_Universal.Djestit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// GroundTerm
-using RecognitionGestureFeed_Universal.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
-    class SkeletonEnd : GroundTerm
+    class SkeletonMove : GroundTerm
     {
-        // Attributi
         public int id { get; private set; }
 
-        /* Costruttore */
-        public SkeletonEnd(int id) : base()
+        public SkeletonMove(int id) : base()
         {
             this.id = id;
             this.accepts = func_accepts;
@@ -25,11 +22,12 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                if (skeletonToken.type != TypeToken.End)
+                if (skeletonToken.type != TypeToken.Move)
                     return false;
                 if (this.id != skeletonToken.identifier)
                     return false;
-                return true;
+                else
+                    return true;
             }
             else
                 return false;

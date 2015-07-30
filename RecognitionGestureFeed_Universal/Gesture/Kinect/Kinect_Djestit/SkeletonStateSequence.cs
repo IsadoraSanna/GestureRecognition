@@ -8,7 +8,7 @@ using RecognitionGestureFeed_Universal.Djestit;
 // Debug
 using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_Djestit
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
     public class SkeletonStateSequence : StateSequence
     {

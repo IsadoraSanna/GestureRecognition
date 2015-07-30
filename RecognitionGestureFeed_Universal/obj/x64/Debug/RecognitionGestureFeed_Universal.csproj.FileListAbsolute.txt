@@ -104,3 +104,4 @@ C:\Users\BatCave\Desktop\GestureRecognition\RecognitionGestureFeed_Universal\obj
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csproj.ResolveComReference.cache
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\LeapCSharp.NET4.0.dll
+C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
