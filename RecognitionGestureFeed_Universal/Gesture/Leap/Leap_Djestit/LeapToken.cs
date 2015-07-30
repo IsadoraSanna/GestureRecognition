@@ -16,19 +16,19 @@ namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
     {
         /* Attributi */
         // Scheletro associato al token
-        public HandClone hand;
+        public HandListClone hand;
         // Tipo di token (Start, Move o End)
         public TypeToken type;
         // Buffer che contiene gli n scheletri precedentemente rilevati
-        public List<HandClone> precHands;
+        public List<HandListClone> precHands;
         // Identificativo associato allo scheletro
         public int identifier;
 
         /* Costruttore */
-        public LeapToken(TypeToken type, HandClone hand)
+        public LeapToken(TypeToken type, HandListClone hand)
         {
             // Ricave le informazioni di cui necessità
-            this.hand = (HandClone)hand.Clone();
+            this.hand = (HandListClone)hand.Clone();
             this.type = type;
             this.identifier = hand.Id;
         }

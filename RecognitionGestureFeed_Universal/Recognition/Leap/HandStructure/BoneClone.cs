@@ -8,16 +8,10 @@ using Leap;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Leap.HandStructure
 {
-    public class HandClone : Hand, ICloneable
+    class BoneClone : Bone, ICloneable
     {
         /* Attributi */
 
-        /* Costruttore */
 
-        /* Metodi */
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }

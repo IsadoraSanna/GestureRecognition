@@ -8,9 +8,9 @@ namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
 {
     class LeapEventArgs : EventArgs
     {
-        public readonly LeapSensor sensor;
+        public readonly LeapSensorPorcoddio sensor;
 
-        public LeapEventArgs(LeapSensor sensor)
+        public LeapEventArgs(LeapSensorPorcoddio sensor)
         {
             this.sensor = sensor;
         }

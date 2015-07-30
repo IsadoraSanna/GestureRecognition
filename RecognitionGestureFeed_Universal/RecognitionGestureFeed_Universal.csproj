@@ -123,7 +123,7 @@
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureDetector.cs" />
     <Compile Include="Gesture\Kinect\Kinect_Djestit\SkeletonStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapEventArgs.cs" />
-    <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensor.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensorPorcoddio.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapToken.cs" />
     <Compile Include="Recognition\Audio\AcquisitionManagerAudio.cs" />
@@ -137,8 +137,9 @@
     <Compile Include="Recognition\FrameDataManager\InfraredData.cs" />
     <Compile Include="Recognition\FrameDataManager\LongExposureInfraredData.cs" />
     <Compile Include="Recognition\Kinect\GestureManager.cs" />
+    <Compile Include="Recognition\Leap\HandStructure\BoneClone.cs" />
     <Compile Include="Recognition\Leap\HandStructure\FingerClone.cs" />
-    <Compile Include="Recognition\Leap\HandStructure\HandClone.cs" />
+    <Compile Include="Recognition\Leap\HandStructure\HandListClone.cs" />
     <Compile Include="Recognition\Leap\HandStructure\PointableClone.cs" />
     <Compile Include="Recognition\Leap\InitLeap.cs" />
     <Compile Include="Recognition\Kinect\SensorInterface.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Recognition\Audio\AudioSensorInterface.cs" />
     <Compile Include="Recognition\Kinect\StreamManager.cs" />
     <Compile Include="Recognition\Kinect\Stream\StreamUpdate.cs" />
+    <Compile Include="Utilities\ObjectExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
