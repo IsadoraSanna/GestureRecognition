@@ -7,7 +7,7 @@ using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 {
-    public class Init
+    public class InitKinect
     {
         /// <summary>
         /// Provvede alla inizializzazione della variabile utilizzata per accedere ai 

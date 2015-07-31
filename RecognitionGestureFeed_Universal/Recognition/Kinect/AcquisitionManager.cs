@@ -215,7 +215,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         public void Close()
         {
             multiSourceFrameReader.MultiSourceFrameArrived -= Reader_MultiSourceFrameArrived;
-            Init.Close(this.kinectSensor);
+            InitKinect.Close(this.kinectSensor);
         }
 
         #region Events

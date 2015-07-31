@@ -16,8 +16,6 @@ using System.Windows.Media.Imaging;
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition.Kinect.Stream;
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
-// Thread
-using System.ComponentModel;
 
 
 namespace RecognitionGestureFeed_Universal.Recognition.Kinect
@@ -109,7 +107,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             initInfraredStream(am);
             initColorStream(am);
             initSkeletonStream(am, am.kinectSensor);
-
+            
             // Associo l'handler updateStream all'evento frameManaged
             am.FramesManaged += updateAllStream;
         }

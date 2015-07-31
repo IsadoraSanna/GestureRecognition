@@ -24,19 +24,24 @@ using RecognitionGestureFeed_Universal.Feed.FeedBack;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 {
-    public class SensorInterface
+    public class KinectSensorInterface
     {
-        // Attributi
+        /* Attributi */
+        // Sensore usato per comunicare al motorino i nuovi token
         internal SkeletonSensor sensor;
+        // Capacità del buffer
+        internal int capacity = 5;
         // Prova
         internal Feedback tree;
 
-        public SensorInterface(AcquisitionManager am, Term expression)
+        /* Costruttore */
+        public KinectSensorInterface(AcquisitionManager am, Term expression)
         {
-            this.sensor = new SkeletonSensor(expression, 3);
+            this.sensor = new SkeletonSensor(expression, this.capacity);
             am.SkeletonsFrameManaged += updateSkeleton;
         }
 
+        /* Metodi */
         public void updateSkeleton(Skeleton[] skeletonList)
         {
             // Per ogni scheletro rilevato avvio il motorino
@@ -72,12 +77,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         }
 
         #region Prove
-        public SensorInterface(Term term)
+        public KinectSensorInterface(Term term)
         {
             this.sensor = new SkeletonSensor(term, 5);
         }
 
-        public SensorInterface(AcquisitionManager am)
+        public KinectSensorInterface(AcquisitionManager am)
         {
             /* Pan Asse X */
             // Close

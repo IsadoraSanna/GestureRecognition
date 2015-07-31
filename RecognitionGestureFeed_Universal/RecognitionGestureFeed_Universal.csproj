@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeapCSharp.NET4.0">
-      <HintPath>..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -70,6 +70,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -123,10 +124,11 @@
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureDetector.cs" />
     <Compile Include="Gesture\Kinect\Kinect_Djestit\SkeletonStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapEventArgs.cs" />
-    <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensorPorcoddio.cs" />
+    <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensor.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapToken.cs" />
     <Compile Include="Recognition\Audio\AcquisitionManagerAudio.cs" />
+    <Compile Include="Recognition\Leap\LeapSensorInterface.cs" />
     <Compile Include="Recognition\Leap\AcquisitionManagerLeap.cs" />
     <Compile Include="Recognition\FrameDataManager\AudioData.cs" />
     <Compile Include="Recognition\FrameDataManager\BodyIndexData.cs" />
@@ -137,13 +139,10 @@
     <Compile Include="Recognition\FrameDataManager\InfraredData.cs" />
     <Compile Include="Recognition\FrameDataManager\LongExposureInfraredData.cs" />
     <Compile Include="Recognition\Kinect\GestureManager.cs" />
-    <Compile Include="Recognition\Leap\HandStructure\BoneClone.cs" />
-    <Compile Include="Recognition\Leap\HandStructure\FingerClone.cs" />
-    <Compile Include="Recognition\Leap\HandStructure\PointableClone.cs" />
     <Compile Include="Recognition\Leap\InitLeap.cs" />
-    <Compile Include="Recognition\Kinect\SensorInterface.cs" />
+    <Compile Include="Recognition\Kinect\KinectSensorInterface.cs" />
     <Compile Include="Recognition\Kinect\BodyStructure\Bone.cs" />
-    <Compile Include="Recognition\Kinect\Init.cs" />
+    <Compile Include="Recognition\Kinect\InitKinect.cs" />
     <Compile Include="Recognition\Kinect\BodyStructure\JointInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recognition\Kinect\BodyStructure\Skeleton.cs" />
@@ -151,6 +150,8 @@
     <Compile Include="Recognition\Audio\AudioSensorInterface.cs" />
     <Compile Include="Recognition\Kinect\StreamManager.cs" />
     <Compile Include="Recognition\Kinect\Stream\StreamUpdate.cs" />
+    <Compile Include="Recognition\Leap\StreamManager.cs" />
+    <Compile Include="Recognition\Leap\Stream\StreamUpdate.cs" />
     <Compile Include="Utilities\ObjectExtension.cs" />
   </ItemGroup>
   <ItemGroup>
