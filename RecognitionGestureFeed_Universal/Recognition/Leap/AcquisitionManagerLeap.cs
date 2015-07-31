@@ -42,15 +42,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         public event ListenerEvent _OnServiceDisconnect;
 
         /* Attributi */
-        // Controller usato per creare la connessione con il Leap Motion
-        private Controller controller = new Controller();
         // Object che contiene i dati ricevuti dal Leap Motion
-        private LeapData leapData = new LeapData();
+        private List<LeapData> leapData = new List<LeapData>();
 
         /* Costruttore */
-        public AcquisitionManagerLeap(Controller controller) : base()
+        public AcquisitionManagerLeap() : base()
         {
-            this.controller = controller;
         }
 
         /* Metodi */
@@ -60,7 +57,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         /// <param name="arg0"></param>
         public override void OnInit(Controller controller)
         {
-            Debug.WriteLine("Porcoddio");
             // Abilita il riconoscimento di determinate gesture
 
         }
@@ -71,7 +67,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         /// <param name="controller"></param>
         public override void OnConnect(Controller controller)
         {
-            Debug.WriteLine("Porcamadonna");
 
         }
 
@@ -81,7 +76,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         /// <param name="controller"></param>
         public override void OnDisconnect(Controller controller)
         {
-            Debug.WriteLine("DioLatticinoMerdoso");
         }
 
         /// <summary>
@@ -95,15 +89,18 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
 
         public override void OnFrame(Controller controller)
         {
-            //
-            Debug.WriteLine("Dio Boia di bambini indifesi");
             // Acquisisce l'ultimo Frame inviato dal Leap
             Frame frame = controller.Frame();
             // Aggiorna il contenuto di LeapData
-            this.leapData.update(frame);
+            LeapData a = new LeapData();
+            a.update(frame);
+
+            this.leapData.Add(a);
+            if (this.leapData.Count > 20)
+                Debug.WriteLine("");
             // Genero l'evento per comunicare l'arrivo di un frame
             if (this._OnFrame != null)
-                this._OnFrame(this.leapData);
+                this._OnFrame(a);
         }
 
         public override void OnServiceDisconnect(Controller controller)
@@ -139,7 +136,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         // Restituisce una copia del Leap Data
         private LeapData GetLeapData()
         {
-            return (LeapData)this.leapData.Clone();
+            return (LeapData)this.leapData.Last().Clone();
         }
     }
 }

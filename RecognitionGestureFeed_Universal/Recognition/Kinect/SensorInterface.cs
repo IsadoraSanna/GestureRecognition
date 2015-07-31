@@ -47,12 +47,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
                 // Determino il tipo (Start, Move o End) e ne creo il token, e quindo lo genero
                 if (skeleton.getStatus())
                 {
-                    if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
+                    if (sensor.checkId(skeleton.getIdSkeleton()))
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Move, skeleton);
                     else
                         token = (SkeletonToken)sensor.generateToken(TypeToken.Start, skeleton);
                 }
-                else if (sensor.checkSkeleton(skeleton.getIdSkeleton()))
+                else if (sensor.checkId(skeleton.getIdSkeleton()))
                 {
                     token = (SkeletonToken)sensor.generateToken(TypeToken.End, skeleton);
                 }

@@ -56,7 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeapCSharp.NET4.0">
-      <HintPath>..\..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
+      <HintPath>..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -110,7 +110,7 @@
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioStateSequence.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioToken.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\KinectAudioStream.cs" />
-    <Compile Include="Gesture\Audio\Audio_Djestit\AudioSenso2r.cs" />
+    <Compile Include="Gesture\Audio\Audio_Djestit\AudioSensor.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\AddNewGestureXML.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\GestureDetectorXML.cs" />
     <Compile Include="Gesture\Kinect\Kinect_XML\GestureXML.cs" />
@@ -139,7 +139,6 @@
     <Compile Include="Recognition\Kinect\GestureManager.cs" />
     <Compile Include="Recognition\Leap\HandStructure\BoneClone.cs" />
     <Compile Include="Recognition\Leap\HandStructure\FingerClone.cs" />
-    <Compile Include="Recognition\Leap\HandStructure\HandListClone.cs" />
     <Compile Include="Recognition\Leap\HandStructure\PointableClone.cs" />
     <Compile Include="Recognition\Leap\InitLeap.cs" />
     <Compile Include="Recognition\Kinect\SensorInterface.cs" />

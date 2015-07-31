@@ -8,7 +8,7 @@ using Leap;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Leap.HandStructure
 {
-    class BoneClone : Bone, ICloneable
+    class BoneClone : Bone
     {
         /* Attributi */
 

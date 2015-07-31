@@ -18,7 +18,7 @@ using RecognitionGestureFeed_Universal.Gesture.Audio_Djestit;
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
 
-namespace RecognitionGestureFeed_Universal.Recognition
+namespace RecognitionGestureFeed_Universal.Recognition.Audio
 {
     // Delegate event che indica quando viene gestito un frame di tipo audio  
     public delegate void AudioFrameManaged(AcquisitionManagerAudio sender);

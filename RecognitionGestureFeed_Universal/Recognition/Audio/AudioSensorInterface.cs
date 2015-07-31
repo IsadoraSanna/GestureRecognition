@@ -11,7 +11,7 @@ using RecognitionGestureFeed_Universal.Gesture;
 // Microsoft Speech
 using Microsoft.Speech.Recognition;
 
-namespace RecognitionGestureFeed_Universal.Recognition
+namespace RecognitionGestureFeed_Universal.Recognition.Audio
 {
     class AudioSensorInterface
     {
@@ -28,7 +28,7 @@ namespace RecognitionGestureFeed_Universal.Recognition
         {
             AudioToken token = null;
 
-            if (this.sensor.checkSpeech(0))
+            if (this.sensor.checkId(0))
                 token = (AudioToken)sensor.generateToken(TypeToken.Move, result);
             else
                 token = (AudioToken)sensor.generateToken(TypeToken.Start, result);

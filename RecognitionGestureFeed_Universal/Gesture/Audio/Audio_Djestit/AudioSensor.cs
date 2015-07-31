@@ -10,13 +10,13 @@ using Microsoft.Speech.Recognition;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
 {
-    public class AudioSenso2r : Sensor
+    public class AudioSensor : Sensor
     {
         /* Attributi  */
         AudioStateSequence sequence;
 
         /* Costruttore */
-        public AudioSenso2r(Term root, int capacity) : base(root, capacity)
+        public AudioSensor(Term root, int capacity) : base(root, capacity)
         {
             this.sequence = new AudioStateSequence(this.capacity);
         }
@@ -30,11 +30,11 @@ namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
             {
                 case TypeToken.Start:
                     // Genero l'evento onSkeletonStart
-                    this.OnTokenStart(e);
+                    this._onTokenStart(e);
                     break;
                 case TypeToken.Move:
                     // Genero l'evento onSkeletonStart
-                    this.OnTokenMove(e);
+                    this._onTokenMove(e);
                     // Copio la lista di vecchi token
                     List<AudioToken> listToken;
                     sequence.speechs.TryGetValue(token.identifier, out listToken);
@@ -42,7 +42,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
                     break;
                 case TypeToken.End:
                     // Genero l'evento onSkeletonStart
-                    this.OnTokenEnd(e);
+                    this._onTokenEnd(e);
                     // Rimuovo lo scheletro in questione dalla mappa
                     sequence.removeById(token.identifier);
 

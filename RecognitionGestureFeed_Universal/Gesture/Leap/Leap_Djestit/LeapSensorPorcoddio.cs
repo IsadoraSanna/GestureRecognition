@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
-// HandClone
-using RecognitionGestureFeed_Universal.Recognition.Leap.HandStructure;
+// Copy
+using RecognitionGestureFeed_Universal.Utilities;
+// Leap
+using Leap;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
 {
@@ -20,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
             this.sequence = new LeapStateSequence(this.capacity);
         }
 
-        public Token generateToken(TypeToken type, HandListClone data)
+        public Token generateToken(TypeToken type, Hand data)
         {
             // Creo uno SkeletonToken a partire dallo Skeleton ricevuto in input
             LeapToken token = new LeapToken(type, data);
@@ -37,7 +39,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
                     // Copio la lista di vecchi token
                     List<LeapToken> listToken;
                     sequence.moves.TryGetValue(token.identifier, out listToken);
-                    token.precHands = listToken.Select(item => (HandListClone)item.hand.Clone()).ToList();
+                    token.precHands = listToken.Select(item => (Hand)item.hand.CloneObject()).ToList();
                     break;
                 case TypeToken.End:
                     // Genero l'evento onSkeletonStart

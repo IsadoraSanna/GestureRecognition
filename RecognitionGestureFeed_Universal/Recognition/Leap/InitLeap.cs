@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         public InitLeap()
         {
             controller = new Controller();
-            AcquisitionManagerLeap leapManager = new AcquisitionManagerLeap(controller);
+            AcquisitionManagerLeap leapManager = new AcquisitionManagerLeap();
             controller.AddListener(leapManager);
         }
     }

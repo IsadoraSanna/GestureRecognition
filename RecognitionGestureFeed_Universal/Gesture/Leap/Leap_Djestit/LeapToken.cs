@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Leap;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
-// Hand
-using RecognitionGestureFeed_Universal.Recognition.Leap.HandStructure;
+// Copy
+using RecognitionGestureFeed_Universal.Utilities;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
 {
@@ -16,20 +16,21 @@ namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
     {
         /* Attributi */
         // Scheletro associato al token
-        public HandListClone hand;
+        public Hand hand;
         // Tipo di token (Start, Move o End)
         public TypeToken type;
         // Buffer che contiene gli n scheletri precedentemente rilevati
-        public List<HandListClone> precHands;
+        public List<Hand> precHands;
         // Identificativo associato allo scheletro
         public int identifier;
 
         /* Costruttore */
-        public LeapToken(TypeToken type, HandListClone hand)
+        public LeapToken(TypeToken type, Hand hand)
         {
             // Ricave le informazioni di cui necessità
-            this.hand = (HandListClone)hand.Clone();
+            this.hand = (Hand)hand.CloneObject();
             this.type = type;
+            this.precHands = new List<Hand>();
             this.identifier = hand.Id;
         }
     }
