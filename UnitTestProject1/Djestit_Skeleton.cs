@@ -153,32 +153,35 @@ namespace UnitTestProject1
             termx1.type = "Start";
             termx1.accepts = close;
             termx1.name = "GroundTerm CloseX";
-            termx1.likelihood = new Likelihood(0.01f);
+            termx1.likelihood = 0.5f;//new Likelihood(0.01f);
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
             termx2.name = "GroundTerm MoveX";
-            termx2.likelihood = new Likelihood(0.02f);
+            termx2.likelihood = 0.75f;//new Likelihood(0.02f);
             //termx2.Complete += MoveX;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
             termx3.name = "GroundTerm OpenX";
-            termx3.likelihood = new Likelihood(0.01f);
+            termx3.likelihood = 0.5f;//new Likelihood(0.01f);
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
+            iterativex.likelihood = ComputeLikelihood.indipendentEvents(iterativex);//new Likelihood(iterativex, ProbabilityType.IndipendentEvents);
             List<Term> listTermx = new List<Term>();
             listTermx.Add(iterativex);
             listTermx.Add(termx3);
             Disabling disablingx = new Disabling(listTermx);
+            disablingx.likelihood = ComputeLikelihood.indipendentEvents(disablingx); //new Likelihood(disablingx, ProbabilityType.IndipendentEvents);
             List<Term> listTerm2 = new List<Term>();
             listTerm2.Add(termx1);
             listTerm2.Add(disablingx);
             Sequence panX = new Sequence(listTerm2);
-            //panX.Complete += PanX;
+            panX.likelihood = ComputeLikelihood.indipendentEvents(panX); //new Likelihood(panX, ProbabilityType.IndipendentEvents);
+            panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
             panX.handler = new Handler(this.PanX);
@@ -189,32 +192,35 @@ namespace UnitTestProject1
             termy1.type = "Start";
             termy1.accepts = close;
             termy1.name = "GroundTerm CloseY";
-            termy1.likelihood = new Likelihood(0.01f);
+            termy1.likelihood = 0.5f;//new Likelihood(0.01f);
             //termy1.Complete += Close;
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
             termy2.name = "GroundTerm MoveY";
-            termy2.likelihood = new Likelihood(0.3f);
+            termy2.likelihood = 0.75f;// new Likelihood(0.3f);
             //termy2.Complete += Move;
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
             termy3.name = "GroundTerm OpenY";
-            termy3.likelihood = new Likelihood(0.01f);
+            termy3.likelihood = 0.5f;// new Likelihood(0.01f);
             //termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
+            iterativey.likelihood = ComputeLikelihood.indipendentEvents(iterativey); //new Likelihood(iterativey, ProbabilityType.IndipendentEvents);
             List<Term> listTermy = new List<Term>();
             listTermy.Add(iterativey);
             listTermy.Add(termy3);
             Disabling disablingy = new Disabling(listTermy);
+            disablingy.likelihood = ComputeLikelihood.indipendentEvents(disablingy); //new Likelihood(disablingy, ProbabilityType.IndipendentEvents);
             List<Term> listTermy2 = new List<Term>();
             listTermy2.Add(termy1);
             listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
-            //panY.Complete += PanY;
+            panY.likelihood = ComputeLikelihood.indipendentEvents(panY); //new Likelihood(panY, ProbabilityType.IndipendentEvents);
+            panY.Complete += PanY;
             panY.name = "PanY";
             // PanY
             panY.handler = new Handler(this.PanY);
@@ -228,8 +234,8 @@ namespace UnitTestProject1
             sensor = new SkeletonSensor(choice, 5);
             // Creo l'albero dei feedback
             Feedback tree = new Feedback(choice);
-
-            /// Simulazione Gesti
+           
+            /*/// Simulazione Gesti
             // Simulo 1 gesto di start
             Skeleton sStart = new Skeleton(0, HandState.Closed, 0.0f, 0.0f);
             SkeletonToken tStart = (SkeletonToken)sensor.generateToken(TypeToken.Start, sStart);
@@ -256,7 +262,7 @@ namespace UnitTestProject1
                         i = 51;
                         sMove = new Skeleton(0, HandState.Closed, (1f + i), 0.0f);
                     }*/
-                    // Creo lo scheletro
+                    /*// Creo lo scheletro
                     sMove = new Skeleton(0, HandState.Closed, (1f + i), 0.0f);
                     // Creo il gesto
                     tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
@@ -270,7 +276,7 @@ namespace UnitTestProject1
             Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
             SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
             // E lo sparo al motorino
-            sensor.root.fire(tEnd);
+            sensor.root.fire(tEnd);*/
             tree.tree.print();
         }
     }

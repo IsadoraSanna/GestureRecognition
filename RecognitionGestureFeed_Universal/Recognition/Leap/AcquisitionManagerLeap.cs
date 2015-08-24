@@ -94,10 +94,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
             // Aggiorna il contenuto di LeapData
             LeapData a = new LeapData();
             a.update(frame);
-
-            this.leapData.Add(a);
-            if (this.leapData.Count > 20)
-                Debug.WriteLine("");
             // Genero l'evento per comunicare l'arrivo di un frame
             if (this._OnFrame != null)
                 this._OnFrame(a);

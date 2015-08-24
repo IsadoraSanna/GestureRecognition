@@ -55,20 +55,27 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /// Se assume il valore False vuol dire che l'utente sta eseguendo una gesture totalmente dissimile, e quindi non dev'essere visualizzato.
         public StateGroup state;// { get; private set; }
         // Probabilità associata al Term
-        public Likelihood likelihood { get; internal set; }
+        //public Likelihood likelihood { get; internal set; }
+        public float likelihood { get; internal set; }
         // Handler associato alla Gesture
-        public Handler handlerGesture;
+        public Handler handler;
 
         /* Costruttore */
         public FeedbackGroup(Term term)
         {
             // Assegna al nodo il term a cui dev'essere associato
             this.term = term;
+            // Inizializzo la classe Likelihood
+            //this.likelihood = new Likelihood();
+            this.likelihood = term.likelihood;
             // Inizializza la stato del Nodo a Default
             this.state = StateGroup.Default;
             // Associa al FeedbackGroup l'handler associato term (se questo non è nullo)
             if (term.handler != null)
-                this.handlerGesture = term.handler;
+            {
+                this.handler = term.handler;
+                this.handler.likelihood = term.likelihood;
+            }
         }
 
         /* Metodi */
@@ -81,7 +88,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             if (this.FeedbackGroupComplete != null)
             {
                 // Creo il parametro FeedbackGroupEventArgs
-                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handler);
                 this.FeedbackGroupComplete(sender);// Lancia l'evento
             }
         }
@@ -95,7 +102,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             if (this.FeedbackGroupContinue != null)
             {
                 // Creo il parametro FeedbackGroupEventArgs
-                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handler);
                 this.FeedbackGroupContinue(sender);// Lancia l'evento
             }
         }
@@ -109,7 +116,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             if (this.FeedbackGroupError != null)
             {
                 // Creo il parametro FeedbackGroupEventArgs
-                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handlerGesture);
+                FeedbackGroupEventArgs sender = new FeedbackGroupEventArgs(this.term, this.wrapper, this, this.handler);
                 this.FeedbackGroupError(sender);// Lancia l'evento
             }
         }

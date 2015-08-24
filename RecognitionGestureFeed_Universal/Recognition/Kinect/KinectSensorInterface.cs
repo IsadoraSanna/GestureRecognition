@@ -90,21 +90,24 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             termx1.type = "Start";
             termx1.accepts = close;
             termx1.name = "GroundTerm CloseX";
-            termx1.likelihood = new Likelihood(0.01f);
+            //termx1.likelihood = new Likelihood(0.01f);
+            termx1.likelihood = 0.01f;
             //termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
             termx2.name = "GroundTerm MoveX";
-            termx2.likelihood = new Likelihood(0.02f);
+            //termx2.likelihood = new Likelihood(0.02f);
+            termx2.likelihood = 0.01f;
             //termx2.Complete += Move;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
             termx3.name = "GroundTerm OpenX";
-            termx3.likelihood = new Likelihood(0.01f);
+            //termx3.likelihood = new Likelihood(0.01f);
+            termx3.likelihood = 0.01f;
             //termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
@@ -126,21 +129,24 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             termy1.type = "Start";
             termy1.accepts = close;
             termy1.name = "GroundTerm CloseY";
-            termy1.likelihood = new Likelihood(0.01f);
+            //termy1.likelihood = new Likelihood(0.01f);
+            termy1.likelihood = 0.01f;
             //termy1.Complete += Close;
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
             termy2.name = "GroundTerm MoveY";
-            termy2.likelihood = new Likelihood(0.3f);
+            //termy2.likelihood = new Likelihood(0.3f);
+            termy2.likelihood = 0.01f;
             //termy2.Complete += Move;
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
             termy3.name = "GroundTerm OpenY";
-            termy3.likelihood = new Likelihood(0.01f);
+            //termy3.likelihood = new Likelihood(0.01f);
+            termy3.likelihood = 0.01f;
             //termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();

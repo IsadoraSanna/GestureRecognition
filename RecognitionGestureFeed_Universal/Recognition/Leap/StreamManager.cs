@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 // Diagnostic
 using System.Diagnostics;
 // Writable
+using System.Drawing;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 // Leap
@@ -28,7 +29,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
 
         /* Attributi */
         // Writable che rappresenta l'immagine acquisita dal leap
-        private static WriteableBitmap imageBitmap = null;
+        private static Bitmap imageBitmap = null;
 
         /* Costruttore */
 
@@ -48,16 +49,16 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         /// <param name="leapData"></param>
         private static void updateImageStream(FrameDataManager.LeapData leapData)
         {
-            Debug.WriteLine(leapData.image.Width + " - " + leapData.image.Height);
-            Debug.WriteLine("Porcamadonna: " + leapData.handList[0].IsValid);
             // Inizializza il WriteableBitmap
             /*if (imageBitmap == null)
             {
-                //imageBitmap = new WriteableBitmap(leapData.imageList[0].Width, leapData.imageList[0].Height, 96.0, 96.0, PixelFormats.Gray32Float, null);
-            }
+                imageBitmap = new WriteableBitmap(leapData.image.Width, leapData.image.Height, 96.0, 96.0, System.Windows.Media.PixelFormats.Gray8, null);
+            }*/
+            Debug.WriteLine("Porcamadonna");
             // Aggiorna l'immagine
-            imageBitmap.convertBitmap(leapData.imageList[0]);
-            _OnImageUpdate();*/
+            imageBitmap.convertBitmap(leapData.imageList);
+            //imageBitmap.convertBitmap(leapData.imageList);
+            _OnImageUpdate();
         }
 
         /// <summary>
@@ -66,7 +67,10 @@ namespace RecognitionGestureFeed_Universal.Recognition.Leap
         public static void _OnImageUpdate()
         {
             if (OnImageUpdate != null)
-                OnImageUpdate(imageBitmap);
+            {
+                ImageSourceConverter c = new ImageSourceConverter();
+                OnImageUpdate((ImageSource)c.ConvertFrom(imageBitmap));
+            }
         }
     }
 }

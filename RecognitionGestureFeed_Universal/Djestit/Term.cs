@@ -41,7 +41,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
         public int num_discrete { get; private set; }
         // Probabilità dell'evento
-        public Likelihood likelihood;
+        //public Likelihood likelihood;
+        public float likelihood;
         // Handler dell'evento
         public Handler handler;
         // Prova

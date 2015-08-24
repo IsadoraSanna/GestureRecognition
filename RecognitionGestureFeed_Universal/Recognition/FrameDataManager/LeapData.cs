@@ -22,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
         // Lista dei Pointables rilevate
         public PointableList pointableList { get; private set; }
         // Lista delle immagini
-        public Image image { get; private set; }
+        public ImageList imageList { get; private set; }
         // Lista dell'InteractionBox contenuto nel frame ricevuto dal Leap Motion
         public InteractionBox interactionBox { get; private set; }
         // Descrizione in byte del contenuto del frame
@@ -38,7 +38,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
             this.handList = new HandList();
             this.fingerList = new FingerList();
             this.pointableList = new PointableList();
-            this.image = new Image();
+            this.imageList = new ImageList();
         }
 
         /* Metodi */
@@ -57,7 +57,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
             // Aggiorna la lista degli Tools
             this.pointableList = frame.Pointables;
             // Recupera le ultime immagini rilevate dal Leap
-            this.image = frame.Images[0];
+            this.imageList = frame.Images;
             // Aggiorna l'InteractionBox
             this.interactionBox = frame.InteractionBox;
             // Aggiorna il timestamp dell'ultimo frame

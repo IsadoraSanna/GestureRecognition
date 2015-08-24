@@ -51,7 +51,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             }
 
             // Inizializzo la mappa degli handler, inserendovi la relativa classe che si occupa del Compare tra i vari handler
-            this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();//(new ComparerHandler());
+            this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();
             // Associa al cambiamento di stato del term l'handler resetTree
             this.term.ChangeState += resetTree;
         }
@@ -206,7 +206,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
     {
         public int Compare(Handler x, Handler y)
         {
-            return (y.likelihood.likelihood.CompareTo(x.likelihood.likelihood));
+            //return (y.likelihood.probability.CompareTo(x.likelihood.probability));
+            return (y.likelihood.CompareTo(x.likelihood));
         }
     }
 }

@@ -24,11 +24,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         // Funzione che gestisce la gesture
         public GestureEventHandler function;
         // Probabilità associata alla gesture
-        public Likelihood.Likelihood likelihood { get; internal set; }
+        //public Likelihood.Likelihood likelihood { get; internal set; }
+        public float likelihood;
 
         /* Costruttore */
         public Handler(GestureEventHandler function)
         {
+            // Probabilità
+            this.likelihood = 0.0f;
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
@@ -42,7 +45,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         public Handler()
         {
             this.function = null;
-            this.likelihood = new Likelihood.Likelihood(); 
+            //this.likelihood = new Likelihood.Likelihood(); 
         }
 
         /* Metodi */
@@ -73,7 +76,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         /// <returns></returns>
         public int CompareTo(Handler other)
         {
-            return (other.likelihood.likelihood.CompareTo(this.likelihood.likelihood));
+            return (other.likelihood.CompareTo(this.likelihood));//(other.likelihood.probability.CompareTo(this.likelihood.probability));
         }
     }
 

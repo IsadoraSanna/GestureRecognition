@@ -106,7 +106,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             // Inizializza l'oggetto LongExposureData
             FrameDescription longExposureFrameDescription = kinectSensor.LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
-            //
+            // Controlla se sono stati attivati tutti i tipi di FrameSource
             if (enabledFrameSourceTypes.Equals(FrameSourceTypes.Body | FrameSourceTypes.BodyIndex | FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared))
                 this.allFrames = true;
             // Attivo il lettore di multiframe

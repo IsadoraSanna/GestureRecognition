@@ -21,11 +21,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /* Costruttore */
         public FeedbackComposite(Term term) : base(term)
         {
-            // Calcolo della probabilità
-            //this.determineLikelihood(ProbabilityType.simple);
-            // Quindi aggiorna la probabilità del suo handler
-            //this.handlerGesture.likelihood = this.likelihood;
-
             // Associo all'evento TokenFire il suo handler
             this.term.TokenFire += updateChild;
             // Associo all'evento ChangeState il suo handler

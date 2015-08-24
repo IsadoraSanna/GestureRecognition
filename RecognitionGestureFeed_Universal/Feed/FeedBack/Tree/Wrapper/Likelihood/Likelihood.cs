@@ -3,41 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// Djestit
+using RecognitionGestureFeed_Universal.Djestit;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
 {
     // Enum che indica i diversi tipi di probabilità
     public enum ProbabilityType
     {
-        composite = 1,
-        simple = 0
+        IndipendentEvents = 1,
+        Simple = 0
     }
 
     public class Likelihood
     {
         /* Attributi */
-        public float likelihood { get; private set; }
+        public float probability { get; private set; }
+        private int n = 10;
 
         /* Costruttore */
         public Likelihood()
         {
-            this.likelihood = 0.0f;
+            this.probability = 0.0f;
         }
         public Likelihood(float value)
         {
-            this.likelihood = value;
+            this.probability = value;
         }
-        public Likelihood(FeedbackGesture node, ProbabilityType type)
+        public Likelihood(CompositeTerm term, ProbabilityType type)
         {
             switch (type)
             {
-                case ProbabilityType.composite:
-                    // Probabilità composta
-                    composite(node);
-                    break;
-                case ProbabilityType.simple:
-                    // Probabilità semplice
-                    simple(node);
+                case ProbabilityType.IndipendentEvents:
+                    // Probabilità Composta Eventi Indipendenti
+                    composite(term);
                     break;
             }
         }
@@ -51,14 +50,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
         {
             // La probabilità di una gesture è ovviamente sempre compresa tra 0 e 1
             if ((value > 0) && (value < 1))
-                this.likelihood = value;
+                this.probability = value;
             else if (value > 1)
-                this.likelihood = 1f;
+                this.probability = 1f;
             else
-                this.likelihood = 0;
+                this.probability = 0;
         }
 
-        /// <summary>
+        //// <summary>
         /// Probabilità composta calcolata come il prodotto della probabilità dei singoli GroundTerm che 
         /// compongono la gesture
         /// </summary>
@@ -69,21 +68,43 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
 
             foreach (FeedbackLeaf child in node.groundTermChildren)
             {
-                tempLikelihood = tempLikelihood * child.likelihood.likelihood;
+                tempLikelihood = tempLikelihood * 0;//child.likelihood.probability;
             }
 
             // Inserisce la probabilità nel nodo
-            this.likelihood = tempLikelihood;
+            this.probability = tempLikelihood;
         }
-
-        /// <summary>
-        /// Probabilità semplice, ovvero la probabilità data a priori alla gesture
-        /// </summary>
-        /// <param name="node"></param>
-        private void simple(FeedbackGesture node)
+     
+        private void composite(CompositeTerm term)
         {
-            // Inserisce la probabilità nel nodo
-            this.likelihood = node.term.likelihood.likelihood;
+            float tempLikelihood = 1;
+
+            if ((term.GetType() == typeof(Sequence)) || (term.GetType() == typeof(RecognitionGestureFeed_Universal.Djestit.Parallel)) || (term.GetType() == typeof(Disabling)))
+            {
+                foreach (var child in term.children)
+                    tempLikelihood *= 0;// child.likelihood.probability;
+            }
+            else if(term.GetType() == typeof(OrderIndependece))
+            {
+                foreach (var child in term.children)
+                    //term.likelihood.probability *= child.likelihood.probability;
+                tempLikelihood *= term.children.Count;
+            }
+            else if(term.GetType() == typeof(Iterative))
+            {
+                tempLikelihood = 0;// (float)Math.Pow(term.children[0].likelihood.probability, this.n);
+            }
+            else if(term.GetType() == typeof(Choice))
+            {
+                List<float> list= new List<float>();
+
+                foreach (var child in term.children) 
+                    list.Add(0);//child.likelihood.probability);
+
+                tempLikelihood = list.Max();
+            }
+
+            this.probability = tempLikelihood;
         }
     }
 }
