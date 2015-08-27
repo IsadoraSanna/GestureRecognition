@@ -73,18 +73,17 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
                 if (this.sensor.root.state == expressionState.Error || this.sensor.root.state == expressionState.Complete)
                     this.sensor.root.reset();
             }
-            tree.tree.print();
         }
 
         #region Prove
         public KinectSensorInterface(Term term)
         {
-            this.sensor = new SkeletonSensor(term, 5);
+            //this.sensor = new SkeletonSensor(term, 5);
         }
 
         public KinectSensorInterface(AcquisitionManager am)
         {
-            /* Pan Asse X */
+            //* Pan Asse X */
             // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
@@ -161,17 +160,54 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             panY.name = "PanY";
             // PanY
             panY.handler = new Handler(this.PanY);
+            /// Circle
+            // Start
+            GroundTerm startCircle = new GroundTerm();
+            startCircle.type = "Start";
+            startCircle.accepts = close;
+            startCircle.name = "GroundTerm Start Circle";
+            startCircle.likelihood = 0.5f;
+            // Move
+            GroundTerm moveCircle = new GroundTerm();
+            moveCircle.type = "Move";
+            moveCircle.accepts = move;
+            moveCircle.name = "GroundTerm Move Circle";
+            moveCircle.likelihood = 0.5f;
+            // End
+            GroundTerm endCircle = new GroundTerm();
+            endCircle.type = "End";
+            endCircle.accepts = open;
+            endCircle.name = "GroundTerm End Circle";
+            endCircle.likelihood = 0.5f;
+            // Iterative
+            Iterative iterativeCircle = new Iterative(moveCircle);
+            // Disabling
+            List<Term> listIterativeCircle = new List<Term>();
+            listIterativeCircle.Add(iterativeCircle);
+            listIterativeCircle.Add(endCircle);
+            Disabling disablingCircle = new Disabling(listIterativeCircle);
+            // Circle
+            List<Term> listDisablingCircle = new List<Term>();
+            listDisablingCircle.Add(startCircle);
+            listDisablingCircle.Add(disablingCircle);
+            Sequence circle = new Sequence(listDisablingCircle);
+            circle.Complete += Porcoddio;//Circle;
+            circle.name = "Circle";
+            // Handler PanX
+            circle.likelihood = ComputeLikelihood.indipendentEvents(circle);
+            circle.handler = new Handler(this.Porcoddio);
 
             // Choice
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
             listTerm.Add(panY);
+            listTerm.Add(circle);
             Choice choice = new Choice(listTerm);
             // Assoccio l'espressione panX al sensor
             this.sensor = new SkeletonSensor(choice, 5);
             am.SkeletonsFrameManaged += updateSkeleton;
             // Creo l'albero dei feedback
-            this.tree = new Feedback(choice);
+            //this.tree = new Feedback(choice);
         }
 
         // Example
@@ -257,11 +293,20 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             }
             return false;
         }
+        internal bool move(Token token)
+        {
+            if (token.GetType() == typeof(SkeletonToken))
+            {
+                return true;
+            }
+            return false;
+        }
         internal bool open(Token token)
         {
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
+                Debug.WriteLine(skeletonToken.skeleton.rightHandStatus);
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
                     return true;
                 else
@@ -280,6 +325,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         void PanY(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Eseguito gesto PanY");
+        }
+        [Modifies("e", 0), Modifies("f", 1), Modifies("g", 2)]
+        void Porcoddio(object sender, GestureEventArgs t)
+        {
+            Debug.WriteLine("Eseguito gesto Porcoddio");
         }
         void Close(object sender, GestureEventArgs t)
         {

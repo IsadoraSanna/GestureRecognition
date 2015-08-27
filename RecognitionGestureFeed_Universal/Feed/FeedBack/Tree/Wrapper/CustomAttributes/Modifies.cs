@@ -8,6 +8,16 @@ using System.Reflection;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes
 {
+    public enum SelectedShape
+    {
+        None,
+        Circle,
+        Rectangle,
+        Triangle,
+        Square,
+        Rhombus
+    }
+
     //
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class Modifies : Attribute, ICloneable
@@ -19,6 +29,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         internal object obj { get; private set; }
         // Nome del suo nuovo valore
         internal float value { get; private set; }
+        //
+        internal SelectedShape shape { get; private set; }
 
         /* Costruttore */
         public Modifies(string name, float value)
@@ -32,7 +44,16 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
             this.obj = obj; // Object 
             this.value = value; // Valore
         }
-
+        public Modifies(object obj, SelectedShape value)
+        {
+            this.obj = obj;
+            this.shape = value;
+        }
+        public Modifies(SelectedShape value)
+        {
+            this.obj = obj;
+            this.shape = value;
+        }
         /* Metodi */
         /// <summary>
         /// Clona l'oggeto di tipo Modifies
