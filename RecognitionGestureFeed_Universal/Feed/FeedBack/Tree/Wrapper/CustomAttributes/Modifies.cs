@@ -16,7 +16,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         Triangle,
         Square,
         Cancell,
-        Translation
+        Translation,
+        Swipe
     }
 
     //
