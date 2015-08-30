@@ -15,6 +15,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
     public class Token
     {
+        public Token()
+        {
 
+        }
     }
 }

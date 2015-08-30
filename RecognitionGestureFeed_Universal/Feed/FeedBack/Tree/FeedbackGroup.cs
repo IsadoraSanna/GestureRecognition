@@ -96,7 +96,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /// <summary>
         /// Comunica che la gesture associata al FeedbackGroup è ancora in esecuzione
         /// </summary>
-        internal virtual void OnFeedbackGroupContinue()
+        public virtual void OnFeedbackGroupContinue()
         {
             // Se l'evento ha un gestore provvede a lanciarlo
             if (this.FeedbackGroupContinue != null)

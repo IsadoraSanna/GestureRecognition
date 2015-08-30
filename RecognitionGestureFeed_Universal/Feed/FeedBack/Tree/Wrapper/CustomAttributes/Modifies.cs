@@ -15,7 +15,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         Rectangle,
         Triangle,
         Square,
-        Rhombus
+        Cancell,
+        Translation
     }
 
     //

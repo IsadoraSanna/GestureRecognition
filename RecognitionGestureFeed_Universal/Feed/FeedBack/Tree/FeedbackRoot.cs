@@ -18,8 +18,13 @@ using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 {
+    // Delegate per gli eventi legati al cambiamento di stato di una gesture
+    public delegate void FeedbackRootEvent();
+
     public class FeedbackRoot
     {
+        /* Eventi */
+        public event FeedbackRootEvent feedbackRootEvent;
         /* Attributi */
         // Lista delle Gesture presenti nel term passato in input
         public List<FeedbackGesture> children = new List<FeedbackGesture>();
@@ -142,6 +147,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             // Inserisce l'handler nella mappa
             this.mapHandler.Add(newHandler, listModifies);
+
+            OnFeedbackRootEvent();
         }
 
         /// <summary>
@@ -169,6 +176,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                     i.Value.Add(element);
                 }
             }
+
+            OnFeedbackRootEvent();
         }
 
         /// <summary>
@@ -181,6 +190,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 feedbackGesture.reset();// Resetta il figlio
             }
             this.mapHandler.Clear();// Resetta la mappa degli Handler
+            OnFeedbackRootEvent();
         }
 
         /// <summary>
@@ -189,6 +199,12 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void resetTree()
         {
             this.reset();
+        }
+
+        public void OnFeedbackRootEvent()
+        {
+            if (this.feedbackRootEvent != null)
+                this.feedbackRootEvent();
         }
 
         // Prova
