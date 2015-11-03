@@ -144,6 +144,7 @@ namespace UnitTestProject1
         [TestMethod]
         public void PanX()
         {
+
             // Sensore
             SkeletonSensor sensor;
             
@@ -276,8 +277,8 @@ namespace UnitTestProject1
             Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
             SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
             // E lo sparo al motorino
-            sensor.root.fire(tEnd);*/
-            tree.tree.print();
+            sensor.root.fire(tEnd);
+            tree.tree.print();*/
         }
     }
 }

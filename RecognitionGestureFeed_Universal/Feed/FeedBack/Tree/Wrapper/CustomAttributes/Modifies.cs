@@ -8,54 +8,43 @@ using System.Reflection;
 
 namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes
 {
-    public enum SelectedShape
-    {
-        None,
-        Circle,
-        Rectangle,
-        Triangle,
-        Square,
-        Cancell,
-        Translation,
-        Swipe
-    }
-
-    //
+    // 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class Modifies : Attribute, ICloneable
     {
         /* Attributi */
         // Nome dell'oggetto
         internal string name { get; private set; }
-        // Oggetto che verrà modificato
+        // Oggetto in questione
         internal object obj { get; private set; }
-        // Nome del suo nuovo valore
-        internal float value { get; private set; }
-        //
-        internal SelectedShape shape { get; private set; }
+        // Rappresenta il nuovo valore che verrà assegnato all'elemento in seguito all'esecuzione di una gesture
+        internal object newValue { get; private set; }
+        // Rappresenta il valore assegnato all'oggetto in precedenza (serve per la gestione concorrenziale)
+        internal object oldValue { get; private set; }
+        // Rispettivamente nuovo e vecchio valore. Prova.
+        internal float newv { get; private set; }
+        internal float oldv { get; private set; }
 
         /* Costruttore */
         public Modifies(string name, float value)
         {
-            this.name = name; // Nome
-            this.value = value; // Valore
+            this.name = name;
+            this.newv = value;
         }
-        public Modifies(string name, object obj, float value)
+        // Creazione di un Modifies
+        public Modifies(string name, object obj)
+        {
+            this.name = name;
+            this.obj = obj;
+        }
+        // In seguito all'esecuzione di una gesture
+        public Modifies(string name, object obj, object newValue)
         {
             this.name = name; // Nome
             this.obj = obj; // Object 
-            this.value = value; // Valore
+            this.newValue = newValue; // Nuovo Valore
         }
-        public Modifies(object obj, SelectedShape value)
-        {
-            this.obj = obj;
-            this.shape = value;
-        }
-        public Modifies(SelectedShape value)
-        {
-            this.obj = obj;
-            this.shape = value;
-        }
+
         /* Metodi */
         /// <summary>
         /// Clona l'oggeto di tipo Modifies
@@ -64,6 +53,39 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+        // Aggiorna il valore di un obj
+        public void setAttr()
+        {
+            if (this.newValue != null)
+            {
+                this.oldValue = this.obj;// Conservo il vecchio valore
+                this.obj = this.newValue;// Setto il nuovo valore
+            }
+        }
+        public void setAttr(object newValue)
+        {
+            if (this.newValue != null)
+            {
+                this.newValue = newValue;
+                setAttr();
+            }
+            else
+            {
+                // Comunico all'utente che non ha inserito un nuovo valore
+                throw new InvalidModifiesException("Non è stato inserito nessun nuovo valore");
+            }
+        }
+        // Ripristina il vecchio valore 
+        public void riprAttr()
+        {
+            if (this.oldValue != null)
+                this.obj = this.oldValue;
+            else
+            {    
+                // Comunico all'utente che non ha inserito un nuovo valore
+                throw new InvalidModifiesException("Non è presente alcun valore di ripristino");
+            }
         }
     }
 
@@ -99,15 +121,11 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
 
             // Se l'oggetto non è nullo allora calcolo l'hashcode dei singoli attributi dell'oggetto stesso
             int hashName = element.name == null ? 0 : element.name.GetHashCode();
-
-            // Calcola l'hashcode del valore
-            int hashValue = element.value == 0 ? 0 : element.value.GetHashCode();
-
             // Calcola l'hashcode dell'oggetto
             int hashObj = element.obj == null ? 0 : element.obj.GetHashCode();
-
+            
             //Calculate the hash code for the product.
-            return hashName ^ hashValue ^ hashObj;
+            return hashName ^ hashObj;
         }
     }
 

@@ -121,5 +121,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
             if (this.TokenFire != null)
                 this.TokenFire(this, sender);
         }
+        // Controlla se al term è stato associato una funzione di complete
+        public virtual bool hasComplete()
+        {
+            if (this.Complete != null)
+                return true;
+            else
+                return false;
+        }
     }
 }

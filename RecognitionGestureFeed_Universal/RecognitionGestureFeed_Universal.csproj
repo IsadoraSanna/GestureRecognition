@@ -55,8 +55,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LeapCSharp.NET4.0">
-      <HintPath>..\..\..\Downloads\Leap_Motion_SDK_Windows_2.2.7\LeapDeveloperKit_2.2.7+30199_win\LeapSDK\lib\x64\LeapCSharp.NET4.0.dll</HintPath>
+    <Reference Include="LeapCSharp.NET4.0, Version=2.3.1.0, Culture=neutral, PublicKeyToken=6e1b1368e71eba9b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\x64\Debug\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -72,6 +73,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Speech" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -81,6 +83,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concurrency\TransactionsManager.cs" />
     <Compile Include="Djestit\Choice.cs" />
     <Compile Include="Djestit\CompositeTerm.cs" />
     <Compile Include="Djestit\Disabling.cs" />
@@ -96,12 +99,14 @@
     <Compile Include="Djestit\Term.cs" />
     <Compile Include="Djestit\Token.cs" />
     <Compile Include="Djestit\TokenFireArgs.cs" />
+    <Compile Include="Feed\FeedBack\Conflict\ConflictManager.cs" />
     <Compile Include="Feed\FeedBack\Feedback.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackComposite.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackGesture.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackLeaf.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackGroup.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackRoot.cs" />
+    <Compile Include="Feed\FeedBack\Tree\Wrapper\CustomAttributes\InvalidModifiesException.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Handler\Handler.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Likelihood\ComputeLikelihood.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Likelihood\Likelihood.cs" />

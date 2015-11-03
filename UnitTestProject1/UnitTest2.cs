@@ -85,6 +85,9 @@ namespace UnitTestProject1
 
             // Crea Albero
             Feedback feedback = new Feedback(choice);
+
+            Debug.WriteLine("Ciao!");
+            Debug.WriteLine("Porcamadonna");
         }
 
         // Example

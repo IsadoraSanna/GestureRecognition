@@ -116,7 +116,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 // Se si, lo si rimuove dalla mappa e si aggiornano di conseguenza anche tutti gli 
                 // elementi dei vari handler presenti nella mappa.
                 this.mapHandler.Remove(sender.handler);
-                Debug.WriteLine("Nome dell'handler: " + sender.handler.name);
                 this.removeNode();
             }
         }
@@ -158,15 +157,36 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void removeNode()
         {
             List<Modifies> listModifies = new List<Modifies>();
+            List<Modifies> listTemp = new List<Modifies>();
 
-            // Prima si determina quali sono i nuovi attributi in conflitto
+            // Si determina quali sono i nuovi attributi in conflitto
+            foreach (var elem in this.mapHandler)
+            {
+                if (listTemp.Count() > 0)
+                {
+                    // Memorizza temporaneamente il vecchio contenuto della lista
+                    List<Modifies> temp = listTemp.ToList();
+                    // Unione con gli attributi della funione in oggetto.
+                    listTemp = listTemp.Union(elem.Value).ToList();
+                    // Intersezione con la vecchia lista
+                    temp = temp.Intersect(elem.Value).ToList();
+                    // Differenza tra le due liste
+                    listModifies = temp.Except(listTemp).ToList();
+                }
+                else// Inizializzazione mappa
+                {
+                    listTemp.Union(elem.Value);
+                }
+            }
+
+            /*// Prima si determina quali sono i nuovi attributi in conflitto
             foreach (var i in this.mapHandler)
             {
                 if (listModifies.Count > 0)
                     listModifies.Union(i.Key.elementList);
                 else
                     listModifies.Intersect(i.Key.elementList);
-            }
+            }*/
 
             // Quindi si fa l'union con la lista degli elementi di partenza e poi se ne fa la differenza
             foreach (var i in this.mapHandler)
@@ -205,16 +225,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         {
             if (this.feedbackRootEvent != null)
                 this.feedbackRootEvent();
-        }
-
-        // Prova
-        public void print()
-        {
-            //Debug.WriteLine(this.mapHandler.Count);
-            foreach (var child in this.mapHandler)
-            {
-                Debug.WriteLine("Porcamadonna a Dio: - " + child.Key.name);
-            }
         }
     }
 
