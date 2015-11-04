@@ -13,6 +13,8 @@ using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttribut
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 // Likelihood
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
+// Conflict Manager
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict;
 // Debug
 using System.Diagnostics;
 
@@ -28,10 +30,13 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /* Attributi */
         // Lista delle Gesture presenti nel term passato in input
         public List<FeedbackGesture> children = new List<FeedbackGesture>();
-        // Term assoicato alla radice
+        // Term associato alla radice
         public Term term;
+        // Conflict Manager associato alla radice
+        public ConflictManager conflictManager = null;
+
         // SortedDictionary che contiene le informazioni relative alle gesture in stato di Continue
-        public SortedDictionary<Handler, List<Modifies>> mapHandler { get; private set; }
+        //public SortedDictionary<Handler, List<Modifies>> mapHandler { get; private set; }
 
         /* Costruttore */
         public FeedbackRoot(Term term)
@@ -56,7 +61,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             }
 
             // Inizializzo la mappa degli handler, inserendovi la relativa classe che si occupa del Compare tra i vari handler
-            this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();
+            //this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();
+            this.conflictManager = new ConflictManager(term);
+
             // Associa al cambiamento di stato del term l'handler resetTree
             this.term.ChangeState += resetTree;
         }
@@ -96,10 +103,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void updateContinue(FeedbackGroupEventArgs sender)
         {
             // Se l'handler non è ancora presente nella mappa, allora lo inserisco, e aggiorno l'albero
-            if (!this.mapHandler.ContainsKey(sender.handler))
+            if (!this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
             {
                 // Aggiorna l'albero inserendo l'handler.
-                this.addNode(sender.handler);
+                this.conflictManager.addHandler(sender.handler);
             }
         }
 
@@ -111,16 +118,17 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void updateError(FeedbackGroupEventArgs sender)
         {
             // Controlla se l'handler si trova nella mappa
-            if (this.mapHandler.ContainsKey(sender.handler))
+            if (this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
             {
                 // Se si, lo si rimuove dalla mappa e si aggiornano di conseguenza anche tutti gli 
                 // elementi dei vari handler presenti nella mappa.
-                this.mapHandler.Remove(sender.handler);
-                this.removeNode();
+                //this.mapHandler.Remove(sender.handler);
+                //this.removeNode();
+                this.conflictManager.removeHandler(sender.handler);
             }
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Inserisce un handler nella map.
         /// </summary>
         /// <param name="newHandler"></param>
@@ -179,14 +187,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 }
             }
 
-            /*// Prima si determina quali sono i nuovi attributi in conflitto
-            foreach (var i in this.mapHandler)
-            {
-                if (listModifies.Count > 0)
-                    listModifies.Union(i.Key.elementList);
-                else
-                    listModifies.Intersect(i.Key.elementList);
-            }*/
+            // Prima si determina quali sono i nuovi attributi in conflitto
+            //foreach (var i in this.mapHandler)
+            //{
+                //if (listModifies.Count > 0)
+                    //listModifies.Union(i.Key.elementList);
+                //else
+                    //listModifies.Intersect(i.Key.elementList);
+            //}
 
             // Quindi si fa l'union con la lista degli elementi di partenza e poi se ne fa la differenza
             foreach (var i in this.mapHandler)
@@ -198,7 +206,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             }
 
             OnFeedbackRootEvent();
-        }
+        }*/
 
         /// <summary>
         /// Funzione che resetta l'albero (e di conseguenza tutti i suoi figli) e la mappa degli handler

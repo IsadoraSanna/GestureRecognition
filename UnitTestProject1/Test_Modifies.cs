@@ -48,8 +48,6 @@ namespace UnitTestProject1
             mapHandlersModifies.Add(4, list4.ToList());
 
             determineConflict();
-
-            Debug.WriteLine("porcoddio");
         }
 
         private void determineConflict()
