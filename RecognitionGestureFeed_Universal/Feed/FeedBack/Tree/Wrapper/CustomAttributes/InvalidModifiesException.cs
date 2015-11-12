@@ -13,6 +13,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         // Costruttori
         public InvalidModifiesException(string message) : base(message) { }
         public InvalidModifiesException(string message, System.Exception inner) : base(message, inner) { }
+        public InvalidModifiesException(string message, Modifies mod) : base(message) { }
 
         // Propagazione Eccezione
         protected InvalidModifiesException(System.Runtime.Serialization.SerializationInfo info,

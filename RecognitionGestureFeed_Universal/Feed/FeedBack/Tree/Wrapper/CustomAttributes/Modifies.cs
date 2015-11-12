@@ -14,22 +14,21 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
     {
         /* Attributi */
         // Nome dell'oggetto
-        internal string name { get; private set; }
+        public string name { get; private set; }
         // Oggetto in questione
         internal object obj { get; private set; }
         // Rappresenta il nuovo valore che verrà assegnato all'elemento in seguito all'esecuzione di una gesture
         internal object newValue { get; private set; }
         // Rappresenta il valore assegnato all'oggetto in precedenza (serve per la gestione concorrenziale)
         internal object oldValue { get; private set; }
-        // Rispettivamente nuovo e vecchio valore. Prova.
-        internal float newv { get; private set; }
-        internal float oldv { get; private set; }
+        // Tipo: inizializzazione o nuovo valore
 
         /* Costruttore */
-        public Modifies(string name, float value)
+        public Modifies(string name, float value, float newV)
         {
             this.name = name;
-            this.newv = value;
+            this.value = value;
+            this.newv = newV;
         }
         // Creazione di un Modifies
         public Modifies(string name, object obj)
@@ -54,16 +53,35 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         {
             return this.MemberwiseClone();
         }
+
+        /* Abstract Methods */
+        /// <summary>
+        /// Viene utilizzata per definire una modifica all'interno dell'oggeto.
+        /// </summary>
+        //public abstract void set();
+        /// <summary>
+        /// Viene utilizzata per ripristinare il valore precedente. Necessario in caso di errore
+        /// </summary>
+        //public abstract void refresh();
+        /// <summary>
+        /// Verfica se due modifies sono uguali
+        /// </summary>
+        //public abstract bool equals(Modifies mod);
+
+        /* Example Methods */ 
         // Aggiorna il valore di un obj
-        public void setAttr()
+        public void setAttr(float newValue)
         {
-            if (this.newValue != null)
+            this.oldv = this.value;
+            this.value = newValue;
+            System.Diagnostics.Debug.WriteLine(this.value);
+            /*if (this.newValue != null)
             {
                 this.oldValue = this.obj;// Conservo il vecchio valore
                 this.obj = this.newValue;// Setto il nuovo valore
-            }
+            }*/
         }
-        public void setAttr(object newValue)
+        /*public void setAttr(object newValue)
         {
             if (this.newValue != null)
             {
@@ -75,7 +93,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
                 // Comunico all'utente che non ha inserito un nuovo valore
                 throw new InvalidModifiesException("Non è stato inserito nessun nuovo valore");
             }
-        }
+        }*/
         // Ripristina il vecchio valore 
         public void riprAttr()
         {
@@ -87,6 +105,13 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
                 throw new InvalidModifiesException("Non è presente alcun valore di ripristino");
             }
         }
+
+
+
+        // Rispettivamente nuovo e vecchio valore. Prova.
+        public float value { get; private set; }
+        public float newv { get; private set; }
+        public float oldv { get; private set; }
     }
 
     // Comparer per la classe Modifies

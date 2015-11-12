@@ -217,7 +217,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             {
                 feedbackGesture.reset();// Resetta il figlio
             }
-            this.mapHandler.Clear();// Resetta la mappa degli Handler
+            this.conflictManager.mapConflictExec.Clear();// Resetta la mappa degli Handler
+            //this.mapHandler.Clear();// Resetta la mappa degli Handler
             OnFeedbackRootEvent();
         }
 

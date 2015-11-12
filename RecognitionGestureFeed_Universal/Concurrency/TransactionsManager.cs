@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Transactions;
 // Modifies
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 
 namespace RecognitionGestureFeed_Universal.Concurrency
 {
@@ -34,14 +36,28 @@ namespace RecognitionGestureFeed_Universal.Concurrency
     {
         // Indica se è già in atto una transazione
         private bool isDoTransactions;
-        // Numero massimo di transazioni in esecuzione contemporaneamente
-        private readonly int numTransactionManageable = 5;
-        private int numTransactionInExecution = 0; // Contatore che indica il numero di transazioni in esecuzione
         // Transazione con lo scope
-        private Transaction _enlistedTransaction;
+        private TransactionScope prova;
+        /* Attributi */
+        // Lista di tutti i modifies della classe
+        protected List<Modifies> listModifies = new List<Modifies>();
 
-        public void OnTransactionExcute()
+        protected void OnTransactionExcute(Handler handler, List<Modifies> modConfl, List<Modifies> modNoConfl)
         {
+            // Esecuzione cambiamenti
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+            {
+                // Esegue le modifiche non in conflitto, se presenti
+                using (TransactionScope scopeNoConfl = new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    this.execChange(modNoConfl, this.listModifies);
+                }
+
+                // Esegue i cambiamenti in conflitto
+                this.execChange(modConfl, this.listModifies);
+                // Transazione Completata
+                scope.Complete();
+            }
             /*
             // Se non c'è uno scope attivo, allora lo sia avvia
             if (numTransactionInExecution == 0)
@@ -60,47 +76,49 @@ namespace RecognitionGestureFeed_Universal.Concurrency
 
             // Se non ci sono già altre transazioni in esecuzione allora faccio partire lo scope, in modo da poterle 
             // eseguire in sicurezza. Altrimenti creo una transazione e la invio allo scope.
-            if(!isDoTransactions)
+            /*if (!isDoTransactions)
             {
                 isDoTransactions = true;
-                startTransaction();
+                startTransaction(handler, mod);
             }
             else
             {    
                 // Crea transazione
-                _enlistedTransaction = Transaction.Current;
+                //_enlistedTransaction = Transaction.Current;
                 _enlistedTransaction.EnlistVolatile(this,  EnlistmentOptions.None);
                 // Funzione che si occupa di liberare le risorse una volta che la transazione è stata completata
                 this._enlistedTransaction.TransactionCompleted += this.onTransactionCompletedHandler;
-            }
+            }*/
         }
-        
-        // Questa funzione fa partire l'esecuzione di una transazione
-        private void startTransaction()
+
+        // Esecuzione 
+        private void execChange(List<Modifies> listMod, List<Modifies> listElem)
         {
-            using (TransactionScope scope = new TransactionScope())
+            // Cicla la lista di modifies della classe principale, e li confronta con quelli
+            // passati in input
+            foreach(var e in listMod)
             {
-                // Esecuzione della transazione
-
-                // Transazione Completata
-                scope.Complete();
+                // Ricerca la corrispondenza
+                Modifies c = listElem.Find(item => item.name == e.name);//item.Equals(e));
+                if (c != null)
+                {
+                    // Esegue la modifica
+                    c.setAttr(e.newv);
+                }
+                else
+                {
+                    // Se arriva a questo punto vuol dire che c'è stato un errore, lancia 
+                    // un'eccezione, indicando qual'è il modifies che non è stato trovato.
+                    throw new InvalidModifiesException("Modifies non trovato! Errore!", e);
+                }
             }
-            isDoTransactions = false;
+
         }
 
-        // Funzione richiamata quando viene completata l'esecuzione di una transazione
-        private void onTransactionCompletedHandler(object sender, TransactionEventArgs e)
-        {
-            this._enlistedTransaction.TransactionCompleted -= this.onTransactionCompletedHandler;
-            this._enlistedTransaction = null;
-        }
-        
         /* Implementazione dell'interfaccia IEnlistmentNotification */
         // Commit
         void IEnlistmentNotification.Commit(Enlistment enlistment)
         {
-            // In fase di Commit memorizziamo definitivamente il valore della variabile
-
             // Comunica al Transation Manager che la transazione è stata conclusa
             enlistment.Done();
         }
@@ -115,11 +133,19 @@ namespace RecognitionGestureFeed_Universal.Concurrency
             // Comunica al Transaction Manager che tutti i partecipanti sono pronti
             preparingEnlistment.Prepared();
         }
+        // Rollback
         void IEnlistmentNotification.Rollback(Enlistment enlistment)
         {
-            // Rollback, vuol dire che qualcosa non è andato come previsto, nel nostro
-            // caso non facciamo nulla, in quanto i valori non sono stati ancora assegnati.
+            // Ripristina il vecchio valore
+            
             enlistment.Done();
+        }
+        // Funzione richiamata quando viene completata l'esecuzione di una transazione
+        Transaction _enlistedTransaction;
+        private void onTransactionCompletedHandler(object sender, TransactionEventArgs e)
+        {
+            this._enlistedTransaction.TransactionCompleted -= this.onTransactionCompletedHandler;
+            this._enlistedTransaction = null;
         }
     }
 }

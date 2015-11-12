@@ -104,7 +104,6 @@ C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debu
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Speech.dll
 C:\Users\BatCave\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\Alessandro\Documents\Tesi\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
-C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.dll
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.pdb
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\RecognitionGestureFeed_Universal.dll
@@ -116,3 +115,7 @@ C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Unive
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Face.xml
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.VisualGestureBuilder.xml
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Wpf.Controls.xml
+C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\LeapCSharp.NET4.0.dll
+C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.dll
+C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.xml
+C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
