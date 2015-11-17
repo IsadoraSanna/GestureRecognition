@@ -107,7 +107,6 @@
     <Compile Include="Feed\FeedBack\Tree\FeedbackGroup.cs" />
     <Compile Include="Feed\FeedBack\Tree\FeedbackRoot.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\CustomAttributes\InvalidModifiesException.cs" />
-    <Compile Include="Feed\FeedBack\Tree\Wrapper\CustomAttributes\TransactionalStringManager.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Handler\Handler.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Likelihood\ComputeLikelihood.cs" />
     <Compile Include="Feed\FeedBack\Tree\Wrapper\Likelihood\Likelihood.cs" />

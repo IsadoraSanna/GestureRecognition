@@ -59,6 +59,7 @@
       <HintPath>..\RecognitionGestureFeed_Universal\bin\x64\Debug\RecognitionGestureFeed_Universal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">

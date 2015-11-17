@@ -74,7 +74,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         {
             this.oldv = this.value;
             this.value = newValue;
-            System.Diagnostics.Debug.WriteLine(this.value);
             /*if (this.newValue != null)
             {
                 this.oldValue = this.obj;// Conservo il vecchio valore
