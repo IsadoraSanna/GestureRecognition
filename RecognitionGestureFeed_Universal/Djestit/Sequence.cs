@@ -20,16 +20,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
         /// Prende in ingresso un singolo parametro.
         /// </summary>
         /// <param name="terms"></param>
-        public Sequence(Term terms)
+        public Sequence(Term term) : base(term)
         {
             this.children = new List<Term>();
-            this.children.Add(terms);
+            this.children.Add(term);
         }
         /// <summary>
         /// Prende in ingresso un'intera lista.
         /// </summary>
         /// <param name="terms"></param>
-        public Sequence(List<Term> terms)
+        public Sequence(List<Term> terms) : base(terms)
         {
             this.children = new List<Term>();
             this.children = terms;

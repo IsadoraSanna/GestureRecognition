@@ -27,6 +27,7 @@ namespace UnitTestProject1
     public class DjestitTest
     {
         [TestMethod]
+        [Modifies("A", 0)]
         public void TestMethod1()
 {
             /* Pan Asse X */
@@ -35,19 +36,19 @@ namespace UnitTestProject1
             termx1.type = "Start";
             termx1.accepts = close;
             termx1.Complete += Close;
-            termx1.handler = new Handler(Close, termx1);
+            termx1.handler = new Handler(Close, termx1, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
             termx2.Complete += Move;
-            termx2.handler = new Handler(Move, termx2);
+            termx2.handler = new Handler(Move, termx2, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
             termx3.Complete += Open;
-            termx3.handler = new Handler(Open, termx3);
+            termx3.handler = new Handler(Open, termx3, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Iterative Move
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
@@ -59,11 +60,9 @@ namespace UnitTestProject1
             listTermx2.Add(termx1);
             listTermx2.Add(disablingx);
             // Sequence Start - Move - End
-            Sequence sequencePanX = new Sequence(listTermx2);
-            sequencePanX.Complete += PanX;
-            sequencePanX.handler = new Handler(PanX, sequencePanX);
-            // GestureRepresent
-            GestureRepresent panX = new GestureRepresent(sequencePanX);
+            Sequence panX = new Sequence(listTermx2);
+            panX.Complete += PanX;
+            panX.handler = new Handler(PanX, panX, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
 
             //panX.setErrorTollerance();
             /* Pan Asse Y */
@@ -72,19 +71,19 @@ namespace UnitTestProject1
             termy1.type = "Start";
             termy1.accepts = close;
             termy1.Complete += Close;
-            termy1.handler = new Handler(Close, termy1);
+            termy1.handler = new Handler(Close, termy1, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
             termy2.Complete += Move;
-            termy2.handler = new Handler(Move, termy2);
+            termy2.handler = new Handler(Move, termy2, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
             termy3.Complete += Open;
-            termy3.handler = new Handler(Open, termy3);
+            termy3.handler = new Handler(Open, termy3, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Iterative Move
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();
@@ -96,10 +95,9 @@ namespace UnitTestProject1
             listTermy2.Add(termy1);
             listTermy2.Add(disablingy);
             // Sequence Start - Move - End
-            Sequence sequencePanY = new Sequence(listTermy2);
-            sequencePanY.Complete += PanY;
-            sequencePanY.handler = new Handler(PanY, sequencePanY);
-            GestureRepresent panY = new GestureRepresent(sequencePanY);
+            Sequence panY = new Sequence(listTermy2);
+            panY.Complete += PanY;
+            panY.handler = new Handler(PanY, panY, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             
             // Gesture Database
             List<Term> listTerm = new List<Term>();

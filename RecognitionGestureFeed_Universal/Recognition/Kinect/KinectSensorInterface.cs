@@ -74,14 +74,14 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         }
 
         #region Prove
-        public KinectSensorInterface(Term term)
+        /*public KinectSensorInterface(Term term)
         {
             //this.sensor = new SkeletonSensor(term, 5);
         }
 
         public KinectSensorInterface(AcquisitionManager am)
         {
-            //* Pan Asse X */
+            /// Pan Asse X
             // Close
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
@@ -120,7 +120,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             // Handler PanX
             panX.handler = new Handler(this.PanX, panX);
 
-            /* Pan Asse Y */
+            /// Pan Asse Y
             // Close
             GroundTerm termy1 = new GroundTerm();
             termy1.type = "Start";
@@ -340,7 +340,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         void Open(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho la mano destra aperta.");
-        }
+        }*/
         #endregion
 
     }

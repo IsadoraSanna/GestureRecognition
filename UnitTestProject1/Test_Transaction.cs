@@ -44,14 +44,14 @@ namespace UnitTestProject1
             termA.name = "GroundTerm CloseA";
             termA.likelihood = 0.5f;
             termA.Complete += completeA;
-            termA.handler = new Handler(completeA, termA);
+            termA.handler = new Handler(completeA, termA, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             termB = new GroundTerm();
             termB.type = "Start";
             termB.accepts = closeB;
             termB.likelihood = 0.6f;
             termB.name = "GroundTerm CloseB";
             termB.Complete += completeB;
-            termB.handler = new Handler(this.completeB, termB);
+            termB.handler = new Handler(this.completeB, termB, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             // Choice
             List<Term> list = new List<Term>();
             list.Add(termA);

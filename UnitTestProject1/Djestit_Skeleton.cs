@@ -193,8 +193,7 @@ namespace UnitTestProject1
             panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
-            panX.handler = new Handler(this.PanX, panX);
-            GestureRepresent panXGesture = new GestureRepresent(panX);
+            panX.handler = new Handler(this.PanX, panX, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
             
             /* Pan Asse Y *
             // Close
@@ -237,7 +236,7 @@ namespace UnitTestProject1
 
             // Choice
             List<Term> listTerm = new List<Term>();
-            listTerm.Add(panXGesture);
+            listTerm.Add(panX);
             //listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
             // Assoccio l'espressione panX al sensor

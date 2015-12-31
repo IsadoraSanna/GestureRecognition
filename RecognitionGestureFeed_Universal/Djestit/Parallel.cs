@@ -17,12 +17,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class Parallel : CompositeTerm
     {
         // Costruttori
-        public Parallel(Term terms)
+        public Parallel(Term term) : base(term)
         {
-            this.children = new List<Term>();
+            this.children.Clear();
+            this.children.Add(term);
         }
-        public Parallel(List<Term> terms)
+        public Parallel(List<Term> terms) : base(terms)
         {
+            this.children.Clear();
             this.children = terms;
         }
 
