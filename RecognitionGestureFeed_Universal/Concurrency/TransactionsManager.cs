@@ -15,109 +15,176 @@ using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 namespace RecognitionGestureFeed_Universal.Concurrency
 {
     /// <summary>
-    /// Attualmente avremo a che fare solo con transazioni locali (distribuite in futuro?). Per far ciò abbiamo bisogno
-    /// di: 1) Local Transaction Manager (che si occupa di mantenere un log, da utilizzare in caso di errore), e che
-    /// coordina le transazioni su singole risorse; 2) Transaction Coordinator, che si occupa invece di far partire
-    /// l'esecuzione delle transazioni, e il risultato finale sarà il commit o il rollback delle operazioni. 
-    /// 
-    /// Classe che si occupa di gestire la concorrenza tra più transazioni. Quando più transazioni operano su oggetti
-    /// diversi, queste vengono eseguite senza problemi. Viceversa entra in gioco il concetto di gestione della 
-    /// concorrenza, ottenuta utilizzando gli elementi messi a disposizione dalla classe System.Transactions.
-    /// Quando una gesture viene eseguita correttamente, la sua funzione viene mandata alla TransactionsManager
-    /// che si occuperà di verificare la presenza di elementi in conflitto e della loro esecuzione.
+    ///
     /// </summary>
-    public class TransactionsManager 
+    public class TransactionsManager : IEnlistmentNotification
     {
-        // Indica se è già in atto una transazione
-        private bool isDoTransactions;
-
         /* Attributi */
-        // Lista di tutti i modifies della classe
-        protected List<Modifies> listModifies = new List<Modifies>();
+        // Indica se è già in atto una transazione
+        //private bool isDoTransactions;
+        // Transazione attiva
+        private static Transaction transaction;
+        // 
+        private Modifies memberValue = default(Modifies);
+        private Modifies oldMemberValue = default(Modifies);
+        private Modifies newSuggestedValue = default(Modifies);
+        
+        private List<Tuple<Modifies, Modifies>> listMember = new List<Tuple<Modifies, Modifies>>();
 
-        protected void OnTransactionExcute(Handler handler, List<Modifies> modConfl, List<Modifies> modNoConfl)
+        /* Costruttore */
+        public TransactionsManager()
         {
-            // Esecuzione cambiamenti
-            using (TransactionScope scope = new TransactionScope())
-            {
-                // Esegue le modifiche non in conflitto, se presenti
-                /*using (TransactionScope scopeNoConfl = new TransactionScope(TransactionScopeOption.Suppress))
-                {
-                    this.execChange(modNoConfl, this.listModifies);
-                    // Transazione Completata
-                    scopeNoConfl.Complete();
-                }*/
 
-                // Esegue i cambiamenti in conflitto
-                //this.execChange(modConfl, this.listModifies);
-
-                // Transazione Completata
-                //scope.Complete();
-            }
-
-            //Transaction c = new Transaction();
-            
-
-            
-            /*
-            // Se non c'è uno scope attivo, allora lo sia avvia
-            if (numTransactionInExecution == 0)
-            {
-                numTransactionInExecution++;// Inserire codice per atomicità
-                startTransaction();
-            }
-            else if(numTransactionInExecution < numTransactionManageable)
-            {
-                // Creo una transazione e cerco di inserirla nello scope previsto
-            }
-            else
-            {
-                // Attendi 
-            }*/
-
-            // Se non ci sono già altre transazioni in esecuzione allora faccio partire lo scope, in modo da poterle 
-            // eseguire in sicurezza. Altrimenti creo una transazione e la invio allo scope.
-            /*if (!isDoTransactions)
-            {
-                isDoTransactions = true;
-                startTransaction(handler, mod);
-            }
-            else
-            {    
-                // Crea transazione
-                //_enlistedTransaction = Transaction.Current;
-                _enlistedTransaction.EnlistVolatile(this,  EnlistmentOptions.None);
-                // Funzione che si occupa di liberare le risorse una volta che la transazione è stata completata
-                this._enlistedTransaction.TransactionCompleted += this.onTransactionCompletedHandler;
-            }*/
         }
 
-        // Esecuzione 
-        private void execChange(List<Modifies> listMod, List<Modifies> listElem)
+        /* Metodi */
+        public void onTransactionExcute(List<Modifies> listMemberValue, List<Modifies> listNewMemberValue)
         {
-            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+            transaction = Transaction.Current;
+            if (transaction != null)
             {
-                // Cicla la lista di modifies della classe principale, e li confronta con quelli
-                // passati in input
-                foreach (var e in listMod)
+                // Eseguiamo la transazione
+                // Accoda le operazioni alla transazione 
+                transaction.EnlistVolatile(this, EnlistmentOptions.None);
+                // Inserisce nel Modifies da modificare il nuovo valore che deve assumere
+                foreach(Modifies mod in listNewMemberValue)
                 {
-                    // Ricerca la corrispondenza
-                    Modifies c = listElem.Find(item => item.name == e.name);//item.Equals(e));
-                    if (c != null)
-                    {
-                        // Esegue la modifica
-                        c.setAttr(e.newv);
-                    }
-                    else
-                    {
-                        // Se arriva a questo punto vuol dire che c'è stato un errore, lancia 
-                        // un'eccezione, indicando qual'è il modifies che non è stato trovato.
-                        throw new InvalidModifiesException("Modifies non trovato! Errore!", e);
-                    }
+                    Modifies modTemp = (listMemberValue.Find(item => item.Equals(mod)));
+                    if (modTemp != null)
+                        this.listMember.Add(new Tuple<Modifies, Modifies>(modTemp, mod));                    
                 }
-
-                scope.Complete();
+            }
+            else
+            {
+                // we are outside a transaction, immediate commit
+                foreach (Modifies mod in listNewMemberValue)
+                {
+                    Modifies modTemp = (listMemberValue.Find(item => item.Equals(mod)));
+                    if (modTemp != null)
+                        modTemp.setValue(mod.newValue);
+                }
             }
         }
+
+        /// <summary>
+        /// Esegue il commit.
+        /// </summary>
+        /// <param name="enlistment"></param>
+        public void Commit(Enlistment enlistment)
+        {
+            // Sto eseguendo il commit della transazione, svuoto la lista delle modifiche
+            this.listMember.Clear();
+        }
+        /// <summary>
+        /// Viene richiamata quando la funzione non è stata eseguita.
+        /// </summary>
+        /// <param name="enlistment"></param>
+        public void InDoubt(Enlistment enlistment)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Prepara l'esecuzione della transizione
+        /// </summary>
+        /// <param name="preparingEnlistment"></param>
+        public void Prepare(PreparingEnlistment preparingEnlistment)
+        {
+            // La transazione è pronta per essere eseguita. Di seguito vengono riportate le operazione da
+            // eseguire. Associo il vecchio valore a quello nuovo.
+            foreach(var modifie in this.listMember)
+            {
+                modifie.Item1.setValue(modifie.Item2.newValue);
+            }
+            // Preparo l'enlistment
+            preparingEnlistment.Prepared();
+        }
+        /// <summary>
+        /// Esegue il rollback della transizione. Vuol dire che qualcosa non è andata a buon fine.
+        /// </summary>
+        /// <param name="enlistment"></param>
+        public void Rollback(Enlistment enlistment)
+        {
+            // Inserisce il valore precedente
+            foreach (var modifie in this.listMember)
+            {
+                modifie.Item1.rollback();
+            }
+            // Svuoto la lista delle modifiche non andate a buon fine
+            this.listMember.Clear();
+        }
+
+        /// <summary>
+        /// Riporta per ogni modifies la modifica che dev'essere effettuata
+        /// </summary>
+        /// <param name="list1"></param>
+        /// <param name="list2"></param>
+        /// <returns></returns>
+        protected List<Modifies> setListTemporary(List<Modifies> list1, List<Modifies> list2)
+        {
+            List<Modifies> list3 = new List<Modifies>();
+
+            foreach (Modifies mod in list1)
+            {
+                Modifies i = list1.Find(item => item.Equals(mod));
+                if (i != null)
+                {
+                    Modifies temp = new Modifies(i.name, i.value, mod.value);
+                    list3.Add(temp);
+                }
+            }
+            return list3;
+        }
+
     }
 }
+
+
+
+
+
+/*
+public void CreateTransactionAmbient(int id, List<Modifies> list1, List<Modifies> list2)
+{
+    List<Modifies> listTemp = new List<Modifies>();
+
+    listTemp = setListTemporary(list1, list2);
+
+    //
+    if (!listModifiche.ContainsKey(id))
+    {
+        listModifiche.Add(id, listTemp);
+        return;
+    }
+    //
+    List<Modifies> listTemp2 = new List<Modifies>();
+    listModifiche.TryGetValue(id, out listTemp2);
+    listTemp2.Union(listTemp);
+}
+
+public void ExecuteTransaction(int id, List<Modifies> list1, List<Modifies> listNewMemberValue)
+{
+    List<Modifies> listTemp = new List<Modifies>();
+    listTemp = setListTemporary(list1, listNewMemberValue);
+
+    //
+    transaction = Transaction.Current;
+    if (transaction != null)
+    {
+        transaction.EnlistVolatile(this, EnlistmentOptions.None);
+    }
+    else
+    {
+
+    }
+    List<Modifies> listTemp2 = new List<Modifies>();
+    listModifiche.TryGetValue(id, out listTemp2);
+    listTemp2.Union(listTemp);
+    // 
+    foreach (Modifies mod in listTemp2)
+    {
+        Modifies modTemp = (list1.Find(item => item.Equals(mod)));
+        if (modTemp != null)
+            this.listMember.Add(new Tuple<Modifies, Modifies>(modTemp, mod));
+    }
+
+}*/

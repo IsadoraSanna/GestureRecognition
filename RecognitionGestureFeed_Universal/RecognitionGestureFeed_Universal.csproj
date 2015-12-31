@@ -87,6 +87,7 @@
     <Compile Include="Djestit\Choice.cs" />
     <Compile Include="Djestit\CompositeTerm.cs" />
     <Compile Include="Djestit\Disabling.cs" />
+    <Compile Include="Djestit\ErrorTolerance\ErrorTolerance.cs" />
     <Compile Include="Djestit\Expression.cs" />
     <Compile Include="Djestit\GestureEventArgs.cs" />
     <Compile Include="Djestit\GroundTerm.cs" />

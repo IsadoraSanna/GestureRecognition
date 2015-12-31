@@ -31,8 +31,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         internal SkeletonSensor sensor;
         // Capacità del buffer
         internal int capacity = 5;
-        // Prova
-        internal Feedback tree;
 
         /* Costruttore */
         public KinectSensorInterface(AcquisitionManager am, Term expression)
@@ -120,7 +118,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
-            panX.handler = new Handler(this.PanX);
+            panX.handler = new Handler(this.PanX, panX);
 
             /* Pan Asse Y */
             // Close
@@ -159,7 +157,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             panY.Complete += PanY;
             panY.name = "PanY";
             // PanY
-            panY.handler = new Handler(this.PanY);
+            panY.handler = new Handler(this.PanY, panY);
             /// Circle
             // Start
             GroundTerm startCircle = new GroundTerm();
@@ -195,7 +193,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             circle.name = "Circle";
             // Handler PanX
             circle.likelihood = ComputeLikelihood.indipendentEvents(circle);
-            circle.handler = new Handler(this.Porcoddio);
+            circle.handler = new Handler(this.Porcoddio, circle);
 
             // Choice
             List<Term> listTerm = new List<Term>();

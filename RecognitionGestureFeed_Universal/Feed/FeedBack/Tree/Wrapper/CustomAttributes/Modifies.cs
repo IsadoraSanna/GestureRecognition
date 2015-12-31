@@ -16,32 +16,24 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         // Nome dell'oggetto
         public string name { get; private set; }
         // Oggetto in questione
-        internal object obj { get; private set; }
-        // Rappresenta il nuovo valore che verrà assegnato all'elemento in seguito all'esecuzione di una gesture
-        internal object newValue { get; private set; }
-        // Rappresenta il valore assegnato all'oggetto in precedenza (serve per la gestione concorrenziale)
-        internal object oldValue { get; private set; }
-        // Tipo: inizializzazione o nuovo valore
+        public object value { get; private set; }
+        public object newValue { get; private set; }
+        public object oldValue { get; private set; }
 
         /* Costruttore */
-        public Modifies(string name, float value, float newV)
+        public Modifies(string name, object value)
         {
             this.name = name;
             this.value = value;
-            this.newv = newV;
+            this.oldValue = value;
         }
         // Creazione di un Modifies
-        public Modifies(string name, object obj)
+        public Modifies(string name, object value, object newValue)
         {
             this.name = name;
-            this.obj = obj;
-        }
-        // In seguito all'esecuzione di una gesture
-        public Modifies(string name, object obj, object newValue)
-        {
-            this.name = name; // Nome
-            this.obj = obj; // Object 
-            this.newValue = newValue; // Nuovo Valore
+            this.value = value;
+            this.oldValue = value;
+            this.newValue = newValue;
         }
 
         /* Metodi */
@@ -51,9 +43,33 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         /// <returns></returns>
         public object Clone()
         {
+            /*String nameClone = name;
+            Object valueClone = value.Clone();
+            Object newValueClone = newValue.Clone();
+            Modifies clone = new Modifies(name, valueClone, newValueClone);
+            return clone;*/
             return this.MemberwiseClone();
         }
 
+        public override bool Equals(Object obj)
+        {
+            Modifies mod = (Modifies)obj;
+            if (this.name == mod.name)
+                return true;
+
+            return false;
+        }
+
+        public virtual void setValue(Object newValue)
+        {
+            this.oldValue = this.value;
+            this.value = newValue;
+        }
+
+        public virtual void rollback()
+        {
+            this.value = oldValue;
+        }
         /* Abstract Methods */
         /// <summary>
         /// Viene utilizzata per definire una modifica all'interno dell'oggeto.
@@ -68,18 +84,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
         /// </summary>
         //public abstract bool equals(Modifies mod);
 
-        /* Example Methods */ 
-        // Aggiorna il valore di un obj
-        public void setAttr(float newValue)
-        {
-            this.oldv = this.value;
-            this.value = newValue;
-            /*if (this.newValue != null)
-            {
-                this.oldValue = this.obj;// Conservo il vecchio valore
-                this.obj = this.newValue;// Setto il nuovo valore
-            }*/
-        }
+        /* Example Methods */
         /*public void setAttr(object newValue)
         {
             if (this.newValue != null)
@@ -93,24 +98,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
                 throw new InvalidModifiesException("Non è stato inserito nessun nuovo valore");
             }
         }*/
-        // Ripristina il vecchio valore 
-        public void riprAttr()
-        {
-            if (this.oldValue != null)
-                this.obj = this.oldValue;
-            else
-            {    
-                // Comunico all'utente che non ha inserito un nuovo valore
-                throw new InvalidModifiesException("Non è presente alcun valore di ripristino");
-            }
-        }
-
-
-
-        // Rispettivamente nuovo e vecchio valore. Prova.
-        public float value { get; private set; }
-        public float newv { get; private set; }
-        public float oldv { get; private set; }
     }
 
     // Comparer per la classe Modifies
@@ -128,10 +115,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
                 return false;
 
             // Controlla se i due Modifies modificano lo stesso oggetto
-            if ((x.obj != null && y.obj != null) && (x.obj == y.obj))
+            if ((x.value != null && y.value != null) && (x.value == y.value))
                 return true;
             // O se hanno lo stesso nome
-            if ((x.obj == null) || (y.obj == null) && (x.name == y.name))
+            if ((x.name == null) || (y.name == null) && (x.name == y.name))
                 return true;
 
             return false;
@@ -146,10 +133,12 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttr
             // Se l'oggetto non è nullo allora calcolo l'hashcode dei singoli attributi dell'oggetto stesso
             int hashName = element.name == null ? 0 : element.name.GetHashCode();
             // Calcola l'hashcode dell'oggetto
-            int hashObj = element.obj == null ? 0 : element.obj.GetHashCode();
-            
+            int hashValue = element.value == null ? 0 : element.value.GetHashCode();
+            // Calcola l'hashcode dell'oggetto
+            int hashNewValue = element.newValue == null ? 0 : element.newValue.GetHashCode();
+
             //Calculate the hash code for the product.
-            return hashName ^ hashObj;
+            return hashName ^ hashValue ^ hashNewValue;
         }
     }
 

@@ -52,26 +52,30 @@ namespace UnitTestProject1
             {
                 // 
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                //
-                float positionNewX = skeletonToken.positionX;
-                float positionNewY = skeletonToken.positionY;
-                //
-                List<float> listConfidenceX = new List<float>();
-                List<float> listConfidenceY = new List<float>();
-                // Calcolo la differenza lungo l'asse X e l'asse Y
-                foreach (Skeleton sOld in skeletonToken.precSkeletons)
+
+                if (skeletonToken.precSkeletons.Count > 1)
                 {
-                    // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    float positionOldX = sOld.handRightPositionX;
-                    float positionOldY = sOld.handRightPositionY;
-                    listConfidenceX.Add(Math.Abs(positionNewX - positionOldX));
-                    listConfidenceY.Add(Math.Abs(positionNewY - positionOldY));
+                    //
+                    float positionNewX = skeletonToken.positionX;
+                    float positionNewY = skeletonToken.positionY;
+                    //
+                    List<float> listConfidenceX = new List<float>();
+                    List<float> listConfidenceY = new List<float>();
+                    // Calcolo la differenza lungo l'asse X e l'asse Y
+                    foreach (Skeleton sOld in skeletonToken.precSkeletons)
+                    {
+                        // Preleva dal penultimo scheletro il JointInformation riguardante la mano
+                        float positionOldX = sOld.handRightPositionX;
+                        float positionOldY = sOld.handRightPositionY;
+                        listConfidenceX.Add(Math.Abs(positionNewX - positionOldX));
+                        listConfidenceY.Add(Math.Abs(positionNewY - positionOldY));
+                    }
+                    if (listConfidenceX.Average() > listConfidenceY.Average())
+                        return true;
+                    else
+                        return false;
                 }
-                //
-                if (listConfidenceX.Average() > listConfidenceY.Average())
-                    return true;
-                else
-                    return false;
+                return true;
             }
             return false;
         }
@@ -136,6 +140,10 @@ namespace UnitTestProject1
         {
             Debug.WriteLine("Ho mosso la mano destra chiusa.");
         }
+        void MoveY(object sender, GestureEventArgs t)
+        {
+            Debug.WriteLine("Ho mosso la mano destra chiusa.");
+        }
         void Open(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Ho la mano destra aperta.");
@@ -155,21 +163,21 @@ namespace UnitTestProject1
             termx1.accepts = close;
             termx1.name = "GroundTerm CloseX";
             termx1.likelihood = 0.5f;//new Likelihood(0.01f);
-            //termx1.Complete += Close;
+            termx1.Complete += Close;
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
             termx2.name = "GroundTerm MoveX";
             termx2.likelihood = 0.75f;//new Likelihood(0.02f);
-            //termx2.Complete += MoveX;
+            termx2.Complete += MoveX;
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
             termx3.name = "GroundTerm OpenX";
             termx3.likelihood = 0.5f;//new Likelihood(0.01f);
-            //termx3.Complete += Open;
+            termx3.Complete += Open;
             Iterative iterativex = new Iterative(termx2);
             iterativex.likelihood = ComputeLikelihood.indipendentEvents(iterativex);//new Likelihood(iterativex, ProbabilityType.IndipendentEvents);
             List<Term> listTermx = new List<Term>();
@@ -185,30 +193,31 @@ namespace UnitTestProject1
             panX.Complete += PanX;
             panX.name = "PanX";
             // Handler PanX
-            panX.handler = new Handler(this.PanX);
-
-            /* Pan Asse Y */
+            panX.handler = new Handler(this.PanX, panX);
+            GestureRepresent panXGesture = new GestureRepresent(panX);
+            
+            /* Pan Asse Y *
             // Close
             GroundTerm termy1 = new GroundTerm();
             termy1.type = "Start";
             termy1.accepts = close;
             termy1.name = "GroundTerm CloseY";
             termy1.likelihood = 0.5f;//new Likelihood(0.01f);
-            //termy1.Complete += Close;
+            termy1.Complete += Close;
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
             termy2.name = "GroundTerm MoveY";
             termy2.likelihood = 0.75f;// new Likelihood(0.3f);
-            //termy2.Complete += Move;
+            termy2.Complete += MoveY;
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
             termy3.name = "GroundTerm OpenY";
             termy3.likelihood = 0.5f;// new Likelihood(0.01f);
-            //termy3.Complete += Open;
+            termy3.Complete += Open;
             Iterative iterativey = new Iterative(termy2);
             iterativey.likelihood = ComputeLikelihood.indipendentEvents(iterativey); //new Likelihood(iterativey, ProbabilityType.IndipendentEvents);
             List<Term> listTermy = new List<Term>();
@@ -224,61 +233,72 @@ namespace UnitTestProject1
             panY.Complete += PanY;
             panY.name = "PanY";
             // PanY
-            panY.handler = new Handler(this.PanY);
+            panY.handler = new Handler(this.PanY, panY);*/
 
             // Choice
             List<Term> listTerm = new List<Term>();
-            listTerm.Add(panX);
-            listTerm.Add(panY);
+            listTerm.Add(panXGesture);
+            //listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
             // Assoccio l'espressione panX al sensor
             sensor = new SkeletonSensor(choice, 5);
             // Creo l'albero dei feedback
-            Feedback tree = new Feedback(choice);
+            //Feedback tree = new Feedback(choice);
            
-            /*/// Simulazione Gesti
+            /// Simulazione Gesti
             // Simulo 1 gesto di start
             Skeleton sStart = new Skeleton(0, HandState.Closed, 0.0f, 0.0f);
             SkeletonToken tStart = (SkeletonToken)sensor.generateToken(TypeToken.Start, sStart);
             // E lo sparo al motorino
             sensor.root.fire(tStart);
-            tree.tree.print();
 
             // Simulo 20 gesti di move
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 100; i++)
             {
                 Skeleton sMove = null;
                 SkeletonToken tMove = null;
-                /*if (i == 1)
+                //sMove = new Skeleton(0, HandState.Closed, 0.0f+i, 0.0f);
+                //tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
+                if(i == 20)
                 {
-                    sMove = new Skeleton(0, HandState.Closed, 0.0f, 10000f);
+                    sMove = new Skeleton(0, HandState.Closed, 0.0f, 10.0f);
                     tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
                 }
-                else*/
-                //{
-                    /*if (i == 140)
+                else
+                {
+                    sMove = new Skeleton(0, HandState.Closed, 0.0f+i, 0.0f);
+                    tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
+                }
+                /*if (i == 1)
+                {
+                    sMove = new Skeleton(0, HandState.Closed, 0.1f, 0.0f);
+                    tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
+                }
+                else
+                {
+                    if (i == 140)
                         sMove = new Skeleton(0, HandState.Closed, (0.0f - 1000f), 0.0f);
                     if (i == 50)
                     {
                         i = 51;
                         sMove = new Skeleton(0, HandState.Closed, (1f + i), 0.0f);
-                    }*/
-                    /*// Creo lo scheletro
+                    }
+                    // Creo lo scheletro
                     sMove = new Skeleton(0, HandState.Closed, (1f + i), 0.0f);
                     // Creo il gesto
                     tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
-                //}
+                }*/
                 // E lo sparo
                 sensor.root.fire(tMove);
             }
-            tree.tree.print();
+            //tree.tree.print();
 
             // Simulo 1 gesto di end
             Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
             SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
             // E lo sparo al motorino
             sensor.root.fire(tEnd);
-            tree.tree.print();*/
+            //tree.tree.print();
         }
     }
 }

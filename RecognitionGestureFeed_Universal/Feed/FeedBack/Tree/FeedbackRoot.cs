@@ -15,6 +15,8 @@ using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Conflict Manager
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict;
+// TransactionsManager
+using RecognitionGestureFeed_Universal.Concurrency;
 // Debug
 using System.Diagnostics;
 
@@ -34,6 +36,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public Term term;
         // Conflict Manager associato alla radice
         public ConflictManager conflictManager = null;
+        // Transaction Manager associato alla radice
+        public TransactionsManager transactionsManager = new TransactionsManager();
 
         // SortedDictionary che contiene le informazioni relative alle gesture in stato di Continue
         //public SortedDictionary<Handler, List<Modifies>> mapHandler { get; private set; }
@@ -87,12 +91,17 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         }
 
         /// <summary>
-        /// Se una Gesture è stata completata, allora resetto l'albero e cancello la mappa
+        /// Se una Gesture viene completata, allora eseguo le istruzioni ad esso associate
         /// </summary>
         /// <param name="sender"></param>
         private void updateComplete(FeedbackGroupEventArgs sender)
         {
-            this.reset();
+            // Esegui le modifiche
+            //using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+            //{
+                //this.transactionsManager.onTransactionExcute(this.conflictManager.listModifies, sender.handler.elementList);
+            //}
+            //this.reset;
         }
 
         /// <summary>
@@ -107,6 +116,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             {
                 // Aggiorna l'albero inserendo l'handler.
                 this.conflictManager.addHandler(sender.handler);
+                OnFeedbackRootEvent();
             }
         }
 
@@ -125,7 +135,39 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
                 //this.mapHandler.Remove(sender.handler);
                 //this.removeNode();
                 this.conflictManager.removeHandler(sender.handler);
+                OnFeedbackRootEvent();
             }
+        }
+
+        /// <summary>
+        /// Funzione che resetta l'albero (e di conseguenza tutti i suoi figli) e la mappa degli handler
+        /// </summary>
+        private void reset()
+        {
+            foreach (FeedbackGesture feedbackGesture in this.children)
+            {
+                feedbackGesture.reset();// Resetta il figlio
+            }
+            this.conflictManager.mapConflictExec.Clear();// Resetta la mappa degli Handler
+            //this.mapHandler.Clear();// Resetta la mappa degli Handler
+            OnFeedbackRootEvent();
+        }
+
+        /// <summary>
+        /// Funzione che richiama la reset
+        /// </summary>
+        private void resetTree()
+        {
+            this.reset();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnFeedbackRootEvent()
+        {
+            if (this.feedbackRootEvent != null)
+                this.feedbackRootEvent();
         }
 
         /*/// <summary>
@@ -207,34 +249,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             OnFeedbackRootEvent();
         }*/
-
-        /// <summary>
-        /// Funzione che resetta l'albero (e di conseguenza tutti i suoi figli) e la mappa degli handler
-        /// </summary>
-        private void reset()
-        {
-            foreach (FeedbackGesture feedbackGesture in this.children)
-            {
-                feedbackGesture.reset();// Resetta il figlio
-            }
-            this.conflictManager.mapConflictExec.Clear();// Resetta la mappa degli Handler
-            //this.mapHandler.Clear();// Resetta la mappa degli Handler
-            OnFeedbackRootEvent();
-        }
-
-        /// <summary>
-        /// Funzione che richiama la reset
-        /// </summary>
-        private void resetTree()
-        {
-            this.reset();
-        }
-
-        public void OnFeedbackRootEvent()
-        {
-            if (this.feedbackRootEvent != null)
-                this.feedbackRootEvent();
-        }
     }
 
     public class ComparerHandler : IComparer<Handler>

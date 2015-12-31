@@ -44,6 +44,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             
          }
 
+        /*
         public override void fire(Token token)
         {
             this.feedToken(token);
@@ -96,6 +97,71 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 for(int index = 0; index < this.children.Count; index++)
                 {
                     if(!this.children[index].once)
+                    {
+                        this.children[index].excluded = false;
+                        this.children[index].reset();
+                    }
+                }
+            }
+            //
+            TokenFireArgs args = new TokenFireArgs(token, this);
+            IsTokenFire(args);
+        } */
+
+        /* Error Tollerance Manager */
+        public override void fire(Token token)
+        {
+            this.feedToken(token);
+            bool allComplete = true, newSequence = false, allExcluded = true;
+
+            for (int index = 0; index < this.children.Count; index++)
+            {
+                if (!this.children[index].once)
+                {
+                    if (!this.children[index].excluded)
+                    {
+                        allExcluded = false;
+                        switch (this.children[index].state)
+                        {
+                            case expressionState.Likely:
+                            case expressionState.Complete:
+                                this.children[index].once = true;
+                                this.children[index].excluded = true;
+                                newSequence = true;
+                                break;
+                            case expressionState.Error:
+                                // this case is never executed, since
+                                // feedToken excludes the subterms in error state
+                                break;
+                            default:
+                                allComplete = false;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        allComplete = false;
+                    }
+                }
+            }
+            if (allComplete)
+            {
+                // we completed all sub-terms
+                this.complete(token);
+                return;
+            }
+            if (allExcluded)
+            {
+                // no expression was able to handle the input
+                this.error(token);
+                return;
+            }
+            if (newSequence)
+            {
+                // execute a new sequence among those in order independence
+                for (int index = 0; index < this.children.Count; index++)
+                {
+                    if (!this.children[index].once)
                     {
                         this.children[index].excluded = false;
                         this.children[index].reset();

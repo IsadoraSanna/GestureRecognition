@@ -17,6 +17,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
     public class ConflictManager
     {
         /* Attributi */
+        // Elenco di tutti gli attributi del Programma
+        public List<Modifies> listModifies { get; private set; }
         // Elenco generale degli attributi per ogni funzione
         public SortedDictionary<Handler, List<Modifies>> mapHandlersModifies { get; private set; }
         // Elenco generale degli attributi per ogni funzione in conflitto
@@ -32,8 +34,42 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         /// Attraverso l'albero delle gesture, e raccolgo per ognuno la lista di oggetti che modificano a tempo 
         /// di esecuzione. Questi dati verranno salvati in un dizionario riportando per ogni term, con una funzione
         /// associata al suo campo CompleteExecute, l'elenco delle variabili su cui agiscono.
+        /// Inoltre dalla funzione ottengo anche l'elenco di tutti i modifies che il programma modifica
+        public ConflictManager(Object elem, Term term)
+        {
+            // Inizializzazione liste
+            listModifies = new List<Modifies>();
+            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
+            // Inizializza la lista degli attributi del programma
+            listModifies = elem.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList();
+            // Costruisce la map che riporta per ogni funzione la sua lista di modifies
+            visitTree(term);
+            // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
+            determineConflict();
+        }
+        public ConflictManager(List<Modifies> list, Term term)
+        {
+            // Inizializzazione liste
+            listModifies = new List<Modifies>();
+            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
+            // Inizializza la lista degli attributi del programma
+            listModifies = list;
+            // Costruisce la map che riporta per ogni funzione la sua lista di modifies
+            visitTree(term);
+            // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
+            determineConflict();
+        }
         public ConflictManager(Term term)
         {
+            // Inizializzazione liste
+            listModifies = new List<Modifies>();
+            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
+            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
             // Costruisce la map che riporta per ogni funzione la sua lista di modifies
             visitTree(term);
             // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
@@ -44,6 +80,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         // Attraverso tutto l'albero e inserisce la coppia di elementi nella mappa
         private void visitTree(Term term)
         {
+            System.Diagnostics.Debug.WriteLine(term.GetType());
             // Attraverso l'albero, quindi controllo innanzittutto se il term passato in input è
             // un ground term o composite term
             if (term.GetType() != typeof(GroundTerm))
@@ -55,19 +92,19 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                 foreach (Term children in exp.children)
                 {
                     visitTree(children);
-                    if (children.hasComplete())
-                    {
-                        mapHandlersModifies.Add(children.handler, children.handler.elementList);
-                    }
                 }
             }
-            else
+            // È un ground term, allora non ha figli, quindi inserisco il suo contenuto nella map.
+            try
             {
-                // È un groun term, allora non ha figli, quindi inserisco il suo contenuto nella map.
                 if (term.hasComplete())
                 {
                     mapHandlersModifies.Add(term.handler, term.handler.elementList);
                 }
+            }
+            catch(NullReferenceException e)
+            {
+                throw new Exception("If you add a function to Complete, you must define a Handler object!", e);
             }
         }
 

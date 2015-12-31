@@ -26,130 +26,70 @@ namespace UnitTestProject1
 {
     [TestClass]
     [Modifies("a", 0), Modifies("b", 0), Modifies("c", 0)]
-    public class Test_Transaction : RecognitionGestureFeed_Universal.Concurrency.TransactionsManager
+    public class Test_Transaction
     {
         /* Attributi */
         // Gesture
         GroundTerm termA, termB;
-        string a = "i";
-
+        TransactionsManager transactionManager = new TransactionsManager();
+        ConflictManager conflictManager = null;
+        
         [TestMethod]
         public void Test_Transaction_1()
         {
-            this.listModifies = ((Modifies[]) Attribute.GetCustomAttributes(typeof(Test_Transaction), typeof(Modifies))).ToList();
-
             // Creo due gesture
             termA = new GroundTerm();
             termA.type = "Start";
             termA.accepts = closeA;
-            termA.name = "GroundTerm CloseX";
+            termA.name = "GroundTerm CloseA";
             termA.likelihood = 0.5f;
             termA.Complete += completeA;
-            termA.handler = new Handler(completeA);
+            termA.handler = new Handler(completeA, termA);
             termB = new GroundTerm();
             termB.type = "Start";
             termB.accepts = closeB;
-            termB.name = "GroundTerm CloseX";
+            termB.likelihood = 0.6f;
+            termB.name = "GroundTerm CloseB";
             termB.Complete += completeB;
-            termB.handler = new Handler(this.completeB);
+            termB.handler = new Handler(this.completeB, termB);
+            // Choice
+            List<Term> list = new List<Term>();
+            list.Add(termA);
+            list.Add(termB);
+            Choice choice = new Choice(list);
 
-            //termA.complete(new Token());
-            //termB.complete(new Token());
+            conflictManager = new ConflictManager(this, choice);
 
-            /*for (int i = 0; i < this.listModifies.Count; i++)
+            termA.complete(new Token());
+            termB.complete(new Token());
+
+            foreach(Modifies elem in this.conflictManager.listModifies)
             {
-                System.Diagnostics.Debug.WriteLine(this.listModifies[i].name + " - " + this.listModifies[i].value);
-            }*/
-
-            BackgroundWorker worker1 = new BackgroundWorker();
-            BackgroundWorker worker2 = new BackgroundWorker();
-
-            worker1.DoWork += prove;
-            worker2.DoWork += prove;
-
-
-            worker2.RunWorkerAsync();
-            worker1.RunWorkerAsync();
-
-        }
-
-        TransactionScope scope = null;
-        public void prove(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                using (scope = new TransactionScope(TransactionScopeOption.Required))
-                {
-                    scope.Dispose();
-                    a = "p";
-                }
+                Debug.WriteLine(elem.name + " - " + elem.value + " - " + elem.newValue);
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-
-            Debug.WriteLine(a);
-        }
-
-        //
-        [Modifies("a", 0, 10)]
-        private void ccc(object obj, GestureEventArgs sender)
-        {
-            BackgroundWorker worker1 = new BackgroundWorker();
-            BackgroundWorker worker2 = new BackgroundWorker();
-
-            worker1.DoWork += exec1;
-            worker2.DoWork += exec2;
-
-
-            worker2.RunWorkerAsync(sender);
-            worker1.RunWorkerAsync(sender);
-        }
-
-        private void exec1(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            GestureEventArgs args = (GestureEventArgs)e.Argument;
-
-            Debug.WriteLine("Eseguito A");
-            this.OnTransactionExcute(args.term.handler, args.term.handler.elementList, new List<Modifies>());   
-        }
-        private void exec2(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            GestureEventArgs args = (GestureEventArgs)e.Argument;
-
-            // creo lista di modifies fasulla
-            List<Modifies> list = new List<Modifies>();
-            list.Add(new Modifies("a", 0, 12));
-            list.Add(new Modifies("b", 0, 11));
-            List<Modifies> newlist = new List<Modifies>();
-            newlist.Add(new Modifies("c", 0, 11));
-
-            Debug.WriteLine("Eseguito B");
-            this.OnTransactionExcute(args.term.handler, list, newlist);
         }
 
         // Funzione eseguita al riconoscimento di A
         [Modifies("a", 0, 10), Modifies("b", 0, 1)]
         private void completeA(object obj, GestureEventArgs sender)
         {
-            Debug.WriteLine("Eseguito A");
-            List<Modifies> list = new List<Modifies>();
-            list.Add(new Modifies("b", 0, 1));
-
-            this.OnTransactionExcute(sender.term.handler, sender.term.handler.elementList, list);
+            using (TransactionScope scope = new TransactionScope())
+            {
+                // Cerca la corrispondenza con un modifies del programma
+                transactionManager.onTransactionExcute(conflictManager.listModifies, sender.term.handler.elementList);
+                scope.Complete();
+            }
         }
+
         // Funzione eseguita al riconoscimento di B
         [Modifies("a", 0, 12), Modifies("c", 0, 1)]
         private void completeB(object obj, GestureEventArgs sender)
         {
-            Debug.WriteLine("Eseguito B");
-            List<Modifies> list = new List<Modifies>();
-            list.Add(new Modifies("c", 0, 1));
-
-            this.OnTransactionExcute(sender.term.handler, sender.term.handler.elementList, list);
+            using (TransactionScope scope = new TransactionScope())
+            {
+                transactionManager.onTransactionExcute(conflictManager.listModifies, sender.term.handler.elementList);
+                scope.Complete();
+            }
         }
 
         /* Funzioni Accettazione Metodi */

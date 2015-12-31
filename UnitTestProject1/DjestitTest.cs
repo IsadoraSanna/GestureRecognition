@@ -14,13 +14,17 @@ using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 using Microsoft.Kinect;
 // FeedBack
 using RecognitionGestureFeed_Universal.Feed.FeedBack;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Test
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTestProject1
 {
     [TestClass]
-    public class UnitTest2
+    public class DjestitTest
     {
         [TestMethod]
         public void TestMethod1()
@@ -30,64 +34,83 @@ namespace UnitTestProject1
             GroundTerm termx1 = new GroundTerm();
             termx1.type = "Start";
             termx1.accepts = close;
-            //termx1.Complete += Close;
+            termx1.Complete += Close;
+            termx1.handler = new Handler(Close, termx1);
             // Move
             GroundTerm termx2 = new GroundTerm();
             termx2.type = "Move";
             termx2.accepts = moveX;
-            //termx2.Complete += Move;
+            termx2.Complete += Move;
+            termx2.handler = new Handler(Move, termx2);
             // Open
             GroundTerm termx3 = new GroundTerm();
             termx3.type = "End";
             termx3.accepts = open;
-            //termx3.Complete += Open;
+            termx3.Complete += Open;
+            termx3.handler = new Handler(Open, termx3);
+            // Iterative Move
             Iterative iterativex = new Iterative(termx2);
             List<Term> listTermx = new List<Term>();
             listTermx.Add(iterativex);
             listTermx.Add(termx3);
+            // Disabling Move - End
             Disabling disablingx = new Disabling(listTermx);
             List<Term> listTermx2 = new List<Term>();
             listTermx2.Add(termx1);
             listTermx2.Add(disablingx);
-            Sequence panX = new Sequence(listTermx2);
-            panX.Complete += PanX;
+            // Sequence Start - Move - End
+            Sequence sequencePanX = new Sequence(listTermx2);
+            sequencePanX.Complete += PanX;
+            sequencePanX.handler = new Handler(PanX, sequencePanX);
+            // GestureRepresent
+            GestureRepresent panX = new GestureRepresent(sequencePanX);
+
+            //panX.setErrorTollerance();
             /* Pan Asse Y */
             // Close
             GroundTerm termy1 = new GroundTerm();
             termy1.type = "Start";
             termy1.accepts = close;
-            //termy1.Complete += Close;
+            termy1.Complete += Close;
+            termy1.handler = new Handler(Close, termy1);
             // Move
             GroundTerm termy2 = new GroundTerm();
             termy2.type = "Move";
             termy2.accepts = moveY;
-            //termy2.Complete += Move;
+            termy2.Complete += Move;
+            termy2.handler = new Handler(Move, termy2);
             // Open
             GroundTerm termy3 = new GroundTerm();
             termy3.type = "End";
             termy3.accepts = open;
-            //termy3.Complete += Open;
+            termy3.Complete += Open;
+            termy3.handler = new Handler(Open, termy3);
+            // Iterative Move
             Iterative iterativey = new Iterative(termy2);
             List<Term> listTermy = new List<Term>();
             listTermy.Add(iterativey);
             listTermy.Add(termy3);
+            // Disabling Move - End
             Disabling disablingy = new Disabling(listTermy);
             List<Term> listTermy2 = new List<Term>();
             listTermy2.Add(termy1);
             listTermy2.Add(disablingy);
-            Sequence panY = new Sequence(listTermy2);
-            panY.Complete += PanY;
-            //
+            // Sequence Start - Move - End
+            Sequence sequencePanY = new Sequence(listTermy2);
+            sequencePanY.Complete += PanY;
+            sequencePanY.handler = new Handler(PanY, sequencePanY);
+            GestureRepresent panY = new GestureRepresent(sequencePanY);
+            
+            // Gesture Database
             List<Term> listTerm = new List<Term>();
             listTerm.Add(panX);
             listTerm.Add(panY);
             Choice choice = new Choice(listTerm);
-
+            
             // Crea Albero
             Feedback feedback = new Feedback(choice);
-
-            Debug.WriteLine("Ciao!");
-            Debug.WriteLine("Porcamadonna");
+            panY.errorTolerance.errorDetect();
+            panY.errorTolerance.reset();
         }
 
         // Example
@@ -126,7 +149,6 @@ namespace UnitTestProject1
                     JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
-
                 }
                 //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
                 if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
@@ -181,6 +203,7 @@ namespace UnitTestProject1
         {
             Debug.WriteLine("Pan X");
         }
+        [Modifies("a", 0)]
         void PanY(object sender, GestureEventArgs t)
         {
             Debug.WriteLine("Pan Y");

@@ -74,7 +74,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             if (term.handler != null)
             {
                 this.handler = term.handler;
-                this.handler.likelihood = term.likelihood;
+                //this.handler.likelihood = term.likelihood;
             }
         }
 

@@ -233,6 +233,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// <returns></returns>
         public object Clone()
         {
+            if (handRightPositionX != -1000)
+            {
+                Skeleton pclone = new Skeleton(this.idSkeleton, this.rightHandStatus, this.handRightPositionX, this.handRightPositionY);
+                return pclone;
+            }
             // Creo una prima copia dello scheletro
             Skeleton clone = (Skeleton)this.MemberwiseClone();
             // Creo una copia delle liste
@@ -323,7 +328,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         #endregion
 
         #region Test
-        public float handRightPositionX;
+        public float handRightPositionX = -1000;
         public float handRightPositionY;
         public Skeleton(int i, HandState state, float positionX, float positionY)
         {

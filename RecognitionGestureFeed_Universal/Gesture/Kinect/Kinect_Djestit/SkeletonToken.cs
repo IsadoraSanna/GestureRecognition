@@ -31,6 +31,9 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
             this.type = type;
             this.precSkeletons = new List<Skeleton>();
             this.identifier = sklt.getIdSkeleton();
+            // prova
+            this.positionX = sklt.handRightPositionX;
+            this.positionY = sklt.handRightPositionY;
         }
 
         /* Prova */

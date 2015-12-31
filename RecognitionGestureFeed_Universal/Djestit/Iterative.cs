@@ -11,13 +11,15 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         //COSTRUTTORI
         //creo 2 costruttori invece che solo uno come nel JS dato che è troppo tipato
-        public Iterative(Term term)
+        public Iterative(Term term) : base(term)
         {
+            this.children = new List<Term>();
             this.children.Add(term);
         }
 
-        public Iterative(List<Term> terms)
+        public Iterative(List<Term> terms) : base(terms)
         {
+            this.children = new List<Term>();
             this.children.Add(terms.First());
         }
 
@@ -36,9 +38,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return false;
         }
 
+        /*
         public override void fire(Token token)
         {
-            if(this.lookahead(token))// if (this.lookahead(token) && this.children.fire)
+            if(this.lookahead(token))
             {
                 this.children[0].fire(token);
                 switch (this.children[0].state)
@@ -54,6 +57,36 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 }
             }
             //
+            TokenFireArgs args = new TokenFireArgs(token, this);
+            IsTokenFire(args);
+        }*/
+
+        /* Error Tolerance Manager */
+        public override void fire(Token token)
+        {
+            if (this.lookahead(token))
+            {
+                this.children[0].fire(token);
+                switch (this.children[0].state)
+                {
+                    case expressionState.Error:
+                        // Se viene rilevato un errore si aumenta il contatore dell'apposito gestore, e si verifica se è stata 
+                        // superata la massima soglia "tollerabile".
+                        this.errorTolerance.errorDetect();
+                        if (this.errorTolerance.numError > deltaError)
+                        {
+                            this.error(token);
+                            break;
+                        }
+                        this.state = expressionState.Likely;
+                        break;
+                    case expressionState.Complete:
+                        this.complete(token);                        
+                        break;
+                }
+            }
+            this.children[0].reset();// Resetta lo stato del figlio
+            // Comunica che il token è stato gestito (genera l'evento TokenFire)
             TokenFireArgs args = new TokenFireArgs(token, this);
             IsTokenFire(args);
         }

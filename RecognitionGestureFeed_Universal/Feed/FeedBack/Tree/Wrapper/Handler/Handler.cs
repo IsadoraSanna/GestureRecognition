@@ -24,18 +24,25 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         // Funzione che gestisce la gesture
         public GestureEventHandler function;
         // Probabilità associata alla gesture
-        //public Likelihood.Likelihood likelihood { get; internal set; }
-        public float likelihood;
+        public Likelihood.Likelihood likelihood { get; internal set; }
+        //public float likelihood;
+        // Riferimento alla lista delle variabili del Programma (necessaria per poter attuare le modifiche)
+        public List<Modifies> stateVariables = new List<Modifies>();
 
         /* Costruttore */
-        public Handler(GestureEventHandler function)
+        public Handler(GestureEventHandler function, Term term, List<Modifies> stateVariables)
         {
             // Probabilità
-            this.likelihood = 0.0f;
+            if (term.GetType() != typeof(GroundTerm))
+                this.likelihood = new Likelihood.Likelihood((CompositeTerm)term, ProbabilityType.IndipendentEvents);
+            else
+                this.likelihood = new Likelihood.Likelihood(term.likelihood);
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
             this.elementList = this.getModifiesAttribute();
+            // Lista delle variabili di stato del programma
+            this.stateVariables = stateVariables;
             // Nome associata alla funzione
             this.name = function.Method.Name;
         }
@@ -45,7 +52,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         public Handler()
         {
             this.function = null;
-            //this.likelihood = new Likelihood.Likelihood(); 
+            this.likelihood = null;
         }
 
         /* Metodi */
@@ -66,17 +73,43 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         /// <returns></returns>
         public List<Modifies> getModifiesAttribute()
         {
-            return this.function.GetMethodInfo().GetCustomAttributes().OfType<Modifies>().ToList();
+            // Se nella funzione vengono utilizzati degli attributi personalizzati, ne viene restituita la lista 
+            // completa; altrimenti si restituisce una lista vuota.
+            if (this.function.GetMethodInfo().GetCustomAttributes().OfType<Modifies>().ToList().Count > 0)
+                return this.function.GetMethodInfo().GetCustomAttributes().OfType<Modifies>().ToList();
+            else
+                return new List<Modifies>();
+            
         }
 
         /// <summary>
-        /// Funzione che compara due Handler tra loro.
+        /// Funzione che compara due Handler tra loro. Viene utilizzata per ordinare, per valore
+        /// crescente di probabilità, gli handler all'interno della mappa che riporta i possibili 
+        /// stati dell'interfaccia.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
         public int CompareTo(Handler other)
         {
-            return (other.likelihood.CompareTo(this.likelihood));//(other.likelihood.probability.CompareTo(this.likelihood.probability));
+            /// Se entrambi i likelihood da comparare sono inizializzati allora li compara; qualora la probabilità
+            /// sia per entrambi uguale a zero, restituisce -1. Se invece uno dei due handler ha un likelihood
+            /// non definito, viene posto per prima l'altro. Infine se entrambi per gli handler non è stato definito
+            /// l'attributo likelihood, viene restituito -1 di default.
+
+            // Both different from null
+            if (this.likelihood != null && other.likelihood != null)
+            {
+                // Determina se i due handler hanno la stessa probabilità
+                int likelihoodCompare = this.likelihood.CompareTo(other.likelihood);
+                return likelihoodCompare > 0 ? likelihoodCompare : (-1);
+            }
+            // One is null
+            if (this.likelihood != null)
+                return (this.likelihood.CompareTo(new Likelihood.Likelihood()));
+            if (other.likelihood != null)
+                return (other.likelihood.CompareTo(new Likelihood.Likelihood()));
+            // Default
+            return (-1);
         }
     }
 
@@ -98,7 +131,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
                 return false;
 
             // Controlla se le due funzioni sono equivalenti, in tal caso restituisce true
-            return x.function.Equals(y.function);
+            return x.GetHashCode().Equals(y.GetHashCode());
+            //return x.function.Equals(y.function);
         }
 
         // Restituisce l'HashCode di un Handler

@@ -19,7 +19,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
     {
         /* Attributi */
         public float probability { get; private set; }
-        private int n = 10;
 
         /* Costruttore */
         public Likelihood()
@@ -88,7 +87,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
             {
                 foreach (var child in term.children)
                     //term.likelihood.probability *= child.likelihood.probability;
-                tempLikelihood *= term.children.Count;
+                    tempLikelihood *= term.children.Count;
             }
             else if(term.GetType() == typeof(Iterative))
             {
@@ -105,6 +104,17 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
             }
 
             this.probability = tempLikelihood;
+        }
+        
+        /// <summary>
+        /// Compara tra loro il valore di due probabilità. Serve per determinare quale 
+        /// handler ha la probabilità più elevata di essere eseguito.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>                        
+        public int CompareTo(Likelihood other)
+        {
+            return (other.probability.CompareTo(this.probability));
         }
     }
 }
