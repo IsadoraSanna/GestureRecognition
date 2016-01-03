@@ -17,7 +17,21 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
         }
 
-        /*
+        /* Metodi */
+        public override bool lookahead(Token token)
+        {
+            if (this.state == expressionState.Complete || this.state == expressionState.Error)
+                return false;
+            if (this.children != null && this.children.GetType() == typeof(List<Term>))
+            {
+                for (int index = 0; index < this.children.Count; index++)
+                {
+                    if (!this.children[index].excluded && this.children[index].lookahead(token) == true)
+                        return true;
+                }
+            }
+            return false;
+        }
         public override void feedToken(Token token)
         {
             if (this.state == expressionState.Complete || this.state == expressionState.Error)
@@ -35,10 +49,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                         }
                         else
                         {
-                            // Tollera un altro elemento
-
-                            // the current sub-term is not able to handle the input
-                            // sequence
+                            // The current sub-term is not able to handle the input sequence
                             this.children[index].excluded = true;
                             this.children[index].error(token);
                         }
@@ -46,7 +57,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 }
             }
         }
-        /* Metodi */
+
         /*
         public override void fire(Token token)
         {

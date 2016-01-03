@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 // Likelihood
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Concurrency (Transazioni)
 using RecognitionGestureFeed_Universal.Concurrency;
 // Transazioni
@@ -50,11 +52,12 @@ namespace RecognitionGestureFeed_Universal.Djestit
         //public Likelihood likelihood;
         public float likelihood;
         // Handler dell'evento
+        //public List<Handler> handlers = new List<Handler>();
         public Handler handler;
         // Puntatore al padre
         internal CompositeTerm pointFather = null;
         // Conflict Manager (per eseguire in un ambiente sicuro le gesture)
-        private TransactionsManager transactionsManager = new TransactionsManager();
+        public TransactionsManager transactionsManager = new TransactionsManager();
         // prova
         public String name;
 
@@ -114,7 +117,10 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             // Aggiorna lo stato
             this.state = expressionState.Likely;
-            // Genera l'evento Likely e ChangeState
+            // Genera gli eventi OnLikely, OnComplete e OnChangeState
+            GestureEventArgs e = new GestureEventArgs(this, token);
+            onLikely(e);
+            onComplete(e);
             onChangeState();
         }
 
@@ -162,8 +168,24 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 // Esegui in sicurezza l'eventuali modifiche alle variabili di stato.
                 using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
                 {
-                    transactionsManager.onTransactionExcute(handler.stateVariables, handler.elementList);
+                    //transactionsManager.onTransactionExcute(handler.elementList);
+                    transactionsManager.onTransactionExcute(handler.listModifies, handler.elementList);
+                    // Da l'ok per completare la transizione.
+                    scope.Complete();
                 }
+                /*foreach (Handler h in handlers)
+                {
+                    if (h.elementList.Count > 0)
+                    {
+                        using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+                        {
+                            //transactionsManager.onTransactionExcute(handler.elementList);
+                            transactionsManager.onTransactionExcute(h.listModifies, h.elementList);
+                            // Da l'ok per completare la transizione.
+                            scope.Complete();
+                        }
+                    }
+                }*/
             }
         }
 
@@ -217,6 +239,17 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Setta la funzione Complete del term e provvede a crearne l'handler
+        /// </summary>
+        /// <param name="func"></param>
+        public virtual void setHandler(GestureEventHandler func, List<Modifies> listModifies)
+        {
+            this.Complete += func;
+            this.handler = new Handler(func, this, listModifies);
+            //this.handlers.Add(new Handler(func, this, listModifies));
         }
     }
 }

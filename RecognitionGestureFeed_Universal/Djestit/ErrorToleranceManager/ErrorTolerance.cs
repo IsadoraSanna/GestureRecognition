@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Djestit.ErrorTolerance
+namespace RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager
 {
     /// <summary>
     /// Classe che descrive come e in che modo vengono tollerati gli errori nei movimenti dell'utente.
@@ -14,6 +14,8 @@ namespace RecognitionGestureFeed_Universal.Djestit.ErrorTolerance
         /* Attributi */
         // Variabile che indica il numero di errori commessi
         public int numError { get; private set; }
+        // Indica quando si è verificato un errore  
+        public bool isError;
 
         /* Costruttore */
         public ErrorTolerance()
@@ -28,6 +30,7 @@ namespace RecognitionGestureFeed_Universal.Djestit.ErrorTolerance
         /// </summary>
         public void errorDetect()
         {
+            this.isError = false;
             this.numError++;
         }
         /// <summary>

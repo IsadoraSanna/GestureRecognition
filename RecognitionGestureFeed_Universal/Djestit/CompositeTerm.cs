@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// ErrorTolerance
+using RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -19,25 +23,8 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Indica il massimo numero di errori tollerabili
         protected const int deltaError = 1;
         // Variabile che indica il numero di errori commessi
-        public ErrorTolerance.ErrorTolerance errorTolerance
-        {
-            // Get: se il Composite Term rappresenta la gesture completa, allora ritorna il suo ErrorTolerance, altrimenti
-            // ritorna l'ErrorTolerance del padre.
-            get
-            {
-                if (flagErrTolerance)
-                {
-                    return errorTolerance;
-                }
-                else
-                    return pointFather.errorTolerance;
-            }
-            // Set: Nel momento in cui imposta l'ErrorTolerance, setta il flag a true
-            set
-            {
-                this.flagErrTolerance = true;
-            }
-        }
+        private ErrorToleranceManager.ErrorTolerance error_tolerance = null;
+
         // Flag che indica se il CompositeTerm ha l'oggetto ErrorTolerance settato
         public bool flagErrTolerance { private set; get; }
 
@@ -83,16 +70,31 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         /// <summary>
-        /// Restituisce l'oggetto di tipo il ErrorTolerance del padre se il flag non è settato oppure il proprio, se il composite
-        /// term descrive la gesture.
+        /// Permette di settare la variabile ErrorTolerance
+        /// </summary>
+        /// <param name="err"></param>
+        public void setErrorTolerance(ErrorTolerance err)
+        {
+            this.error_tolerance = err;
+            this.flagErrTolerance = true;
+        }
+        /// <summary>
+        /// Restituisce la variabile ErrorTolerance. Se il flag flagErrTolerance è settato a true restituisce il proprio 
+        /// errorTolerance, altrimenti restituisce l'errorTolerance del padre. Se non ha un puntatore al padre, allora
+        /// restituisce null.
         /// </summary>
         /// <returns></returns>
-        public ErrorTolerance.ErrorTolerance getErrorTolerance()
+        public ErrorTolerance getErrorTolerance()
         {
             if (flagErrTolerance)
-                return this.errorTolerance;
+                return error_tolerance;
             else
-                return pointFather.getErrorTolerance();
+            {
+                if (pointFather != null)
+                    return pointFather.getErrorTolerance();
+                else
+                    return null;
+            }
         }
     }
 }

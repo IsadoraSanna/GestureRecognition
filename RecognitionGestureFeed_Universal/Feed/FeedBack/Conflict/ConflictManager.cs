@@ -20,11 +20,11 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         // Elenco di tutti gli attributi del Programma
         public List<Modifies> listModifies { get; private set; }
         // Elenco generale degli attributi per ogni funzione
-        public SortedDictionary<Handler, List<Modifies>> mapHandlersModifies { get; private set; }
+        public Dictionary<Handler, List<Modifies>> mapHandlersModifies { get; private set; }
         // Elenco generale degli attributi per ogni funzione in conflitto
-        public SortedDictionary<Handler, List<Modifies>> mapConflicts { get; private set; }
+        public Dictionary<Handler, List<Modifies>> mapConflicts { get; private set; }
         // Elenco degli attributi in conflitto per le funzioni, durante l'esecuzione
-        public SortedDictionary<Handler, List<Modifies>> mapConflictExec { get; private set; }
+        public Dictionary<Handler, List<Modifies>> mapConflictExec { get; private set; }
         // Lista degli attributi non in comune
         private List<Modifies> listDistinct = new List<Modifies>();
         // Lista degli attributi in conflitto
@@ -39,9 +39,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         {
             // Inizializzazione liste
             listModifies = new List<Modifies>();
-            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
+            mapHandlersModifies = new Dictionary<Handler, List<Modifies>>();
+            mapConflicts = new Dictionary<Handler, List<Modifies>>();
+            mapConflictExec = new Dictionary<Handler, List<Modifies>>();
             // Inizializza la lista degli attributi del programma
             listModifies = elem.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList();
             // Costruisce la map che riporta per ogni funzione la sua lista di modifies
@@ -53,23 +53,11 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         {
             // Inizializzazione liste
             listModifies = new List<Modifies>();
-            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
+            mapHandlersModifies = new Dictionary<Handler, List<Modifies>>();
+            mapConflicts = new Dictionary<Handler, List<Modifies>>();
+            mapConflictExec = new Dictionary<Handler, List<Modifies>>();
             // Inizializza la lista degli attributi del programma
             listModifies = list;
-            // Costruisce la map che riporta per ogni funzione la sua lista di modifies
-            visitTree(term);
-            // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
-            determineConflict();
-        }
-        public ConflictManager(Term term)
-        {
-            // Inizializzazione liste
-            listModifies = new List<Modifies>();
-            mapHandlersModifies = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflicts = new SortedDictionary<Handler, List<Modifies>>();
-            mapConflictExec = new SortedDictionary<Handler, List<Modifies>>();
             // Costruisce la map che riporta per ogni funzione la sua lista di modifies
             visitTree(term);
             // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
@@ -100,6 +88,8 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                 if (term.hasComplete())
                 {
                     mapHandlersModifies.Add(term.handler, term.handler.elementList);
+                    //foreach(Handler h in term.handlers)
+                    //mapHandlersModifies.Add(h, h.elementList);
                 }
             }
             catch(NullReferenceException e)
@@ -111,12 +101,14 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         // Per ogni funzione va a determinare dove ci sono i conflitti
         private void determineConflict()
         {
-            // Determina tutti gli attributi non in comune
+            // Determina tutti gli attributi non in comune e in comune
             foreach(var elem in this.mapHandlersModifies)
             {
-                if (listDistinct.Count > 0)
+                if(listDistinct.Count == 0)
+                    listDistinct = listDistinct.Union(elem.Value).ToList();
+                else
                 {
-                    // Memorizza temporaneamente il vecchio contenuto della lista
+                    // Memorizza temporaneamente il vecchio contenuto della lista listDistinct
                     List<Modifies> temp = listDistinct.ToList();
                     // Unione con gli attributi della funzione in oggetto.
                     listDistinct = listDistinct.Union(elem.Value).ToList();
@@ -125,8 +117,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                     // Intersezione con la vecchia lista e Differenza tra le due liste
                     listDistinct = listDistinct.Except(listConflict).ToList();
                 }
-                else
-                    listDistinct.Union(elem.Value);
             }
 
             // Lista temporanea di Modifies
@@ -176,8 +166,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         /// </summary>
         internal void removeHandler(Handler handler)
         {
-            // Lista dei nuovi attributi che si possono inserire
-            List<Modifies> listModifies = new List<Modifies>();
             // Liste temporanee utilizzate per determinare quali sono i nuovi attributi da inserire
             List<Modifies> list2 = new List<Modifies>();
 
@@ -188,7 +176,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                 {
                     // Memorizza temporaneamente il vecchio contenuto della lista
                     List<Modifies> temp = listModifies.ToList();
-                    // Unione con gli attributi della funione in oggetto.
+                    // Unione con gli attributi della funzione in oggetto.
                     listModifies = listModifies.Union(elem.Value).ToList();
                     // Intersezione con la vecchia lista
                     list2 = list2.Union(temp.Intersect(elem.Value)).ToList();
@@ -218,6 +206,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                     i.Value.Add(element);
                 }
             }
+            mapConflictExec.Remove(handler);
         }
     }
 }

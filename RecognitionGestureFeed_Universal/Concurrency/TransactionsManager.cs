@@ -28,8 +28,11 @@ namespace RecognitionGestureFeed_Universal.Concurrency
         private Modifies memberValue = default(Modifies);
         private Modifies oldMemberValue = default(Modifies);
         private Modifies newSuggestedValue = default(Modifies);
-        
+        //
         private List<Tuple<Modifies, Modifies>> listMember = new List<Tuple<Modifies, Modifies>>();
+        //
+        //private List<Modifies> listMemberValue = new List<Modifies>();
+        public int i;
 
         /* Costruttore */
         public TransactionsManager()

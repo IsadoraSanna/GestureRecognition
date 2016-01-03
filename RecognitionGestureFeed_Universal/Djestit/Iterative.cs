@@ -23,19 +23,32 @@ namespace RecognitionGestureFeed_Universal.Djestit
             this.children.Add(terms.First());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void reset()
         {
             this.state = expressionState.Default;
             this.children[0].reset();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public override bool lookahead(Token token)
         {
-
             if (this.children != null && this.children[0].lookahead(token))
                 return this.children[0].lookahead(token);
             else
-                return false;
+            {
+                if (getErrorTolerance().numError < deltaError)
+                {
+                    getErrorTolerance().isError = true;
+                    return true;
+                }
+            }
+            return false;
         }
 
         /*
@@ -66,19 +79,21 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             if (this.lookahead(token))
             {
-                this.children[0].fire(token);
+                // Controlla se è stato rilevato un errore nell'esecuzione del movimento
+                if (getErrorTolerance().isError)
+                    this.children[0].fire(token, getErrorTolerance().numError);
+                else
+                    this.children[0].fire(token);
+
+                /// Verifica lo stato del term in seguito all'invio del term
                 switch (this.children[0].state)
                 {
                     case expressionState.Error:
-                        // Se viene rilevato un errore si aumenta il contatore dell'apposito gestore, e si verifica se è stata 
-                        // superata la massima soglia "tollerabile".
-                        this.errorTolerance.errorDetect();
-                        if (this.errorTolerance.numError > deltaError)
-                        {
-                            this.error(token);
-                            break;
-                        }
-                        this.state = expressionState.Likely;
+                        this.error(token);
+                        break;
+                    case expressionState.Likely:
+                        this.getErrorTolerance().errorDetect();
+                        this.complete(token);
                         break;
                     case expressionState.Complete:
                         this.complete(token);                        

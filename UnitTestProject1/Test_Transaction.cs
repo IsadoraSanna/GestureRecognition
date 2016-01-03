@@ -44,14 +44,14 @@ namespace UnitTestProject1
             termA.name = "GroundTerm CloseA";
             termA.likelihood = 0.5f;
             termA.Complete += completeA;
-            termA.handler = new Handler(completeA, termA, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
+            //termA.handler = new Handler(completeA, termA);
             termB = new GroundTerm();
             termB.type = "Start";
             termB.accepts = closeB;
             termB.likelihood = 0.6f;
             termB.name = "GroundTerm CloseB";
             termB.Complete += completeB;
-            termB.handler = new Handler(this.completeB, termB, this.GetType().GetCustomAttributes(true).OfType<Modifies>().ToList());
+            //termB.handler = new Handler(this.completeB, termB);
             // Choice
             List<Term> list = new List<Term>();
             list.Add(termA);
@@ -76,7 +76,7 @@ namespace UnitTestProject1
             using (TransactionScope scope = new TransactionScope())
             {
                 // Cerca la corrispondenza con un modifies del programma
-                transactionManager.onTransactionExcute(conflictManager.listModifies, sender.term.handler.elementList);
+                //transactionManager.onTransactionExcute(sender.term.handler.elementList);
                 scope.Complete();
             }
         }
@@ -87,7 +87,7 @@ namespace UnitTestProject1
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                transactionManager.onTransactionExcute(conflictManager.listModifies, sender.term.handler.elementList);
+                //transactionManager.onTransactionExcute(sender.term.handler.elementList);
                 scope.Complete();
             }
         }

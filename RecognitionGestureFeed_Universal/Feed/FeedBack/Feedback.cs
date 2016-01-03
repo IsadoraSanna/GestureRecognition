@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 // Djestit
 using RecognitionGestureFeed_Universal.Djestit;
-// Acquisition
-using RecognitionGestureFeed_Universal.Recognition;
-// Skeleton
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // FeedbackTree
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree;
 
@@ -21,10 +19,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack
         public FeedbackRoot tree { get; private set; }
 
         /* Costruttore */
-        public Feedback(Choice expr)
+        public Feedback(List<Modifies> listModifies, Choice expr)
         {
             // Creo l'albero dei Feedback
-            this.tree = new FeedbackRoot(expr);
+            this.tree = new FeedbackRoot(listModifies, expr);
         }
     }
 }

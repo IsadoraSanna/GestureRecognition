@@ -28,8 +28,24 @@ namespace RecognitionGestureFeed_Universal.Djestit
             this.children = terms;
         }
 
-        // Metodi
+        /*** Metodi ***/
         // Lookahead
+        /*public override bool lookahead(Token token)
+        {
+
+            if (this.state == expressionState.Complete || this.state == expressionState.Error)
+                return false;
+            if (this.children != null && this.children.GetType() == typeof(List<Term>))
+            {
+                for (int index = 0; index < this.children.Count; index++)
+                {
+                    if (this.children[index].lookahead(token))
+                        return true;
+                }
+            }
+            return false;
+
+        }*/
         public override bool lookahead(Token token)
         {
             
@@ -39,8 +55,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 for(int index = 0; index < this.children.Count; index++)
                 {
-                    if(this.children[index].lookahead(token))
+                    if (this.children[index].lookahead(token))
                         return true;
+                    else if (getErrorTolerance().isError == false && getErrorTolerance().numError < deltaError)
+                    {
+                        getErrorTolerance().isError = true;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -48,16 +69,17 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         // Fire
-        public override void fire(Token token)
+        /*public override void fire(Token token)
         {
             bool all = true;
-            if(this.lookahead(token))
+
+            if (this.lookahead(token))
             {
-                foreach(Term child in this.children)
+                foreach (Term child in this.children)
                 {
                     if(child.lookahead(token))
                         child.fire(token);
-                    if(child.state == expressionState.Error)
+                    if (child.state == expressionState.Error)
                         this.error(token);
                     all = all && child.state == expressionState.Complete;
                 }
@@ -66,6 +88,42 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 this.error(token);
             }
+
+            if (all)
+            {
+                this.complete(token);
+            }
+            //
+            TokenFireArgs args = new TokenFireArgs(token, this);
+            IsTokenFire(args);
+        }*/
+        public override void fire(Token token)
+        {
+            bool all = true;
+
+            if(this.lookahead(token))
+            {
+                foreach(Term child in this.children)
+                {
+                    if(child.lookahead(token))
+                        child.fire(token);
+                    else
+                    {
+                        getErrorTolerance().errorDetect();
+                        child.fire(token);
+                    }
+
+                    if(child.state == expressionState.Error)
+                        this.error(token);
+
+                    //all = all && child.state == expressionState.Complete;
+                }
+            }
+            else
+            {
+                this.error(token);
+            }
+
             if(all)
             {
                 this.complete(token);

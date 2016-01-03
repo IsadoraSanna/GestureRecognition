@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// ErrorTolerance 
+using RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -47,8 +49,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         public override bool lookahead(Token token)
-        {
-            
+        {   
             if (this.state == expressionState.Complete|| this.state == expressionState.Error)
                 return false;
             if (this.children != null && this.children.GetType() == typeof(List<Term>))
@@ -80,17 +81,18 @@ namespace RecognitionGestureFeed_Universal.Djestit
                         }
                         else
                         {
-                            // E' stato rilevato un errore; si verifica se può essere "tollerato" oppure no
-                            errorTolerance.errorDetect();//getErrorTolerance().errorDetect();
-                            // Se è stato già tollerato un numero massimo di errori, allora si pone excluded a true e in error
-                            // il term in questione; altrimenti quest'ultimo viene posto in likely e si va avanti.
-                            if(!(getErrorTolerance().numError > deltaError))
+                            ErrorTolerance err = getErrorTolerance();
+                            if (err != null && err.numError < deltaError)
+                            {
+                                err.errorDetect();
+                                this.children[index].fire(token);
+                            }
+                            else
                             {
                                 // The current sub-term is not able to handle the input sequence
                                 this.children[index].excluded = true;
                                 this.children[index].error(token);
                             }
-                            this.children[index].likely(token);                            
                         }
                     }
                 }
@@ -130,67 +132,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             // Comunica che è stato sparato un token
             TokenFireArgs args = new TokenFireArgs(token, this);
             IsTokenFire(args);
-        }/*
-        public void feedToken(Token token)
-        {
-            if (this.state == expressionState.Complete || this.state == expressionState.Error)
-                return;
-
-            if (this.children != null && this.children.GetType() == typeof(List<Term>))
-            {
-                for (int index = 0; index < this.children.Count; index++)
-                {
-                    if (!this.children[index].excluded)
-                    {
-                        if (this.children[index].lookahead(token))
-                        {
-                            this.children[index].fire(token);
-                        }
-                        else
-                        {
-                            // the current sub-term is not able to handle the input
-                            // sequence
-                            this.children[index].excluded = true;
-                            this.children[index].error(token);
-                        }
-                    }
-                }
-            }
         }
-
-        public override void fire(Token token)
-        {
-            this.feedToken(token);
-            bool allExcluded = true;
-
-            for (int index = 0; index < this.children.Count; index++)
-            {
-                if (!this.children[index].excluded)
-                {
-                    allExcluded = false;
-                    switch (this.children[index].state)
-                    {
-                        case expressionState.Complete:
-                            // one of the subterms is completed, then the entire expression is completed
-                            this.complete(token);
-                            return;
-                        case expressionState.Error:
-                            // this case is never executed, since
-                            // feedToken excludes the subterms in error state
-                            return;
-                    }
-                }
-            }
-            if (allExcluded)
-            {
-                this.error(token);
-                this.reset();
-            }
-
-            // Comunica che è stato sparato un token
-            TokenFireArgs args = new TokenFireArgs(token, this);
-            IsTokenFire(args);
-        }*/
     }
 }
 

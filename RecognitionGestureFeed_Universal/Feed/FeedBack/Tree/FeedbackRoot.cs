@@ -43,7 +43,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         //public SortedDictionary<Handler, List<Modifies>> mapHandler { get; private set; }
 
         /* Costruttore */
-        public FeedbackRoot(Term term)
+        public FeedbackRoot(List<Modifies> listModifies, Term term)
         {
             // Associo il Term alla radice
             this.term = term;
@@ -66,7 +66,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
 
             // Inizializzo la mappa degli handler, inserendovi la relativa classe che si occupa del Compare tra i vari handler
             //this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();
-            this.conflictManager = new ConflictManager(term);
+            this.conflictManager = new ConflictManager(listModifies, term);
 
             // Associa al cambiamento di stato del term l'handler resetTree
             this.term.ChangeState += resetTree;
@@ -111,12 +111,12 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /// <param name="sender"></param>
         private void updateContinue(FeedbackGroupEventArgs sender)
         {
-            // Se l'handler non è ancora presente nella mappa, allora lo inserisco, e aggiorno l'albero
-            if (!this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
+            // Se il term ha un handler e non è ancora presente nella mappa, allora lo inserisco, e aggiorno l'albero
+            if (sender.term.hasComplete() && (!this.conflictManager.mapConflictExec.ContainsKey(sender.handler)))
             {
-                // Aggiorna l'albero inserendo l'handler.
-                this.conflictManager.addHandler(sender.handler);
-                OnFeedbackRootEvent();
+                    // Aggiorna l'albero inserendo l'handler.
+                    this.conflictManager.addHandler(sender.handler);
+                    OnFeedbackRootEvent();
             }
         }
 
@@ -128,7 +128,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         private void updateError(FeedbackGroupEventArgs sender)
         {
             // Controlla se l'handler si trova nella mappa
-            if (this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
+            if (sender.term.hasComplete() && this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
             {
                 // Se si, lo si rimuove dalla mappa e si aggiornano di conseguenza anche tutti gli 
                 // elementi dei vari handler presenti nella mappa.

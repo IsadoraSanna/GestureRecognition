@@ -59,6 +59,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         public float likelihood { get; internal set; }
         // Handler associato alla Gesture
         public Handler handler;
+        public List<Handler> handlers;
 
         /* Costruttore */
         public FeedbackGroup(Term term)

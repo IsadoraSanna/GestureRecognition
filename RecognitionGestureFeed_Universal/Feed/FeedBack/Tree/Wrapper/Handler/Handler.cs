@@ -20,29 +20,29 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         // Nome della funzione associata a questo Handler
         public string name { get; private set; }
         // Lista dei custom attributes di tipo Modifies dichiarati nella funzione
-        public List<Modifies> elementList = new List<Modifies>();
+        public List<Modifies> elementList { get; private set; }
+        public List<Modifies> listModifies { get; private set; }
         // Funzione che gestisce la gesture
-        public GestureEventHandler function;
+        public GestureEventHandler function { get; private set; }
         // Probabilità associata alla gesture
         public Likelihood.Likelihood likelihood { get; internal set; }
         //public float likelihood;
-        // Riferimento alla lista delle variabili del Programma (necessaria per poter attuare le modifiche)
-        public List<Modifies> stateVariables = new List<Modifies>();
 
         /* Costruttore */
-        public Handler(GestureEventHandler function, Term term, List<Modifies> stateVariables)
+        public Handler(GestureEventHandler function, Term term, List<Modifies> listModifies)
         {
             // Probabilità
             if (term.GetType() != typeof(GroundTerm))
                 this.likelihood = new Likelihood.Likelihood((CompositeTerm)term, ProbabilityType.IndipendentEvents);
             else
                 this.likelihood = new Likelihood.Likelihood(term.likelihood);
+            // Lista dei Modifies del programma
+            this.listModifies = new List<Modifies>();
+            this.listModifies = listModifies;
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
             this.elementList = this.getModifiesAttribute();
-            // Lista delle variabili di stato del programma
-            this.stateVariables = stateVariables;
             // Nome associata alla funzione
             this.name = function.Method.Name;
         }
@@ -82,6 +82,21 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
             
         }
 
+        public override bool Equals(object obj)
+        {
+            // Controlla per prima cosa se i due handler puntano allo stesso oggetto
+            // in tal caso restituisce vero.
+            if (Object.ReferenceEquals(this, obj))
+                return true;
+
+            // Controlla se uno dei due oggetti è null, in tal caso
+            // restituisce false.
+            if (Object.ReferenceEquals(this, null) || Object.ReferenceEquals(obj, null))
+                return false;
+
+            return this.GetHashCode().Equals(((Handler)obj).GetHashCode());
+        }
+
         /// <summary>
         /// Funzione che compara due Handler tra loro. Viene utilizzata per ordinare, per valore
         /// crescente di probabilità, gli handler all'interno della mappa che riporta i possibili 
@@ -111,6 +126,27 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
             // Default
             return (-1);
         }
+
+        public override int GetHashCode()
+        {
+            // Se l'handler non punta a nulla restituisce zero
+            if (Object.ReferenceEquals(this, null)) return 0;
+
+            // Calcola l'hashcode del nome
+            int hashName = this.name == null ? 0 : this.name.GetHashCode();
+
+            // Calcola l'hashcode della lista di elementi
+            int hashList = this.elementList.GetHashCode();
+
+            // Calcola l'hashcode dell'handler associata alla gesture
+            int hashFunction = this.function.GetHashCode();
+
+            // Calcola l'hashcode della probabilità associata alla gesture
+            int hashLikelihood = this.likelihood.GetHashCode();
+
+            // Calcola l'hashcode di tutto l'oggetto
+            return hashName ^ hashList ^ hashFunction ^ hashLikelihood;
+        }
     }
 
     /// <summary>
@@ -118,6 +154,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
     /// </summary>
     public class HandlerComparer : IEqualityComparer<Handler>
     {
+
         // Funzione che verfica l'equalità tra due Handler
         public bool Equals(Handler x, Handler y)
         {

@@ -55,13 +55,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
             {
                 return false;
             }
-            //terzo argomento dell'if . nel codice JS non c'è il parametro token
-            if ((this.children != null) && (this.children[index] != null))// && (this.children[index].lookahead(token) != null))
+
+            if ((this.children != null) && (this.children[index] != null))
             {
-                //if (this.children[index] != null)
                 return this.children[index].lookahead(token);
             }
-
             return false;
         }
 
@@ -125,13 +123,13 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 /// Nel caso in cui l'utente faccia un errore nell'esecuzione della gesture si provvede a gestirlo, in maniera tale
                 /// da rendere il modello più flessibile agli errori iniziali dell'utente. Si possono tollerare un deltaError di errori.
                 /// In futuro si prevede di utilizzare anche il concetto di somiglianza, in modo da renderlo più realistico. 
-                if (this.errorTolerance.numError >= deltaError)
+                if (getErrorTolerance().numError < deltaError)
                 {
-                    error(token);
-                    return;
+                    getErrorTolerance().errorDetect();// Errore
+                    this.children[index].fire(token);// Chiamo l'apposito gestore.
                 }
-                this.errorTolerance.errorDetect();// Errore
-                this.children[index].fire(token);// Chiamo l'apposito gestore.
+                error(token);
+                return;
             }
 
             // Se l'indice è superiore al numero di subterm da gestire, allora è in error.
@@ -151,7 +149,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                     // Verifica se sono state controllate tutte le primitive
                     if (index >= this.children.Count)
                     {
-                        if (this.errorTolerance.numError > 0)
+                        if (this.getErrorTolerance().numError > 0)
                             this.likely(token);// L'utente non ha eseguito perfettamente la gesture
                         else
                             this.complete(token);// L'utente ha eseguito perfettamente la gesture
