@@ -99,9 +99,10 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             // Esegui le modifiche
             //using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
             //{
-                //this.transactionsManager.onTransactionExcute(this.conflictManager.listModifies, sender.handler.elementList);
+            //this.transactionsManager.onTransactionExcute(this.conflictManager.listModifies, sender.handler.elementList);
             //}
             //this.reset;
+            OnFeedbackRootEvent();
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         }
 
         /// <summary>
-        /// 
+        /// Comunica che una delle gesture ha modificato il suo stato
         /// </summary>
         public void OnFeedbackRootEvent()
         {

@@ -21,6 +21,8 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
         public TypeToken type;
         // Buffer che contiene gli n scheletri precedentemente rilevati
         public List<Skeleton> precSkeletons;
+        // Indice per il buffer
+        public int indexBuffer;
         // Identificativo associato allo scheletro
         public int identifier;
 

@@ -68,7 +68,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
         // Attraverso tutto l'albero e inserisce la coppia di elementi nella mappa
         private void visitTree(Term term)
         {
-            System.Diagnostics.Debug.WriteLine(term.GetType());
             // Attraverso l'albero, quindi controllo innanzittutto se il term passato in input è
             // un ground term o composite term
             if (term.GetType() != typeof(GroundTerm))

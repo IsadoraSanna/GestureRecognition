@@ -32,12 +32,15 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
                     _onTokenStart(e);
                     break;
                 case TypeToken.Move:
-                    // Genero l'evento onSkeletonStart
+                    // Genero l'evento onSkeletonMove
                     _onTokenMove(e);
                     // Copio la lista di vecchi token
                     List<SkeletonToken> listToken;
                     sequence.moves.TryGetValue(token.identifier, out listToken);
                     token.precSkeletons = listToken.Select(item =>(Skeleton)item.skeleton.Clone()).ToList();
+                    int index;
+                    sequence.m_index.TryGetValue(token.identifier, out index);
+                    token.indexBuffer = index;
                     break;
                 case TypeToken.End:
                     // Genero l'evento onSkeletonStart
