@@ -306,10 +306,10 @@ namespace UnitTestProject1
            
             /// Simulazione Gesti
             // Simulo 1 gesto di start
-            Skeleton sStart = new Skeleton(0, HandState.Closed, 0.0f, 0.0f);
-            SkeletonToken tStart = (SkeletonToken)sensor.generateToken(TypeToken.Start, sStart);
+            //Skeleton sStart = new Skeleton(0, HandState.Closed, 0.0f, 0.0f);
+            //SkeletonToken tStart = (SkeletonToken)sensor.generateToken(TypeToken.Start, sStart);
             // E lo sparo al motorino
-            sensor.root.fire(tStart);
+            //sensor.root.fire(tStart);
 
             // Simulo 20 gesti di move
             for(int i = 0; i < 5; i++)
@@ -317,7 +317,7 @@ namespace UnitTestProject1
                 Skeleton sMove = null;
                 SkeletonToken tMove = null;
                 numProve++;
-                sMove = new Skeleton(0, HandState.Closed, 0.0f+i, 0.0f);
+                //sMove = new Skeleton(0, HandState.Closed, 0.0f+i, 0.0f);
                 tMove = (SkeletonToken)sensor.generateToken(TypeToken.Move, sMove);
                 /*if (i == 1)
                 {
@@ -343,10 +343,10 @@ namespace UnitTestProject1
             }
 
             // Simulo 1 gesto di end
-            Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
-            SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
+            //Skeleton sEnd = new Skeleton(0, HandState.Open, 22.0f, 0.0f);
+            //SkeletonToken tEnd = (SkeletonToken)sensor.generateToken(TypeToken.Move, sEnd);
             // E lo sparo al motorino
-            sensor.root.fire(tEnd);
+            //sensor.root.fire(tEnd);
         }
     }
 }

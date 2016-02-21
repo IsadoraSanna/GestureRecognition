@@ -118,4 +118,3 @@ C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Unive
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\LeapCSharp.NET4.0.dll
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.dll
 C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.xml
-C:\Users\Alessandro\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

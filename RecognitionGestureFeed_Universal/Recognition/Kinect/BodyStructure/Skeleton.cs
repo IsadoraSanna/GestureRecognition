@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 // Kinect e Face
 using Microsoft.Kinect;
 using Microsoft.Kinect.Face;
-// Debug
-using System.Diagnostics;
+// Kinect Gesture
+using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder;
 // Draw
 using System.Windows.Media;
 
@@ -37,6 +37,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// faceAlignment: memorizza i punti principali di un Face (ovvero occhi, naso, bocca) a partire di un'immagine in 2D.
         /// faceModel: rappresenta un face model (da cui si possono ottenere informazioni circa colore dei capelli, della pelle, la scala ecc.
         /// colorSkeleton: colore con cui verrà rappresentato lo scheletro(modificabile da parte dell'utente).
+        /// gestureDetector: rilevatore delle gesture riconosciute tramite gli algoritmi forniti dalla Kinect.
         /// </summary>
         // Skeleton
         private ulong idBody;
@@ -61,6 +62,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         public FaceModel faceModel { get; private set; }
         // Stampa
         public Pen colorSkeleton { get; set; }
+        public GestureDetector gestureDetector;
 
         /* Costruttore */
         /// <summary>
@@ -97,7 +99,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
             this.faceModel = new FaceModel();
             // Associo allo scheletro il colore con cui verrà rappresenta in bitmap
             this.colorSkeleton = color;
+
+            // Prova Gesture 
+            List<string> namePose = new List<string>() { "PanX_Right" };
+            gestureDetector = new GestureDetector(kinectSensor, "C:/Users/Alessandro/Copy/Dottorato/GestureRecognition/DatabaseTraining/Kinect/Database.gbd", namePose);
         }
+
         /* Metodi */
         /// <summary>
         /// Funzione di aggiornamento delle compenenti dello scheletro
@@ -233,11 +240,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// <returns></returns>
         public object Clone()
         {
-            if (handRightPositionX != -1000)
+            /*if (handRightPositionX != -1000)
             {
                 Skeleton pclone = new Skeleton(this.idSkeleton, this.rightHandStatus, this.handRightPositionX, this.handRightPositionY);
                 return pclone;
-            }
+            }*/
             // Creo una prima copia dello scheletro
             Skeleton clone = (Skeleton)this.MemberwiseClone();
             // Creo una copia delle liste
@@ -328,7 +335,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         #endregion
 
         #region Test
-        public float handRightPositionX = -1000;
+        /*public float handRightPositionX = -1000;
         public float handRightPositionY;
         public Skeleton(int i, HandState state, float positionX, float positionY)
         {
@@ -336,7 +343,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
             this.rightHandStatus = state;
             this.handRightPositionX = positionX;
             this.handRightPositionY = positionY;
-        }
+        }*/
         #endregion
     }
 }

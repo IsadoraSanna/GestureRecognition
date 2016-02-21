@@ -9,7 +9,7 @@ using System.Diagnostics;
 using Microsoft.Kinect;
 using Microsoft.Kinect.VisualGestureBuilder;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder
 {
     // Delegate dell'evento che viene lanciato quando si esegue una gesture discreta
     public delegate void DiscreteGestureExecute(Microsoft.Kinect.VisualGestureBuilder.Gesture gesture, DiscreteGestureResult result);
@@ -31,7 +31,10 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
         private VisualGestureBuilderFrameSource vgbFrameSource = null;
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
         // Soglia di accettazione di una certa gesture
-        private readonly float threshold = 0.95f;
+        private readonly float threshold = 0f;
+        // Discrete/Continuous Results
+        public List<Tuple<DiscreteGestureResult, string>> discreteGestureResult = new List<Tuple<DiscreteGestureResult, string>>();
+        public List<Tuple<ContinuousGestureResult, string>> continuousGestureResult = new List<Tuple<ContinuousGestureResult, string>>();
 
         /* Costruttore */
         /// <summary>
@@ -41,21 +44,14 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
         /// <param name="pathDatabase">Indirizzo in cui risiede il database da cui prelevare le gesture</param>
         public GestureDetector(KinectSensor kinectSensor, string pathDatabase)
         {
-            init(kinectSensor);
+            // Inizializzazione
+            initialize(kinectSensor);
 
-            // Carico tutte le gesture che voglio rilevare dal database
+            // Carica tutte le gesture che si vogliono rilevare dal database
             using (VisualGestureBuilderDatabase database = new VisualGestureBuilderDatabase(pathDatabase))
             {
                 // Carichiamo tutte le gesture disponibili nel database attraverso la chiamata 
                 this.vgbFrameSource.AddGestures(database.AvailableGestures);
-                // qualora volessimo caricarne solo alcune, possiamo specificarlo direttamente tramite nome.
-                //foreach (Gesture gesture in database.AvailableGestures)
-                //{
-                    //if (gesture.Name.Equals(this.GestureName))
-                    //{                
-                    //this.vgbFrameSource.AddGesture(gesture);
-                    //}
-                //}
             }
         }
         /// <summary>
@@ -66,7 +62,8 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
         /// <param name="namesGesture"></param>
         public GestureDetector(KinectSensor kinectSensor, string pathDatabase, List<String> namesGesture)
         {
-            init(kinectSensor);
+            // Inizializzazione
+            initialize(kinectSensor);
 
             using (VisualGestureBuilderDatabase database = new VisualGestureBuilderDatabase(pathDatabase))
             {
@@ -91,24 +88,24 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
         /// Inizializza gli elementi della classe
         /// </summary>
         /// <param name="kinectSensor"></param>
-        private void init(KinectSensor kinectSensor)
+        private void initialize(KinectSensor kinectSensor)
         {
             if (kinectSensor == null)
-                throw new ArgumentNullException("kinectSensor");
+                throw new ArgumentNullException("KinectSensor not inizialize.");
 
             /// <summary>
-            /// Creo il VisualGestureBuilder source e lo assoccio al body rilevato dalla kinect 
+            /// Crea il VisualGestureBuilder source e lo assoccio al body rilevato dalla kinect 
             /// (questo se il body contenuto nel frame è valido). Indi si provede a gestire l'evento TrackingIdLost
             /// (che si attiva quando il body non è più rilevabile dalla kinect.
             /// </summary>
             this.vgbFrameSource = new VisualGestureBuilderFrameSource(kinectSensor, 0);
             this.vgbFrameSource.TrackingIdLost += vgbFrameSource_TrackingIdLost;
 
-            // Attivo il reader per i VisualGestureBuilder frame
+            // Attiva il reader per i VisualGestureBuilder frame
             this.vgbFrameReader = this.vgbFrameSource.OpenReader();
             if (this.vgbFrameReader != null)
             {
-                // Se il frame è stato inizializzato, allora lo metto in pausa e associo l'evento FrameArrived al suo gestore
+                // Se il frame è stato inizializzato, allora lo mette in pausa e associa l'evento FrameArrived al suo gestore
                 //this.vgbFrameReader.IsPaused = true;
                 this.vgbFrameReader.FrameArrived += this.vgbFrameReader_FrameArrived;
             }
@@ -120,6 +117,10 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
         /// <param name="e"></param> 
         void vgbFrameReader_FrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
+            discreteGestureResult.Clear();
+            continuousGestureResult.Clear();
+
+            // Preleva il frame
             VisualGestureBuilderFrameReference frameReference = e.FrameReference;
             using (VisualGestureBuilderFrame frame = frameReference.AcquireFrame())
             {
@@ -139,15 +140,15 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
                         {
                             if (gesture.GestureType == GestureType.Discrete)
                             {
-                                // Prendo dalla mappa contenuta in discreteResult il valore di confidenza della gesture
+                                // Prende dalla mappa contenuta in discreteResult il valore di confidenza della gesture
                                 DiscreteGestureResult result = null;
                                 discreteResults.TryGetValue(gesture, out result);
 
-                                /// Quindi se il valore di confidenza della gesture è superiore
-                                /// alla soglia impostata, alllora lo comunico (tramite evento) all'utente.
+                                // Se il valore di confidenza è superiore ad un certo threshold, la gesture è stata riconosciuta
                                 if (result != null && result.Confidence > this.threshold)
                                 {
-                                    // Genero l'evento che informa il completamento della gesture
+                                    discreteGestureResult.Add(new Tuple<DiscreteGestureResult, string>(result, gesture.Name));
+                                    // Genera l'evento che informa il completamento della gesture
                                     OnDiscreteGesture(gesture, result);
                                 }
                             }
@@ -156,20 +157,20 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder
                     /* Gesture Continue */
                     if (continuousResult != null)// Se è stata rilevata almeno un gesture continua
                     {
-                        // Per ogni gesture continua rilevata e contenuta nel frame, verifico la sua somiglianza
+                        // Per ogni gesture continua rilevata e contenuta nel frame, verifica la sua somiglianza
                         // con quelle contenute nel database
                         foreach (Microsoft.Kinect.VisualGestureBuilder.Gesture gesture in vgbFrameSource.Gestures)
                         {
                             if (gesture.GestureType == GestureType.Continuous)
                             {
-                                // Prendo dalla mappa contenuta in discreteResult il valore di confidenza della gesture
+                                // Prende dalla mappa contenuta in discreteResult il valore di confidenza della gesture
                                 ContinuousGestureResult result = null;
                                 continuousResult.TryGetValue(gesture, out result);
 
-                                // Quindi se il valore di confidenza della gesture è nulla non faccio,
-                                // viceversa comunico che la gesture in questione è stata rilevata
+                                // Se il valore di confidenza è superiore ad un certo threshold, la gesture è stata riconosciuta
                                 if (result != null && result.Progress > this.threshold)
                                 {
+                                    continuousGestureResult.Add(new Tuple<ContinuousGestureResult, string> (result, gesture.Name));
                                     OnContinuousGesture(gesture, result);
                                 }
                             }

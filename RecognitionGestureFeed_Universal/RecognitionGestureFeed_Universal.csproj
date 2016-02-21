@@ -135,6 +135,7 @@
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapToken.cs" />
     <Compile Include="Recognition\Audio\AcquisitionManagerAudio.cs" />
+    <Compile Include="Recognition\Kinect\InitializationKinect.cs" />
     <Compile Include="Recognition\Leap\LeapSensorInterface.cs" />
     <Compile Include="Recognition\Leap\AcquisitionManagerLeap.cs" />
     <Compile Include="Recognition\FrameDataManager\AudioData.cs" />
@@ -169,8 +170,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy "$(KINECTSDK20_DIR)Redist\VGB\$(Platform)\vgbtechs" "$(TargetDir)\vgbtechs" /S /R /Y /I
+xcopy "$(KINECTSDK20_DIR)Redist\Face\$(Platform)\NuiDatabase" "$(TargetDir)\NuiDatabase" /S /R /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

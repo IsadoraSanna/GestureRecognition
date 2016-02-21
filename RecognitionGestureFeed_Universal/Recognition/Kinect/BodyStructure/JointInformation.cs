@@ -22,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         public CameraSpacePoint position { get; set; }
         public Vector4 orientation { get; set; }
         public TrackingState status { get; set; }
-        public int idSkeleton { set; get; }
+        public int idSkeleton { get; set; }
 
         /* Costruttore */
         public JointInformationXML()
@@ -32,7 +32,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
 
         /* Metodo */
         /// <summary>
-        /// Salve le informazioni contenute in JointInformation all'interno dell'oggetto JointInformationXML
+        /// Salva le informazioni contenute in JointInformation all'interno dell'oggetto JointInformationXML
         /// </summary>
         /// <param name="jointInformation"></param>
         public void fromJointInformation(JointInformation jointInformation)
@@ -92,6 +92,11 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         public JointInformation(int idSkeleton)
         {
             this.status = TrackingState.Tracked;
+            this.idSkeleton = idSkeleton;
+        }
+        public JointInformation(CameraSpacePoint position, int idSkeleton)
+        {
+            this.position = position;
             this.idSkeleton = idSkeleton;
         }
 

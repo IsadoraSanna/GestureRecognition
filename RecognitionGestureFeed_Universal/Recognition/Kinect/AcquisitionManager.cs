@@ -5,15 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 // Writable
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 // Kinect
 using Microsoft.Kinect;
-using Microsoft.Kinect.Face;
 // RecognitionGestureFeed
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-using RecognitionGestureFeed_Universal.Recognition.Kinect.Stream;
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
-using RecognitionGestureFeed_Universal.Gesture;
 // Debug
 using System.Diagnostics;
 
@@ -53,7 +49,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         // Array che contiene gli n_max_skeleton rilevati dalla kinect 
         internal Skeleton[] skeletonList;
         // Array che contiene i colori con cui verranno rappresentati i vari scheletri su bitmap
-        private Pen[] skeletonColors = {(new Pen(Brushes.Red, 6)), (new Pen(Brushes.Orange, 6)), (new Pen(Brushes.Green, 6)), (new Pen(Brushes.Blue, 6)), (new Pen(Brushes.Indigo, 6)), (new Pen(Brushes.Violet, 6))};
+        internal Pen[] skeletonColors = {(new Pen(Brushes.Red, 6)), (new Pen(Brushes.Orange, 6)), (new Pen(Brushes.Green, 6)), (new Pen(Brushes.Blue, 6)), (new Pen(Brushes.Indigo, 6)), (new Pen(Brushes.Violet, 6))};
         /// <summary>
         /// Rispettivamente, depthFrameData è l'array che indica per ogni pixel il livello di profondità rilevato;
         /// infraredFrameData è l'array che indica per ogni pixel il livello di infrarossi rilevato dalla kinect;
@@ -64,7 +60,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         internal InfraredData infraredData = null;
         internal LongExposureInfraredData longExposureInfraredData = null;
         // Reader utilizzato per selezionare e leggere i frame in arrivo dalla kinect
-        MultiSourceFrameReader multiSourceFrameReader = null;
+        internal MultiSourceFrameReader multiSourceFrameReader = null;
         // Booleano che indica se l'utente ha avviato la lettura di tutti i frame
         bool allFrames;
 
@@ -115,7 +111,12 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             this.multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
 
-        private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
+        /// <summary>
+        /// Handler che gestisce l'arrivo dei frame
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
  	        // Acquisisco il frame arrivato in input
             MultiSourceFrame multiSourceFrame = e.FrameReference.AcquireFrame();

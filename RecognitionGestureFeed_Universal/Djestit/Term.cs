@@ -249,7 +249,11 @@ namespace RecognitionGestureFeed_Universal.Djestit
         {
             this.Complete += func;
             this.handler = new Handler(func, this, listModifies);
-            //this.handlers.Add(new Handler(func, this, listModifies));
+        }
+        public virtual void setHandler(GestureEventHandler func)
+        {
+            this.Complete += func;
+            this.handler = new Handler(func, this);
         }
     }
 }

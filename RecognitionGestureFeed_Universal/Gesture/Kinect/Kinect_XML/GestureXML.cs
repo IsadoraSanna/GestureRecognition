@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_XML
 {
     public class GestureXML
     {

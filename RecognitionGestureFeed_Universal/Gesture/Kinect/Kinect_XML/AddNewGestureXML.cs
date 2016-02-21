@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
+namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_XML
 {
     public class AddNewGestureXML
     {
@@ -29,7 +29,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect_XML
             newGesture.name = nameGesture;
             // Variabile che indicherà se la gesture è stata effettivamente registrata o meno
             bool boolYesWriting = false;
-            /// Elemento che verrà usato per accedere ai JointInformation di Skeleton
+            // Elemento che verrà usato per accedere ai JointInformation di Skeleton
             JointInformation jointI;
 
             foreach (Skeleton skeleton in skeletonList)

@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using RecognitionGestureFeed_Universal.Djestit;
 // JointInformation
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-// Kinect - Prova
-using Microsoft.Kinect;
 
 namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
 {
@@ -33,13 +31,6 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
             this.type = type;
             this.precSkeletons = new List<Skeleton>();
             this.identifier = sklt.getIdSkeleton();
-            // prova
-            this.positionX = sklt.handRightPositionX;
-            this.positionY = sklt.handRightPositionY;
         }
-
-        /* Prova */
-        public float positionX;
-        public float positionY;
     }
 }

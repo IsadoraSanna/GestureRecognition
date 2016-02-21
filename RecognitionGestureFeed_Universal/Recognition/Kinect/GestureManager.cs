@@ -6,68 +6,73 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.ComponentModel;
-// Kinect
-using Microsoft.Kinect;
-using Microsoft.Kinect.VisualGestureBuilder;
-// RGF
+// RecognitionGestureFeed
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-using RecognitionGestureFeed_Universal.Recognition.Kinect.Stream;
-using RecognitionGestureFeed_Universal.Gesture.Kinect_VisualGestureBuilder;
+using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 {
-    public static class GestureManager
+    public class GestureManager
     {
         /**** Attributi ****/
         // Lista di GestureDetector, una per ogni scheletro rilevato.
-        private static List<GestureDetector> gestureDetectorList = null;
+        public List<GestureDetector> gestureDetectorList { get; private set; }
 
         /**** Metodi ****/
         /// <summary>
         /// Avvia il rilevamento di Gesture tramite i metodi forniti dalla Kinect
         /// </summary>
-        /// <param name="am">Una variabile di tipo AcquisitionManager</param>
-        /// <param name="pathDatabase">Path in cui si trova la variabile di partenza</param>
-        public static void startGesture(AcquisitionManager am, string pathDatabase)
+        /// <param name="acquisitionManager">Una variabile di tipo AcquisitionManager</param>
+        /// <param name="databasePath">Path in cui si trova il database da utilizzare</param>
+        public void StartGesture(AcquisitionManager acquisitionManager, string databasePath)
         {
-            if(pathDatabase == "")
-                throw new ArgumentNullException("Path not correct.");
+            // Verifica se i parametri passati sono pronti per l'utilizzo
+            if (acquisitionManager == null)
+                throw new ArgumentNullException("AcquisitionManager is Null.");
+            if (databasePath == "")
+                throw new ArgumentException("Path not correct.");
 
-            // Inizializzo la lista di GestureDetector
+            // Inizializza la lista di GestureDetector
             gestureDetectorList = new List<GestureDetector>();
-            for (int i = 0; i < am.numSkeletons; i++)
+            for (int i = 0; i < acquisitionManager.numSkeletons; i++)
             {
-                GestureDetector detector = new GestureDetector(am.kinectSensor, pathDatabase);
+                GestureDetector detector = new GestureDetector(acquisitionManager.kinectSensor, databasePath);
                 gestureDetectorList.Add(detector);
             }
 
             // Associo l'handler updateStream all'evento frameManaged
-            am.SkeletonsFrameManaged += updateGesture;
+            acquisitionManager.SkeletonsFrameManaged += UpdateGesture;
         }
         /// <summary>
         /// Avvia il rilevamento di Gesture tramite i metodi forniti dalla Kinect delle sole gesture specificate dall'utente
         /// </summary>
-        /// <param name="am"></param>
-        /// <param name="pathDatabase"></param>
-        /// <param name="namesGesture"></param>
-        public static void startGesture(AcquisitionManager am, string pathDatabase, List<String> namesGesture)
+        /// <param name="acquisitionManager">Variabile di tipo AcquisitionManager</param>
+        /// <param name="databasePath">Path in cui si trova il database da utilizzare</param>
+        /// <param name="namesGesture">Lista delle gesture che si vogliono riconoscere</param>
+        public void StartGesture(AcquisitionManager acquisitionManager, string databasePath, List<string> gestureNames)
         {
-            if (pathDatabase == "")
-                throw new ArgumentNullException("Path not correct.");
+            // Verifica se i parametri passati sono pronti per l'utilizzo
+            if (acquisitionManager == null)
+                throw new ArgumentNullException("AcquisitionManager is Null.");
+            if (databasePath == "")
+                throw new ArgumentException("Path not correct.");
+            if (gestureNames.Count == 0)
+                throw new ArgumentException("Gesture List is Empyt.");
 
-            // Inizializzo la lista di GestureDetector
+
+            // Inizializza la lista di GestureDetector
             gestureDetectorList = new List<GestureDetector>();
-            for (int i = 0; i < am.numSkeletons; i++)
+            for (int i = 0; i < acquisitionManager.numSkeletons; i++)
             {
-                GestureDetector detector = new GestureDetector(am.kinectSensor, pathDatabase, namesGesture);
+                GestureDetector detector = new GestureDetector(acquisitionManager.kinectSensor, databasePath, gestureNames);
                 gestureDetectorList.Add(detector);
             }
 
-            // Associo l'handler updateStream all'evento frameManaged
-            am.SkeletonsFrameManaged += updateGesture;
+            // Associa l'handler updateStream all'evento frameManaged
+            acquisitionManager.SkeletonsFrameManaged += UpdateGesture;
         }
 
-        public static void updateGesture(Skeleton[] sender)
+        private void UpdateGesture(Skeleton[] sender)
         {
             /// Rilevamento Gesture
             /// Se TrackingID del body cambia, aggiorno la gesture detector corrispondente col nuovo valore.
