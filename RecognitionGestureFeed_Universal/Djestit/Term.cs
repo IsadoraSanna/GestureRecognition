@@ -5,16 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 // Handler 
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-// Likelihood
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 // Modifies
 using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 // Concurrency (Transazioni)
 using RecognitionGestureFeed_Universal.Concurrency;
 // Transazioni
 using System.Transactions;
-// Debug
-using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -45,21 +41,20 @@ namespace RecognitionGestureFeed_Universal.Djestit
         public bool excluded;
         public bool once;
         // Indica quante volte è stato eseguito il Term in questione, da quando il programma è stato avviato
-        public int num_total { get; private set; }
+        public int num_total { get; protected set; }
         // Indica il numero di volte consecutive con cui è stato eseguito il Term in questione
-        public int num_discrete { get; private set; }
+        public int num_discrete { get; protected set; }
         // Probabilità dell'evento
-        //public Likelihood likelihood;
         public float likelihood;
         // Handler dell'evento
-        //public List<Handler> handlers = new List<Handler>();
-        public Handler handler;
+        public List<Handler> CompleteHandlers = new List<Handler>();
+        public List<Handler> ErrorHandlers = new List<Handler>();
         // Puntatore al padre
         internal CompositeTerm pointFather = null;
-        // Conflict Manager (per eseguire in un ambiente sicuro le gesture)
+        // Conflict Manager (per gestire la possibilità di un errore durante l'esecuzione della gesture)
         public TransactionsManager transactionsManager = new TransactionsManager();
-        // prova
-        public String name;
+        // Nome del Term
+        public string name;
 
         /* Metodi */
         /// <summary>
@@ -155,61 +150,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         /// <summary>
-        /// Genera l'evento Complete; viene richiamato quando lo stato del term va in complete. Provvede anche ad eseguire
-        /// le modifiche alle variabili di stato in un ambiento protetto.
-        /// </summary>
-        /// <param name="t"></param>
-        protected virtual void onComplete(GestureEventArgs t)
-        {
-            if (Complete != null)
-            {
-                // Genera l'evento Complete
-                Complete(this, t);
-                // Esegui in sicurezza l'eventuali modifiche alle variabili di stato.
-                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
-                {
-                    //transactionsManager.onTransactionExcute(handler.elementList);
-                    transactionsManager.onTransactionExcute(handler.listModifies, handler.elementList);
-                    // Da l'ok per completare la transizione.
-                    scope.Complete();
-                }
-                /*foreach (Handler h in handlers)
-                {
-                    if (h.elementList.Count > 0)
-                    {
-                        using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
-                        {
-                            //transactionsManager.onTransactionExcute(handler.elementList);
-                            transactionsManager.onTransactionExcute(h.listModifies, h.elementList);
-                            // Da l'ok per completare la transizione.
-                            scope.Complete();
-                        }
-                    }
-                }*/
-            }
-        }
-
-        /// <summary>
         /// Genera l'evento Likely; viene richiamato quando lo stato del term va in likely.
         /// </summary>
         /// <param name="t"></param>
         protected virtual void onLikely(GestureEventArgs t)
         {
-            if(Likely != null)
+            if (Likely != null)
             {
                 Likely(this, t);
-            }
-        }
-
-        /// <summary>
-        /// Genera l'evento Error; viene richiamato quando lo stato del term va in error.
-        /// </summary>
-        /// <param name="t"></param>
-        protected virtual void onError(GestureEventArgs t)
-        {
-            if (Error != null)
-            {
-                Error(this, t);
             }
         }
 
@@ -241,19 +189,73 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return false;
         }
 
+        // Complete /
         /// <summary>
-        /// Setta la funzione Complete del term e provvede a crearne l'handler
+        /// Setta la funzione Complete del term e provvede a crearne l'handler.
         /// </summary>
         /// <param name="func"></param>
-        public virtual void setHandler(GestureEventHandler func, List<Modifies> listModifies)
+        /// <param name="listModifies"></param>
+        public virtual void setCompleteHandler(GestureEventHandler func, List<Modifies> listModifies)
         {
-            this.Complete += func;
-            this.handler = new Handler(func, this, listModifies);
+            Complete += func;
+            CompleteHandlers.Add(new Handler(func, this, listModifies));
         }
-        public virtual void setHandler(GestureEventHandler func)
+        public virtual void setCompleteHandler(GestureEventHandler func)
         {
-            this.Complete += func;
-            this.handler = new Handler(func, this);
+            Complete += func;
+            CompleteHandlers.Add(new Handler(func, this));
+        }
+        /// <summary>
+        /// Genera l'evento Complete; viene richiamato quando lo stato del term va in complete. Provvede anche ad eseguire
+        /// le modifiche alle variabili di stato in un ambiento protetto.
+        /// </summary>
+        /// <param name="t"></param>
+        protected virtual void onComplete(GestureEventArgs t)
+        {
+            if (Complete != null)
+            {
+                // Genera l'evento Complete
+                Complete(this, t);
+                foreach (Handler handler in CompleteHandlers)
+                {
+                    // Esegui in sicurezza l'eventuali modifiche alle variabili di stato.
+                    using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
+                    {
+                        //transactionsManager.onTransactionExcute(handler.elementList);
+                        transactionsManager.onTransactionExcute(handler.listModifies, handler.elementList);
+                        // Da l'ok per completare la transizione.
+                        scope.Complete();
+                    }
+                }
+            }
+        }
+
+        // Error /
+        /// <summary>
+        /// Setta la funzione Error del term e provvede a crearne l'handler.
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="listModifies"></param>
+        public virtual void setErrorHandler(GestureEventHandler func, List<Modifies> listModifies)
+        {
+            Error += func;
+            ErrorHandlers.Add(new Handler(func, this, listModifies));
+        }
+        public virtual void setErrorHandler(GestureEventHandler func)
+        {
+            Error += func;
+            ErrorHandlers.Add(new Handler(func, this));
+        }
+        /// <summary>
+        /// Genera l'evento Error; viene richiamato quando lo stato del term va in error.
+        /// </summary>
+        /// <param name="t"></param>
+        protected virtual void onError(GestureEventArgs t)
+        {
+            if (Error != null)
+            {
+                Error(this, t);
+            }
         }
     }
 }

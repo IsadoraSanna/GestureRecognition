@@ -38,6 +38,9 @@ namespace RecognitionGestureFeed_Universal.Djestit
         }
 
         /* Metodi */
+        /// <summary>
+        /// Resetta la Choice e tutti i suoi figli.
+        /// </summary>
         public override void reset()
         {
             this.state = expressionState.Default;
@@ -46,6 +49,21 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 child.reset();
                 child.excluded = false;
             }
+        }
+        /// <summary>
+        /// Pone in Error 
+        /// </summary>
+        /// <param name="token"></param>
+        public override void error(Token token)
+        {
+            // Resetta il contatore e verifica se deve generare l'evento Error
+            num_discrete = 0;
+            // Modifica lo stato
+            state = expressionState.Error;
+            // Genera gli eventi Error e ChangeState
+            GestureEventArgs e = new GestureEventArgs(this, token);
+            onError(e);
+            onChangeState();
         }
 
         public override bool lookahead(Token token)
@@ -115,6 +133,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                         case expressionState.Likely:
                         case expressionState.Complete:
                             this.complete(token);
+                            this.reset();
                             return;
                         case expressionState.Error:
                             // this case is never executed, since

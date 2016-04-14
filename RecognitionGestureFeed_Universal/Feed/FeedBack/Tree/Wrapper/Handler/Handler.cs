@@ -26,7 +26,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         public GestureEventHandler function { get; private set; }
         // Probabilità associata alla gesture
         public Likelihood.Likelihood likelihood { get; internal set; }
-        //public float likelihood;
 
         /* Costruttore */
         public Handler(GestureEventHandler function, Term term, List<Modifies> listModifies)
@@ -51,9 +50,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
-            this.elementList = this.getModifiesAttribute();
+            elementList = this.getModifiesAttribute();
             // Nome associata alla funzione
-            this.name = function.Method.Name;
+            name = function.Method.Name;
         }
         /// <summary>
         /// Costruttore che inizializza a zero (o a null), tutti gli elementi dell'handler

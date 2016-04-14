@@ -91,7 +91,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         /// <param name="kinectSensor"></param>
         public static void startSkeletonStream(AcquisitionManager am)
         {
-            initSkeletonStream(am, am.kinectSensor);
+            initSkeletonStream(am, am.kinectSensorExtend.getKinectSensor());
             am.SkeletonsFrameManaged += updateSkeletonStream;
         }
         /// <summary>
@@ -106,7 +106,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             initDepthStream(am);
             initInfraredStream(am);
             initColorStream(am);
-            initSkeletonStream(am, am.kinectSensor);
+            initSkeletonStream(am, am.kinectSensorExtend.getKinectSensor());
             
             // Associo l'handler updateStream all'evento frameManaged
             am.FramesManaged += updateAllStream;

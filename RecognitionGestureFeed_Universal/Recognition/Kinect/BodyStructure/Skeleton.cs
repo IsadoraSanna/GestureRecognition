@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,8 +41,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// gestureDetector: rilevatore delle gesture riconosciute tramite gli algoritmi forniti dalla Kinect.
         /// </summary>
         // Skeleton
-        private ulong idBody;
-        private int idSkeleton;
+        public ulong idBody { get; private set; }
+        public int idSkeleton { get; private set; }
         public FrameEdges clippedEdges { get; private set; }
         public HandState leftHandStatus {get; private set;}
         public HandState rightHandStatus {get; private set;}
@@ -51,25 +52,15 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         public PointF lean { get; private set; }
         public TrackingState leandTrackingState { get; private set; }
         public TimeSpan timeSpan { get; private set; }
-        // Face Information
-        private FaceFrameReader faceFrameReader = null;
-        private FaceFrameSource faceFrameSource = null;
-        public FaceFrameResult faceFrameResults { get; private set; }
-        // Face HD
-        private HighDefinitionFaceFrameReader highDefinitionFaceFrameReader = null;
-        private HighDefinitionFaceFrameSource highDefinitionFaceFrameSource = null;
-        public FaceAlignment faceAlignment { get; private set; }
-        public FaceModel faceModel { get; private set; }
         // Stampa
         public Pen colorSkeleton { get; set; }
-        public GestureDetector gestureDetector;
 
         /* Costruttore */
         /// <summary>
         /// Costruttore.
         /// </summary>
         /// <param name="i"></param>
-        public Skeleton(int i, KinectSensor kinectSensor, Pen color)
+        public Skeleton(int i, Pen color)
         {
             // Inizializzo a false lo status
             this.status = false;
@@ -83,26 +74,8 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
             this.joints = new List<JointInformation>();
             // Inizializzo la lista di bone
             boneBuilder(this.bones);
-            // Inizializzo il FaceFrameSource, specificando quali sono le espressioni che voglio riconoscere (per ora tutte)
-            FaceFrameFeatures faceFrameFeatures = FaceFrameFeatures.BoundingBoxInColorSpace | FaceFrameFeatures.PointsInColorSpace | FaceFrameFeatures.RotationOrientation | FaceFrameFeatures.FaceEngagement | FaceFrameFeatures.Glasses | FaceFrameFeatures.Happy | FaceFrameFeatures.LeftEyeClosed | FaceFrameFeatures.RightEyeClosed | FaceFrameFeatures.LookingAway | FaceFrameFeatures.MouthMoved | FaceFrameFeatures.MouthOpen;
-            this.faceFrameSource = new FaceFrameSource(kinectSensor, 0, faceFrameFeatures);
-            // Inizializzo il FaceFrameReader e associo l'handler all'evento FrameArrived di FaceFrame
-            this.faceFrameReader = this.faceFrameSource.OpenReader();
-            this.faceFrameReader.FrameArrived += this.Reader_FaceFrameArrived;
-            this.faceFrameResults = null;
-            // Inizializzo l'HighDefinitionFaceFrameSource per l'acquisizione dei dati in hd del viso
-            this.highDefinitionFaceFrameSource = new HighDefinitionFaceFrameSource(kinectSensor);
-            // Inizializzo l'HighDefinitionFaceFrameReader e associo l'handler all'evento FrameArrived di HighDefinitionFaceFrame
-            this.highDefinitionFaceFrameReader = this.highDefinitionFaceFrameSource.OpenReader();
-            this.highDefinitionFaceFrameReader.FrameArrived += this.HdFaceReader_FrameArrived;
-            this.faceAlignment = new FaceAlignment();
-            this.faceModel = new FaceModel();
             // Associo allo scheletro il colore con cui verrà rappresenta in bitmap
             this.colorSkeleton = color;
-
-            // Prova Gesture 
-            List<string> namePose = new List<string>() { "PanX_Right" };
-            gestureDetector = new GestureDetector(kinectSensor, "C:/Users/Alessandro/Copy/Dottorato/GestureRecognition/DatabaseTraining/Kinect/Database.gbd", namePose);
         }
 
         /* Metodi */
@@ -110,15 +83,13 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// Funzione di aggiornamento delle compenenti dello scheletro
         /// </summary>
         /// <param name="body"></param>
-        public void updateSkeleton(Body body, TimeSpan ts)
+        public virtual void updateSkeleton(Body body, TimeSpan ts)
         {
-            // Aggiorno lo stato dello scheletro qualora il corpo sia tornato attivo
+            // Aggiorno lo stato dello scheletro qualora il corpo sia tornato attivo 
             if (body.IsTracked && !this.status)
             {
                 this.status = body.IsTracked;
                 this.idBody = body.TrackingId;
-                this.faceFrameSource.TrackingId = idBody;
-                this.highDefinitionFaceFrameSource.TrackingId = idBody;
             }
             // Aggiorno le informazioni riguardanti il clippedEdge e il lean 
             this.clippedEdges = body.ClippedEdges;
@@ -155,16 +126,15 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
             // Aggiorno il timespan
             timeSpan = ts;
         }
+
         /// <summary>
         /// Funzione di aggiornamento qualora lo scheletro non sia tracciato
         /// </summary>
-        public void updateSkeleton()
+        public virtual void updateSkeleton()
         {
             // Aggiorna lo stato in false e resetta idBody
             this.status = false;
             this.idBody = 0;
-            this.faceFrameSource.TrackingId = idBody;
-            this.highDefinitionFaceFrameSource.TrackingId = idBody;
             // Aggiorna lo stato delle mani, pone lo HandSideState come: unknown = 0)
             this.leftHandStatus = HandState.NotTracked;
             this.rightHandStatus = HandState.NotTracked;
@@ -181,23 +151,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
                 bone.update();
             }
         }
-
-        /// <summary>
-        /// Ritorna l'Id del body a cui è associato lo scheletro
-        /// </summary>
-        /// <returns></returns>
-        public ulong getIdBody()
-        {
-            return this.idBody;
-        }
-        /// <summary>
-        /// Ritorna l'Id dello scheletro
-        /// </summary>
-        /// <returns></returns>
-        public int getIdSkeleton()
-        {
-            return this.idSkeleton;
-        }        
+     
         /// <summary>
         /// Dato il nome del Joint a cui vuole accedere, restituisce il JointInformation relativo
         /// </summary>
@@ -240,11 +194,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
         /// <returns></returns>
         public object Clone()
         {
-            /*if (handRightPositionX != -1000)
-            {
-                Skeleton pclone = new Skeleton(this.idSkeleton, this.rightHandStatus, this.handRightPositionX, this.handRightPositionY);
-                return pclone;
-            }*/
             // Creo una prima copia dello scheletro
             Skeleton clone = (Skeleton)this.MemberwiseClone();
             // Creo una copia delle liste
@@ -291,59 +240,6 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
             bones.Add(new Bone(JointType.KneeLeft, JointType.AnkleLeft));
             bones.Add(new Bone(JointType.AnkleLeft, JointType.FootLeft));
         }
-        #endregion
-
-        #region Face
-        /// <summary>
-        /// Aggiorna le informazioni relative alla faccia.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Reader_FaceFrameArrived(object sender, FaceFrameArrivedEventArgs e)
-        {
-            // Prelevo il frame
-            using (FaceFrame faceFrame = e.FrameReference.AcquireFrame())
-            {
-                // Se il frame non è nullo
-                if (faceFrame != null)
-                {
-                    // Memorizzo le informazioni rilevate dalla kinect e contenute in FaceFrame
-                    this.faceFrameResults = faceFrame.FaceFrameResult;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Aggiorna le informazioni relative al HDFace
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void HdFaceReader_FrameArrived(object sender, HighDefinitionFaceFrameArrivedEventArgs e)
-        {
-            // Prelevo il frame
-            using (HighDefinitionFaceFrame hdFaceFrame = e.FrameReference.AcquireFrame())
-            {
-                // Se il frame non è nullo
-                if(hdFaceFrame != null && hdFaceFrame.IsFaceTracked)
-                {
-                    // Prendo dal frame i dati del face alignment, faceAlignmentQuality e FaceModel
-                    hdFaceFrame.GetAndRefreshFaceAlignmentResult(this.faceAlignment);
-                    this.faceModel = hdFaceFrame.FaceModel;
-                }
-            }
-        }
-        #endregion
-
-        #region Test
-        /*public float handRightPositionX = -1000;
-        public float handRightPositionY;
-        public Skeleton(int i, HandState state, float positionX, float positionY)
-        {
-            this.idSkeleton = i;
-            this.rightHandStatus = state;
-            this.handRightPositionX = positionX;
-            this.handRightPositionY = positionY;
-        }*/
         #endregion
     }
 }

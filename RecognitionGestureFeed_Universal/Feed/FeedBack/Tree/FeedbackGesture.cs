@@ -29,8 +29,6 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
         /* Costruttore */
         public FeedbackGesture(Term term) : base(term)
         {
-            // Inizializzo il Wrapper
-            this.wrapper = new FeedbackWrapper();
 
             // Creo la lista dei Ground Term associati qualora il Term sia un Composite Term
             if (term.GetType() != typeof(GroundTerm))

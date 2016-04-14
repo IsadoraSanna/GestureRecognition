@@ -8,8 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
-// Debug
-using System.Diagnostics;
 // Kinect
 using Microsoft.Kinect;
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;

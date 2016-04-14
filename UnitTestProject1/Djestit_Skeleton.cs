@@ -202,7 +202,7 @@ namespace UnitTestProject1
             termx1.accepts = close;
             termx1.name = "GroundTerm CloseX";
             termx1.likelihood = 0.5f;//new Likelihood(0.01f);
-            termx1.setHandler(Close, porcoddio);
+            //termx1.setHandler(Close, porcoddio);
             //termx1.Complete += Close;
             //termx1.handler = new Handler(Close, termx1);
             // Move
@@ -211,7 +211,7 @@ namespace UnitTestProject1
             termx2.accepts = moveX;
             termx2.name = "GroundTerm MoveX";
             termx2.likelihood = 0.75f;//new Likelihood(0.02f);
-            termx2.setHandler(MoveX, porcoddio);
+            //termx2.setHandler(MoveX, porcoddio);
             //termx2.Complete += MoveX;
             //termx2.handler = new Handler(MoveX, termx2);
             // End
@@ -220,7 +220,7 @@ namespace UnitTestProject1
             termx3.accepts = open;
             termx3.name = "GroundTerm OpenX";
             termx3.likelihood = 0.5f;//new Likelihood(0.01f);
-            termx3.setHandler(Open, porcoddio);
+            //termx3.setHandler(Open, porcoddio);
             //termx3.Complete += Open;
             //termx3.handler = new Handler(Open, termx3);
             // Iterative Move
@@ -239,7 +239,7 @@ namespace UnitTestProject1
             Sequence panX = new Sequence(listTerm2);
             panX.likelihood = ComputeLikelihood.indipendentEvents(panX); //new Likelihood(panX, ProbabilityType.IndipendentEvents);
             panX.name = "PanX";
-            panX.setHandler(PanX, porcoddio);
+            //panX.setHandler(PanX, porcoddio);
             //panX.Complete += PanX;
             //panX.handler = new Handler(this.PanX, panX);// Handler
             panX.setErrorTolerance(new ErrorTolerance());
@@ -251,7 +251,7 @@ namespace UnitTestProject1
             termy1.accepts = close;
             termy1.name = "GroundTerm CloseY";
             termy1.likelihood = 0.5f;//new Likelihood(0.01f);
-            termy1.setHandler(Close, porcoddio);
+            //termy1.setHandler(Close, porcoddio);
             //termy1.Complete += Close;
             //termy1.handler = new Handler(Close, termy1, porcoddio);
             // Move
@@ -260,7 +260,7 @@ namespace UnitTestProject1
             termy2.accepts = moveY;
             termy2.name = "GroundTerm MoveY";
             termy2.likelihood = 0.75f;// new Likelihood(0.3f);
-            termy2.setHandler(MoveY, porcoddio);
+            //termy2.setHandler(MoveY, porcoddio);
             //termy2.Complete += MoveY;
             //termy2.handler = new Handler(MoveY, termy2, porcoddio);
             // End
@@ -269,7 +269,7 @@ namespace UnitTestProject1
             termy3.accepts = open;
             termy3.name = "GroundTerm OpenY";
             termy3.likelihood = 0.5f;// new Likelihood(0.01f);
-            termy3.setHandler(Open, porcoddio);
+            //termy3.setHandler(Open, porcoddio);
             //termy3.Complete += Open;
             //termy3.handler = new Handler(Open, termy3);
             // Iterative Move
@@ -289,7 +289,7 @@ namespace UnitTestProject1
             panY.likelihood = ComputeLikelihood.indipendentEvents(panY); //new Likelihood(panY, ProbabilityType.IndipendentEvents);
             panY.name = "PanY";
             panY.setErrorTolerance(new ErrorTolerance());
-            panY.setHandler(PanY, porcoddio);
+            //panY.setHandler(PanY, porcoddio);
             //panY.Complete += PanY;
             //panY.handler = new Handler(this.PanY, panY);// Handler
 

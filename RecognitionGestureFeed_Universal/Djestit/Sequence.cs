@@ -13,8 +13,6 @@ namespace RecognitionGestureFeed_Universal.Djestit
     /// </summary>
     public class Sequence : CompositeTerm
     {
-        private int index = 0;
-
         /* Costruttori */
         /// <summary>
         /// Prende in ingresso un singolo parametro.

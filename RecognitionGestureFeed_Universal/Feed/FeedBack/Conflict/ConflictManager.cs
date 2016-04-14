@@ -86,7 +86,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
             {
                 if (term.hasComplete())
                 {
-                    mapHandlersModifies.Add(term.handler, term.handler.elementList);
+                    mapHandlersModifies.Add(term.CompleteHandlers.First(), term.CompleteHandlers.First().elementList);
                     //foreach(Handler h in term.handlers)
                     //mapHandlersModifies.Add(h, h.elementList);
                 }

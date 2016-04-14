@@ -22,7 +22,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public StateSequence()
         {
-            // TODO: Complete member initialization
+            
         }
 
         public void _push(Token token)

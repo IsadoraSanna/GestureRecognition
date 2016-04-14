@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 // ErrorTolerance
 using RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager;
-// Handler
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 
 namespace RecognitionGestureFeed_Universal.Djestit
 {
@@ -16,15 +14,16 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class CompositeTerm : Term
     {
         /* Attributi */
+        // Indice dei figli
+        protected int index = 0;
         // Evento che descrive quando viene rilevato e gestito un errore nei movimento dell'utente
         public event GestureErrorTolerance ErrorDetect;
         // Contiene la lista di operandi da gestire
         public List<Term> children = new List<Term>();
         // Indica il massimo numero di errori tollerabili
-        protected const int deltaError = 1;
+        protected const int deltaError = 0;
         // Variabile che indica il numero di errori commessi
-        private ErrorToleranceManager.ErrorTolerance error_tolerance = null;
-
+        private ErrorTolerance error_tolerance = null;
         // Flag che indica se il CompositeTerm ha l'oggetto ErrorTolerance settato
         public bool flagErrTolerance { private set; get; }
 
@@ -55,17 +54,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
 		        child.reset();
 	        }
         }
-
+       
         /// <summary>
         /// On error
         /// </summary>
         /// <param name="token"></param>
         public override void error(Token token)
         {
-            foreach (var child in this.children)
-            {
-                child.error(token);
-            }
+            this.children[index].error(token);
             base.error(token);
         }
 

@@ -32,6 +32,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
             }
             return false;
         }
+
         public override void feedToken(Token token)
         {
             if (this.state == expressionState.Complete || this.state == expressionState.Error)

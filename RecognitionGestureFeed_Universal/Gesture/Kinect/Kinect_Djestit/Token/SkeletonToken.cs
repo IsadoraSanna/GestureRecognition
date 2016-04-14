@@ -25,12 +25,16 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
         public int identifier;
 
         /* Costruttore */
-        public SkeletonToken(TypeToken type, Skeleton sklt)
+        public SkeletonToken(TypeToken type, Skeleton skeleton)
         {
-            this.skeleton = (Skeleton)sklt.Clone();
+            this.skeleton = (Skeleton)skeleton.Clone();
             this.type = type;
             this.precSkeletons = new List<Skeleton>();
-            this.identifier = sklt.getIdSkeleton();
+            this.identifier = skeleton.idSkeleton;
+        }
+        public SkeletonToken()
+        {
+
         }
     }
 }
