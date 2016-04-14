@@ -11,8 +11,6 @@ using Microsoft.Kinect;
 // RecognitionGestureFeed
 using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
-// Debug
-using System.Diagnostics;
 
 namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 {
@@ -28,7 +26,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
 
     public class AcquisitionManager
     {
-        /**** Eventi ****/
+        /* Eventi */
         // Evento che indica quando un frame è stato gestito
         public event FramesManaged FramesManaged;
         public event FrameManaged BodyFrameManaged;
@@ -39,8 +37,9 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         public event BodyManaged SkeletonFrameManaged;
         public event BodyManaged SkeletonLoseManaged;
         public event BodiesManaged SkeletonsFrameManaged;
-        
-        /****** Attributi ******/
+
+        /* Attributi */
+        private static AcquisitionManager singleton = null;
         // Variabile usata per la comunicazione con la kinect
         public KinectSensorExtend kinectSensorExtend = null;
         // Numero massimo di scheletri gestibili contemporaneamente
@@ -66,8 +65,19 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         // Booleano che indica se l'utente ha avviato la lettura di tutti i frame
         bool allFrames;
 
-        /****** Costruttore ******/
-        public AcquisitionManager(FrameSourceTypes enabledFrameSourceTypes, [Optional] KinectSensorExtend sensor)
+        /* Costruttore */
+        public static AcquisitionManager getInstance([Optional] KinectSensorExtend sensor, FrameSourceTypes enabledFrameSourceTypes=FrameSourceTypes.Body)
+        {
+            if (singleton == null)
+            {
+                if (enabledFrameSourceTypes == FrameSourceTypes.Body)
+                    singleton = new AcquisitionManager(enabledFrameSourceTypes, sensor);
+            }
+
+            return singleton;
+        }
+
+        private AcquisitionManager(FrameSourceTypes enabledFrameSourceTypes, [Optional] KinectSensorExtend sensor)
         {
             // Inizializzazione sensore e struttura dati scheletro
             Inizialize(sensor);
@@ -96,7 +106,7 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
             // e vi associo il relativo handler
             this.multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
-        public AcquisitionManager([Optional] KinectSensorExtend sensor)
+        private AcquisitionManager([Optional] KinectSensorExtend sensor)
         {
             Inizialize(sensor);
             

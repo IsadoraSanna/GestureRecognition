@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Windows.Threading;
 // Add Kinect
 using Microsoft.Kinect;
-using Microsoft.Kinect.VisualGestureBuilder;
 // Writable
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -51,65 +50,65 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         /// Gestisce la sola stampa del BodyIndexStream.
         /// </summary>
         /// <param name="am"></param>
-        public static void startBodyIndexStream(AcquisitionManager am)
+        public static void startBodyIndexStream()
         {
-            initBodyIndexStream(am);
-            am.BodyFrameManaged += updateBodyIndexStream;
+            initBodyIndexStream();
+            AcquisitionManager.getInstance().BodyFrameManaged += updateBodyIndexStream;
         }
 
         /// <summary>
         /// Gestisce la sola stampa del DepthStream.
         /// </summary>
         /// <param name="am"></param>
-        public static void startDepthStream(AcquisitionManager am)
+        public static void startDepthStream()
         {
-            initDepthStream(am);
-            am.DepthFrameManaged += updateDepthStream;
+            initDepthStream();
+            AcquisitionManager.getInstance().DepthFrameManaged += updateDepthStream;
         }
         /// <summary>
         /// Gestisce la sola stampa del InfraredStream.
         /// </summary>
         /// <param name="am"></param>
-        public static void startInfraredStream(AcquisitionManager am)
+        public static void startInfraredStream()
         {
-            initInfraredStream(am);
-            am.InfraredFrameManaged += updateInfraredStream;
+            initInfraredStream();
+            AcquisitionManager.getInstance().InfraredFrameManaged += updateInfraredStream;
         }
         /// <summary>
         /// Gestisce la sola stampa del ColorStream.
         /// </summary>
         /// <param name="am"></param>
-        public static void startColorStream(AcquisitionManager am)
+        public static void startColorStream()
         {
-            initColorStream(am);
-            am.ColorFrameManaged += updateColorStream;
+            initColorStream();
+            AcquisitionManager.getInstance().ColorFrameManaged += updateColorStream;
         }
         /// <summary>
         /// Gestisce la sola stampa del SkeletonStream.
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        public static void startSkeletonStream(AcquisitionManager am)
+        public static void startSkeletonStream()
         {
-            initSkeletonStream(am, am.kinectSensorExtend.getKinectSensor());
-            am.SkeletonsFrameManaged += updateSkeletonStream;
+            initSkeletonStream();
+            AcquisitionManager.getInstance().SkeletonsFrameManaged += updateSkeletonStream;
         }
         /// <summary>
         /// Gestisce la stampa di tutte le WritableBitmap e associo all'evento frameManaged il suo handler.
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        public static void startAllStream(AcquisitionManager am)
+        public static void startAllStream()
         {
             /* Inizializzazione WritableBitmap */
-            initBodyIndexStream(am);
-            initDepthStream(am);
-            initInfraredStream(am);
-            initColorStream(am);
-            initSkeletonStream(am, am.kinectSensorExtend.getKinectSensor());
-            
+            initBodyIndexStream();
+            initDepthStream();
+            initInfraredStream();
+            initColorStream();
+            initSkeletonStream();
+
             // Associo l'handler updateStream all'evento frameManaged
-            am.FramesManaged += updateAllStream;
+            AcquisitionManager.getInstance().FramesManaged += updateAllStream;
         }
 
         /// <summary>
@@ -287,45 +286,45 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         /// Inizializza bodyIndexBitmap
         /// </summary>
         /// <param name="am"></param>
-        private static void initBodyIndexStream(AcquisitionManager am)
+        private static void initBodyIndexStream()
         {
-            bodyIndexBitmap = new WriteableBitmap(am.bodyIndexData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
+            bodyIndexBitmap = new WriteableBitmap(AcquisitionManager.getInstance().bodyIndexData.width, AcquisitionManager.getInstance().depthData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
         }
         /// <summary>
         /// Inizializza depthBitmap
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        private static void initDepthStream(AcquisitionManager am)
+        private static void initDepthStream()
         {
-            depthBitmap = new WriteableBitmap(am.depthData.width, am.depthData.height, 96.0, 96.0, PixelFormats.Gray8, null);
+            depthBitmap = new WriteableBitmap(AcquisitionManager.getInstance().depthData.width, AcquisitionManager.getInstance().depthData.height, 96.0, 96.0, PixelFormats.Gray8, null);
         }
         /// <summary>
         /// Inizializza infraredBitmap
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        private static void initInfraredStream(AcquisitionManager am)
+        private static void initInfraredStream()
         {
-            infraredBitmap = new WriteableBitmap(am.infraredData.width, am.infraredData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
+            infraredBitmap = new WriteableBitmap(AcquisitionManager.getInstance().infraredData.width, AcquisitionManager.getInstance().infraredData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
         }
         /// <summary>
         /// Inizializza colorBitmap
         /// </summary>
         /// <param name="am"></param>
         /// <param name="kinectSensor"></param>
-        private static void initColorStream(AcquisitionManager am)
+        private static void initColorStream()
         {
-            colorBitmap = new WriteableBitmap(am.colorData.width, am.colorData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
+            colorBitmap = new WriteableBitmap(AcquisitionManager.getInstance().colorData.width, AcquisitionManager.getInstance().colorData.height, 96.0, 96.0, PixelFormats.Bgr32, null);
         }
         /// <summary>
         /// Inizializza skeletonBitmap
         /// </summary>
-        private static void initSkeletonStream(AcquisitionManager am, KinectSensor kinectSensor)
+        private static void initSkeletonStream()
         {
             skeletonBitmap = new DrawingImage(drawingGroup);
             // Prendo dalla variabile kinectSensor, il CoordinateMapper che verrà usata per la stampa degli scheletri
-            coordinateMapper = kinectSensor.CoordinateMapper;
+            coordinateMapper = AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor().CoordinateMapper;
         }
         #endregion Init Stream
 
