@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
         public Dictionary<string, Queue<ResultDiscrete>> dictionaryResults { get; private set; } = new Dictionary<string, Queue<ResultDiscrete>>();
 
         /* Metodi */
-        public void SetLastProgress(ulong id, TimeSpan timeSpan, IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, DiscreteGestureResult> frameData)
+        public void setLastProgress(ulong id, TimeSpan timeSpan, IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, DiscreteGestureResult> frameData)
         {
             // Aggiorna i valori dell'ultimo frame ricevuto
             bodyId = id;
@@ -31,11 +31,10 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
                 {
                     // Gesture non presente nel dizionario
                     dictionaryResults.Add(result.Key.Name, new Queue<ResultDiscrete>());
-                    break;
                 }
                 // Gesture già presente 
                 // Buffer non ancora pieno
-                if (Math.Abs(dictionaryResults[result.Key.Name].Last().timeSpan.TotalSeconds - timeSpan.TotalSeconds) > 1)
+                if (dictionaryResults[result.Key.Name].Count == 0 || Math.Abs(dictionaryResults[result.Key.Name].Last().timeSpan.TotalSeconds - timeSpan.TotalSeconds) < 1)
                     dictionaryResults[result.Key.Name].Enqueue(new ResultDiscrete(result.Value.Detected, result.Value.Confidence, timeSpan));
                 else
                 {
@@ -50,7 +49,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
         /// Restituisce l'ultimo FrameGestureBuilder ricevuto
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, DiscreteGestureResult> GetLastProgress()
+        public IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, DiscreteGestureResult> getLastestProgress()
         {
             return results;
         }

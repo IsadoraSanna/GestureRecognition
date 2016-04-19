@@ -26,25 +26,30 @@ namespace RecognitionGestureFeed_Universal.Recognition.Kinect
         /// </summary>
         /// <param name="acquisitionManager"></param>
         /// <param name="expression"></param>
-        public KinectSensorInterface(AcquisitionManager acquisitionManager, Term expression)
-        {
-            // Verifica se l'acquisitionManager sia nullo
-            if (acquisitionManager == null)
-                throw new ArgumentNullException("AcquisitionManager is null.");
-
-            // Associa all'evento SkeletonsFrameManaged il relativo handler.
-            acquisitionManager.SkeletonsFrameManaged += updateSkeleton;
-
-            // Inizializza la variabile KinectSensor
-            this.sensor = new SkeletonSensor(expression, this.capacity);
-        }
         public KinectSensorInterface(Term expression)
         {
+            // Associa all'evento SkeletonsFrameManaged il relativo handler.
+            AcquisitionManager.getInstance().SkeletonsFrameManaged += updateSkeleton;
+
             // Inizializza la variabile KinectSensor
-            this.sensor = new SkeletonSensor(expression, this.capacity);
+            sensorDefine(expression);
+        }
+        public KinectSensorInterface()
+        {
+
         }
 
         /* Metodi */
+        /// <summary>
+        /// Assegna al sensore la lista delle gesture da riconoscere.
+        /// </summary>
+        /// <param name="expression"></param>
+        protected void sensorDefine(Term expression)
+        {
+            // Inizializza la variabile KinectSensor
+            this.sensor = new SkeletonSensor(expression, this.capacity);
+        }
+
         /// <summary>
         /// Update Skeleton.
         /// </summary>

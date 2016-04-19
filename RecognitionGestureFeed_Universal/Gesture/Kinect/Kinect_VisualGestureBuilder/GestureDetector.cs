@@ -27,14 +27,14 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
         private VisualGestureBuilderFrameReader vgbFrameReader = null;
 
         /* Costruttore */
-        public GestureDetector(KinectSensorExtend sensor, ulong skeletonId, string pathDatabase, [Optional] List<String> namesGesture)
+        public GestureDetector(ulong skeletonId, string pathDatabase, [Optional] List<String> namesGesture)
         {
             // Verifica se il file esiste
-            if (File.Exists(pathDatabase))
+            if (!File.Exists(pathDatabase))
                 throw new Exception("Database don't Exist");
 
             // Attiva il FrameSource
-            this.vgbFrameSource = new VisualGestureBuilderFrameSource(sensor.getKinectSensor(), skeletonId);
+            this.vgbFrameSource = new VisualGestureBuilderFrameSource(AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor(), skeletonId);
             // Attiva il reader per i VisualGestureBuilder frame
             this.vgbFrameReader = this.vgbFrameSource.OpenReader();
             if (this.vgbFrameReader != null)
@@ -79,10 +79,10 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
 
                     /* Gesture Discrete */
                     if (discreteGestureResult != null)
-                        gestureProgressDiscrete.SetLastProgress(frame.TrackingId, frame.RelativeTime, frame.DiscreteGestureResults);
+                        gestureProgressDiscrete.setLastProgress(frame.TrackingId, frame.RelativeTime, frame.DiscreteGestureResults);
                     /* Gesture Continue */
                     if (continuousResult != null)// Se è stata rilevata almeno un gesture continua
-                        gestureProgressContinuous.SetLastProgress(frame.TrackingId, frame.RelativeTime, frame.ContinuousGestureResults);
+                        gestureProgressContinuous.setLastProgress(frame.TrackingId, frame.RelativeTime, frame.ContinuousGestureResults);
                 }
             }
         }

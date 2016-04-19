@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
         public Dictionary<string, Queue<ResultContinuous>> dictionaryResults { get; private set; } = new Dictionary<string, Queue<ResultContinuous>>(); 
 
         /* Metodi */
-        public void SetLastProgress(ulong id, TimeSpan timeSpan ,IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, ContinuousGestureResult> frameData)
+        public void setLastProgress(ulong id, TimeSpan timeSpan ,IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, ContinuousGestureResult> frameData)
         {
             // Aggiorna i valori dell'ultimo frame ricevuto
             bodyId = id;
@@ -31,20 +31,16 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
                 {
                     // Gesture non presente nel dizionario
                     dictionaryResults.Add(result.Key.Name, new Queue<ResultContinuous>());
-                    dictionaryResults[result.Key.Name].Enqueue(new ResultContinuous(result.Value.Progress, timeSpan));
                 }
-                else 
+                // Gesture già presente 
+                // Buffer non ancora pieno
+                if (dictionaryResults[result.Key.Name].Count == 0 || Math.Abs(dictionaryResults[result.Key.Name].Last().timeSpan.TotalSeconds - timeSpan.TotalSeconds) < 1)
+                    dictionaryResults[result.Key.Name].Enqueue(new ResultContinuous(result.Value.Progress, timeSpan));
+                else
                 {
-                    // Gesture già presente 
-                    // Buffer non ancora pieno
-                    if (Math.Abs(dictionaryResults[result.Key.Name].Last().timeSpan.TotalSeconds - timeSpan.TotalSeconds) > 1)
-                        dictionaryResults[result.Key.Name].Enqueue(new ResultContinuous(result.Value.Progress, timeSpan));
-                    else
-                    {
-                        // Buffer pieno
-                        dictionaryResults[result.Key.Name].Dequeue();// Rimuovi il primo elemento
-                        dictionaryResults[result.Key.Name].Enqueue(new ResultContinuous(result.Value.Progress, timeSpan));// Inserisce ultimo elemento
-                    }
+                    // Buffer pieno
+                    dictionaryResults[result.Key.Name].Dequeue();// Rimuovi il primo elemento
+                    dictionaryResults[result.Key.Name].Enqueue(new ResultContinuous(result.Value.Progress, timeSpan));// Inserisce ultimo elemento
                 }
             }
         }
@@ -53,11 +49,10 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBu
         /// Restituisce l'ultimo FrameGestureBuilder ricevuto
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, ContinuousGestureResult> GetLastProgress()
+        public IReadOnlyDictionary<Microsoft.Kinect.VisualGestureBuilder.Gesture, ContinuousGestureResult> getLastestProgress()
         {
             return results;
         }
-
         /// <summary>
         /// Restituisce l'ultimo progresso relativo ad una determinata gesture. Se questa gesture non è presente nel dizionario, restituisce -1.
         /// </summary>
