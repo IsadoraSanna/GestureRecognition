@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Wrapper
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
-// Debug
-using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
+
+namespace Unica.Djestit.Feed
 {
     public class FeedbackComposite : FeedbackGroup
     {

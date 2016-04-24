@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Kinect
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
+namespace Unica.Djestit.Recognition.FrameDataManager
 {
     /// <summary>
     /// La Classe DepthData contiene le informazioni basilari tratte dal frame in arrivo sul sensore.

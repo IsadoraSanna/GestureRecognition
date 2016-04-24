@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 // Audio_Djestit
-using RecognitionGestureFeed_Universal.Gesture.Audio_Djestit;
-using RecognitionGestureFeed_Universal.Gesture;
-// Microsoft Speech
 using Microsoft.Speech.Recognition;
+using Unica.Djestit.Audio;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Audio
+namespace Unica.Djestit.Recognition.Audio
 {
     class AudioSensorInterface
     {

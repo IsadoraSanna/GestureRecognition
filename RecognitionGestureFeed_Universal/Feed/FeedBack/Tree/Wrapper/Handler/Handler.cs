@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Reflection
 using System.Reflection;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
-// Likelihood
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
+
+namespace Unica.Djestit.Feed
 {
     public class Handler : ICloneable, IComparable<Handler>
     {
@@ -25,16 +17,16 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
         // Funzione che gestisce la gesture
         public GestureEventHandler function { get; private set; }
         // Probabilità associata alla gesture
-        public Likelihood.Likelihood likelihood { get; internal set; }
+        public Likelihood likelihood { get; internal set; }
 
         /* Costruttore */
         public Handler(GestureEventHandler function, Term term, List<Modifies> listModifies)
         {
             // Probabilità
             if (term.GetType() != typeof(GroundTerm))
-                this.likelihood = new Likelihood.Likelihood((CompositeTerm)term, ProbabilityType.IndipendentEvents);
+                this.likelihood = new Likelihood ((CompositeTerm)term, ProbabilityType.IndipendentEvents);
             else
-                this.likelihood = new Likelihood.Likelihood(term.likelihood);
+                this.likelihood = new Likelihood (term.likelihood);
             // Lista dei Modifies del programma
             this.listModifies = new List<Modifies>();
             this.listModifies = listModifies;
@@ -128,9 +120,9 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler
             }
             // One is null
             if (this.likelihood != null)
-                return (this.likelihood.CompareTo(new Likelihood.Likelihood()));
+                return (this.likelihood.CompareTo(new Likelihood()));
             if (other.likelihood != null)
-                return (other.likelihood.CompareTo(new Likelihood.Likelihood()));
+                return (other.likelihood.CompareTo(new Likelihood()));
             // Default
             return (-1);
         }

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 // Leap Motion Library
 using Leap;
+using Unica.Djestit.Recognition.FrameDataManager;
 // LeapData
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
 
 // Debug
-using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Leap
+namespace Unica.Djestit.Recognition.Leap
 {
     public delegate void ListenerEvent(LeapData leapData);
 

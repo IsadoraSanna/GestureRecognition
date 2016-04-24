@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Kinect
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect
+namespace Unica.Djestit.Recognition.Kinect2
 {
     public class KinectSensorExtend
     {

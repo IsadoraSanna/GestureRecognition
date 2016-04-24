@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Leap Djestit
-using RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit;
-// LeapData
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
-// Leap 
-using Leap;
+﻿using Leap;
+using Unica.Djestit.Leap;
+using Unica.Djestit.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Leap
+namespace Unica.Djestit.Recognition.Leap
 {
     public class LeapSensorInterface
     {

@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 // Writable
 using System.Windows.Media;
 // Kinect
 using Microsoft.Kinect;
+using Unica.Djestit.Recognition.FrameDataManager;
 // RecognitionGestureFeed
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect
+namespace Unica.Djestit.Recognition.Kinect2
 {
     /// <summary>
     /// Delegate per gli eventi di tipo FrameManaged(tutti i tipi di frame, esclusi Audio e Body) e BodyManaged (quando vengono gestiti

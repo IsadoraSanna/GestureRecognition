@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 // Kinect 
 using Microsoft.Kinect;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
 // Xml
-using System.Xml;
-using System.Xml.XmlConfiguration;
 using System.Xml.Serialization;
 using System.IO;
-using System.Diagnostics;
+using Unica.Djestit.Recognition.Kinect2;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_XML
+namespace Unica.Djestit.Kinect2.XML
 {
     public class AddNewGestureXML
     {
         /* Attributi */
 
         /* Costruttore */
-        public AddNewGestureXML(String nameGesture, List<JointType> jointReg, Skeleton[] skeletonList, string path)
+        public AddNewGestureXML(String nameGesture, List<Microsoft.Kinect.JointType> jointReg, Skeleton[] skeletonList, string path)
         {
             // Inizializzo la nuova GestureXML che verrà inserita nel database
             GestureXML newGesture = new GestureXML();
@@ -36,7 +30,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_XML
             {
                 if (skeleton.getStatus())
                 {
-                    foreach (JointType jointType in jointReg)
+                    foreach (Microsoft.Kinect.JointType jointType in jointReg)
                     {
                         // Prendo dallo scheletro il joint che mi serve
                         jointI = (JointInformation) skeleton.getJointInformation(jointType).Clone();

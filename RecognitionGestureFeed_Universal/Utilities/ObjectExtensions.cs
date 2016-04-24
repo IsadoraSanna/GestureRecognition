@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // MemoryStream
 using System.Reflection;
 
-namespace RecognitionGestureFeed_Universal.Utilities
+namespace Unica.Utilities
 {
     public static class ObjectExtension
     {

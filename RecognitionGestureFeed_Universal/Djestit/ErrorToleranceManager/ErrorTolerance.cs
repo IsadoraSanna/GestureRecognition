@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager
+namespace Unica.Djestit.ErrorToleranceManager
 {
     /// <summary>
     /// Classe che descrive come e in che modo vengono tollerati gli errori nei movimenti dell'utente.

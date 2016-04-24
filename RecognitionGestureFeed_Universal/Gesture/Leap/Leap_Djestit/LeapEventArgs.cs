@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
+namespace Unica.Djestit.Leap
 {
     class LeapEventArgs : EventArgs
     {

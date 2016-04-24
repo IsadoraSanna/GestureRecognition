@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     public class Disabling : Choice
     {
         /* Costruttori */
+        public Disabling() : base() { }
         public Disabling(Term term) : base(term)
         {
         }

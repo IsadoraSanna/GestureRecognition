@@ -1,0 +1,6 @@
+﻿{
+  "choice": [
+      {{{dj k2GL.pan 'nome1'}}},
+      {{{dj k2GL.panLeft 'nome2'}}}
+  ]
+}

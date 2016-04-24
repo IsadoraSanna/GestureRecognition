@@ -1,11 +1,11 @@
-﻿using RecognitionGestureFeed_Universal.Djestit;
+﻿using Unica.Djestit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
+namespace Unica.Djestit.Kinect2
 {
     class SkeletonMove : GroundTerm
     {
@@ -14,7 +14,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
         public SkeletonMove(int id) : base()
         {
             this.id = id;
-            this.accepts = func_accepts;
+            this.Accepts = func_accepts;
         }
 
         public bool func_accepts(Token token)

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
+namespace Unica.Djestit.Audio
 {
     public class AudioStateSequence : StateSequence
     {

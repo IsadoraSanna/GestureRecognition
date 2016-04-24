@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // ErrorTolerance 
-using RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager;
+using Unica.Djestit.ErrorToleranceManager;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     /**
      * A composite expression of terms connected with the choice operator.
@@ -18,14 +18,17 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class Choice : CompositeTerm
     {
         /* Costruttori */
+        public Choice() : base()
+        {
+
+        }
         /// <summary>
         /// Prende in ingresso un singolo parametro.
         /// </summary>
         /// <param name="term"></param>
         public Choice(Term term) : base(term)
         {
-            this.children = new List<Term>();
-            this.children.Add(term);
+
         }
         /// <summary>
         /// Prende in ingresso un'intera lista.
@@ -33,8 +36,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         /// <param name="terms"></param>
         public Choice(List<Term> terms) : base(terms)
         {
-            this.children = new List<Term>();
-            this.children = terms;
+
         }
 
         /* Metodi */

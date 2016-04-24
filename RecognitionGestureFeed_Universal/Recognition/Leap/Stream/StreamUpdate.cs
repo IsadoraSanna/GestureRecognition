@@ -14,7 +14,7 @@ using System.Windows;
 // Leap
 using Leap;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Leap.Stream
+namespace Unica.Djestit.Recognition.Leap
 {
     public static class StreamUpdate
     {

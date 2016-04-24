@@ -2,18 +2,14 @@
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.IO;
 // Kinect
 using Microsoft.Kinect;
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
+using Unica.Djestit.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect.Stream
+namespace Unica.Djestit.Recognition.Kinect2
 {
     public static class StreamUpdate
     {

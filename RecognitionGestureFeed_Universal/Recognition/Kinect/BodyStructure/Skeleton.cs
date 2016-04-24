@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 // Kinect e Face
 using Microsoft.Kinect;
-using Microsoft.Kinect.Face;
 // Kinect Gesture
-using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder;
 // Draw
 using System.Windows.Media;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
+namespace Unica.Djestit.Recognition.Kinect2
 {
     public class Skeleton : ICloneable
     {

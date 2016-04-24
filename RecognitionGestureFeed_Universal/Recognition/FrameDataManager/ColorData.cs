@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 // Kinect
 using Microsoft.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
+namespace Unica.Djestit.Recognition.FrameDataManager
 {
     /// <summary>
     /// La classe ColorData contiene le informazioni basilari tratte dal ColorFrame.

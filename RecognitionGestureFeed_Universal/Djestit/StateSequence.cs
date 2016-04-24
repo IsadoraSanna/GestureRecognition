@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     public class StateSequence
     {

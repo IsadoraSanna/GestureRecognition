@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 // XML
 using System.Xml.Serialization;
 // Skeleton
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
+using Unica.Djestit.Recognition.Kinect2;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_XML
+namespace Unica.Djestit.Kinect2.XML
 {
     public class GestureDetectorXML
     {

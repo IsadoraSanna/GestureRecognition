@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
+namespace Unica.Djestit.Audio
 {
     using System;
     using System.IO;

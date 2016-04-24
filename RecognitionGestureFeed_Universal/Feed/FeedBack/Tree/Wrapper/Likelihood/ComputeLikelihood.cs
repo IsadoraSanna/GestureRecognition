@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
+namespace Unica.Djestit.Feed
 {
     public static class ComputeLikelihood
     {
@@ -38,26 +38,26 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
         {
             float tempLikelihood = 1;
 
-            if ((term.GetType() == typeof(Sequence)) || (term.GetType() == typeof(RecognitionGestureFeed_Universal.Djestit.Parallel)) || (term.GetType() == typeof(Disabling)))
+            if ((term.GetType() == typeof(Sequence)) || (term.GetType() == typeof(Unica.Djestit.Parallel)) || (term.GetType() == typeof(Disabling)))
             {
-                foreach (var child in term.children)
+                foreach (var child in term.Children())
                     tempLikelihood *= child.likelihood;
             }
             else if(term.GetType() == typeof(OrderIndependece))
             {
-                foreach (var child in term.children)
+                foreach (var child in term.Children())
                     tempLikelihood *= child.likelihood;
-                tempLikelihood *= term.children.Count;
+                tempLikelihood *= term.ChildrenCount();
             }
             else if(term.GetType() == typeof(Iterative))
             {
-                tempLikelihood = (float)Math.Pow(term.children[0].likelihood, n);
+                tempLikelihood = (float)Math.Pow(term.GetChild(0).likelihood, n);
             }
             else if(term.GetType() == typeof(Choice))
             {
                 List<float> list= new List<float>();
 
-                foreach (var child in term.children) 
+                foreach (var child in term.Children()) 
                     list.Add(child.likelihood);
 
                 tempLikelihood = list.Max();

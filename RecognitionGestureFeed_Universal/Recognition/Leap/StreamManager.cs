@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Diagnostic
+﻿// Diagnostic
 using System.Diagnostics;
 // Writable
 using System.Drawing;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-// Leap
-using Leap;
-// Stream
-using RecognitionGestureFeed_Universal.Recognition.Leap.Stream;
-// LeapData
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Leap
+
+namespace Unica.Djestit.Recognition.Leap
 {
     // Delegate dell'evento BitmapUpdate
     public delegate void BitmapUpdate(ImageSource bitmap);

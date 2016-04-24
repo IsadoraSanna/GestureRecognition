@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Skeleton
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
+using Unica.Djestit.Recognition.Kinect2;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
+namespace Unica.Djestit.Kinect2
 {
     public class SkeletonSensor : Sensor
     {

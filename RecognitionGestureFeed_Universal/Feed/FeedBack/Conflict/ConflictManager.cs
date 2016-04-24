@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Handler
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-// Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
+
+namespace Unica.Djestit.Feed
 {
     /// Costruisce una mappa degli oggetti in conflitto sia per le gesture parzialmente riconosciute in un dato momento,
     /// sia per tutte le funzioni associate alle varie gesture.
@@ -76,7 +69,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict
                 CompositeTerm exp = (CompositeTerm)term;
                 // Attraverso tutto l'albero e controllo se ogni term ha associata una funzione per 
                 // il suo completamento. Nel caso lo inserisco nel dizionario.
-                foreach (Term children in exp.children)
+                foreach (Term children in exp.Children())
                 {
                     visitTree(children);
                 }

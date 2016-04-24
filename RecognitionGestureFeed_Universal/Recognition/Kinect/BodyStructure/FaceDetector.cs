@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Kinect Face Recognition
 using Microsoft.Kinect.Face;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
+namespace Unica.Djestit.Recognition.Kinect2
 {
     public class FaceDetector
     {

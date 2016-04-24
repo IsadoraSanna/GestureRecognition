@@ -11,7 +11,7 @@ using System.Windows;
 // Vector3D
 using System.Windows.Media.Media3D;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
+namespace Unica.Djestit.Recognition.Kinect2
 {
     [Serializable()]
     public class JointInformationXML

@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 // Handler 
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-// Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+using Unica.Djestit.Feed;
 // Concurrency (Transazioni)
-using RecognitionGestureFeed_Universal.Concurrency;
+using Unica.Djestit.Concurrency;
 // Transazioni
 using System.Transactions;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     // Enum expressionState
     public enum expressionState
@@ -54,7 +48,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         // Conflict Manager (per gestire la possibilità di un errore durante l'esecuzione della gesture)
         public TransactionsManager transactionsManager = new TransactionsManager();
         // Nome del Term
-        public string name;
+        public string Name { get; set; }
 
         /* Metodi */
         /// <summary>

@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
-// FeedbackTree
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree;
+﻿using System.Collections.Generic;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack
+
+namespace Unica.Djestit.Feed
 {
     public class Feedback
     {

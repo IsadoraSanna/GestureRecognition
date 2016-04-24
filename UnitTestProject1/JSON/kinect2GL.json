@@ -1,0 +1,69 @@
+﻿{
+  "k2GL": {
+
+
+    "pan": {
+      "symmetric": true,
+      "sequence": [
+        {
+          "gt": "kinect2.skeleton.hand.closed"
+        },
+        {
+          "disabling": [
+            {
+              "gt": "kinect2.skeleton.hand",
+              "iterative": true
+            },
+            {
+              "gt": "kinect2.skeleton.hand.open"
+            }
+
+          ]
+        }
+      ]
+    },
+
+    "panLeft": {
+      "sequence": [
+        {
+          "gt": "kinect2.skeleton.handLeft.closed"
+        },
+        {
+          "disabling": [
+            {
+              "gt": "kinect2.skeleton.handLeft",
+              "iterative": true
+            },
+            {
+              "gt": "kinect2.skeleton.handLeft.open"
+            }
+
+          ]
+        }
+      ]
+    },
+
+    "panRight": {
+      
+      "sequence" : [
+        {
+          "gt": "kinect2.skeleton.handRight.closed"
+        },
+        {
+          "disabling": [
+            {
+              "gt": "kinect2.skeletonRight.hand",
+              "iterative": true
+            },
+            {
+              "gt": "kinect2.skeleton.handRight.open"
+            }
+
+          ]
+        }
+      ]
+    }
+
+
+  }
+}

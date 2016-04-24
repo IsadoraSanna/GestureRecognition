@@ -1,23 +1,12 @@
-﻿using System;
-using System.Windows;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Windows.Threading;
-// Add Kinect
+﻿// Add Kinect
 using Microsoft.Kinect;
 // Writable
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-// RGF
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-using RecognitionGestureFeed_Universal.Recognition.Kinect.Stream;
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
+using Unica.Djestit.Recognition.FrameDataManager;
+using Unica.Djestit.Recognition.Kinect2;
 
-
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect
+namespace Unica.Djestit.Recognition.Kinect2
 {
     /// <summary>
     /// 

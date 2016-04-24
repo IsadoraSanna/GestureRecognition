@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
+namespace Unica.Djestit.Kinect2
 {
     class SkeletonStart : GroundTerm
     {
@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
         public SkeletonStart(int id) : base()
         {
             this.id = id;
-            this.accepts = func_accepts;
+            this.Accepts = func_accepts;
         }
 
         /* Metodi */

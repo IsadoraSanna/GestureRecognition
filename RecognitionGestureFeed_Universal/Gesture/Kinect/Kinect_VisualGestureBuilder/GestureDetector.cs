@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 // Kinect Gesture
 using Microsoft.Kinect.VisualGestureBuilder;
+using Unica.Djestit.Recognition.Kinect2;
 // KinectSensorExtend
-using RecognitionGestureFeed_Universal.Recognition.Kinect;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder
+namespace Unica.Djestit.Kinect2.VisualGestureBuilder
 {
     public class GestureDetector
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Kinect Gesture
 using Microsoft.Kinect.VisualGestureBuilder;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder
+namespace Unica.Djestit.Kinect2.VisualGestureBuilder
 {
     public class GestureProgressContinuous : GestureProgress
     {

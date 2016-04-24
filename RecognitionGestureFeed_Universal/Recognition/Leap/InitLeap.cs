@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Leap Motion
 using Leap;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Leap
+namespace Unica.Djestit.Recognition.Leap
 {
     public class InitLeap
     {

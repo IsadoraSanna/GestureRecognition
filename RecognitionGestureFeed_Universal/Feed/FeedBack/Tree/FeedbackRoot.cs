@@ -1,26 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Wrapper
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
-// CustomAttributes
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
-// Handler
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-// Likelihood
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
-// Conflict Manager
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict;
-// TransactionsManager
-using RecognitionGestureFeed_Universal.Concurrency;
-// Debug
-using System.Diagnostics;
+﻿using System.Collections.Generic;
+using Unica.Djestit.Concurrency;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
+
+namespace Unica.Djestit.Feed
 {
     // Delegate per gli eventi legati al cambiamento di stato di una gesture
     public delegate void FeedbackRootEvent();
@@ -52,7 +34,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
             {
                 CompositeTerm compositeTerm = (CompositeTerm)term;
                 // Creo un FeedbackGroup per ogni sottocomponente di term e lo metto nella lista children
-                foreach (var child in compositeTerm.children)
+                foreach (var child in compositeTerm.Children())
                 {
                     // Lo aggiungo nella lista dei children
                     this.children.Add(createFeedbackGesture(child));

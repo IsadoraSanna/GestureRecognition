@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // GroundTerm
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
+namespace Unica.Djestit.Kinect2
 {
     class SkeletonEnd : GroundTerm
     {
@@ -17,7 +17,7 @@ namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit
         public SkeletonEnd(int id) : base()
         {
             this.id = id;
-            this.accepts = func_accepts;
+            this.Accepts = func_accepts;
         }
 
         public bool func_accepts(Token token)

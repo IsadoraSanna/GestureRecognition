@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 // Leap
 using Leap;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 // Copy
-using RecognitionGestureFeed_Universal.Utilities;
+using Unica.Utilities;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
+namespace Unica.Djestit.Leap
 {
     internal class LeapToken : Token
     {

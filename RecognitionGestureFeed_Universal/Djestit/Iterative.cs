@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     public class Iterative : CompositeTerm
     {
         /* Attributi */
         // Numero di iterazioni totali
-        int num_iteration;
+        public int Iterations { get; set; } 
         // Numero minimo di iterazioni richieste
         const int thresold_iteration = 2;
 
         /* Costruttori */
+        public Iterative() : base() { }
+        
         public Iterative(Term term) : base(term)
         {
             this.children = new List<Term>();
@@ -23,7 +25,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
 
         public Iterative(List<Term> terms) : base(terms)
         {
-            this.children = new List<Term>();
+            this.children.Clear();
             this.children.Add(terms.First());
         }
 
@@ -46,7 +48,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 return this.children[0].lookahead(token);
             else
             {
-                if (getErrorTolerance().numError < deltaError && num_iteration > thresold_iteration)
+                if (getErrorTolerance().numError < deltaError && Iterations > thresold_iteration)
                 {
                     getErrorTolerance().isError = true;
                     return true;
@@ -93,7 +95,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                 switch (this.children[0].state)
                 {
                     case expressionState.Error:
-                        this.num_iteration = 0;
+                        this.Iterations = 0;
                         this.error(token);
                         break;
                     case expressionState.Likely:
@@ -101,7 +103,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
                         this.complete(token);
                         break;
                     case expressionState.Complete:
-                        this.num_iteration++;
+                        this.Iterations++;
                         this.complete(token);                        
                         break;
                 }

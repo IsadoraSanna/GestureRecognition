@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 // XML
 using System.Xml;
-using System.Xml.Linq;
 // Memory Stream
 using System.IO;
 // Kinect
 using Microsoft.Kinect;
-// Audio Data
-using RecognitionGestureFeed_Universal.Recognition.FrameDataManager;
 // Speech Data
-using RecognitionGestureFeed_Universal.Gesture.Audio_Djestit;
+using Unica.Djestit.Audio;
 // Microsoft Speech Platform
 using Microsoft.Speech.AudioFormat;
 using Microsoft.Speech.Recognition;
+using Unica.Djestit.Recognition.FrameDataManager;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Audio
+namespace Unica.Djestit.Recognition.Audio
 {
     // Delegate event che indica quando viene gestito un frame di tipo audio  
     public delegate void AudioFrameManaged(AcquisitionManagerAudio sender);

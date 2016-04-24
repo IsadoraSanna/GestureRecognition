@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     // Delegate dell'evento che comunica la gestione di uno SkeletonToken
     public delegate void SensorEventHandler(object obj, EventArgs sender);

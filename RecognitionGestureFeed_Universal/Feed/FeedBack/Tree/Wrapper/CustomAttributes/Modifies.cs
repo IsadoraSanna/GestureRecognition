@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Reflection
 using System.Reflection;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes
+namespace Unica.Djestit.Feed
 {
     // 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 // Copy
-using RecognitionGestureFeed_Universal.Utilities;
+using Unica.Utilities;
 // Leap
 using Leap;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Leap.Leap_Djestit
+namespace Unica.Djestit.Leap
 {
     class LeapSensor : Sensor
     {

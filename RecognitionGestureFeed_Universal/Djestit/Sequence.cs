@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 // Debug
 using System.Diagnostics;
 
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     /// <summary>
     /// Descrive l'operatore Sequence di GestIT
@@ -14,14 +14,14 @@ namespace RecognitionGestureFeed_Universal.Djestit
     public class Sequence : CompositeTerm
     {
         /* Costruttori */
+        public Sequence() : base() { }
         /// <summary>
         /// Prende in ingresso un singolo parametro.
         /// </summary>
         /// <param name="terms"></param>
         public Sequence(Term term) : base(term)
         {
-            this.children = new List<Term>();
-            this.children.Add(term);
+
         }
         /// <summary>
         /// Prende in ingresso un'intera lista.
@@ -29,8 +29,7 @@ namespace RecognitionGestureFeed_Universal.Djestit
         /// <param name="terms"></param>
         public Sequence(List<Term> terms) : base(terms)
         {
-            this.children = new List<Term>();
-            this.children = terms;
+
         }
 
         /* Metodi */

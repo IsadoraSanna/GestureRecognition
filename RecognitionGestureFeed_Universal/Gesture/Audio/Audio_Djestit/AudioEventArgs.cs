@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Audio_Djestit
+namespace Unica.Djestit.Audio
 {
     public class AudioEventArgs : EventArgs
     {

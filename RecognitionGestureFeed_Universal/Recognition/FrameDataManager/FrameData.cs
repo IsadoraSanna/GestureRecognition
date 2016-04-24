@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Kinect;
 
 
-namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
+namespace Unica.Djestit.Recognition.FrameDataManager
 {
     /// <summary>
     /// La Classe astratta FrameData fornisce una prima definizione delle classi che descrivono

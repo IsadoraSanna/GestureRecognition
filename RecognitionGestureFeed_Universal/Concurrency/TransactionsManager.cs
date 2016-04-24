@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-// Debug
-using System.Diagnostics;
 // Gestione Transazioni
 using System.Transactions;
 // Modifies
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+using Unica.Djestit.Feed;
 // Handler
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
 
-namespace RecognitionGestureFeed_Universal.Concurrency
+namespace Unica.Djestit.Concurrency
 {
     /// <summary>
     ///

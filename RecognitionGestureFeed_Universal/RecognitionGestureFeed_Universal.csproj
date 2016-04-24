@@ -55,9 +55,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LeapCSharp.NET4.0, Version=2.3.1.0, Culture=neutral, PublicKeyToken=6e1b1368e71eba9b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Downloads\LeapCSharp.NET4.0.dll</HintPath>
+    <Reference Include="Handlebars, Version=1.0.0.0, Culture=neutral, PublicKeyToken=22225d0bf33cd661, processorArchitecture=MSIL">
+      <HintPath>..\packages\Handlebars.Net.1.6.4\lib\Handlebars.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LeapCSharp.NET4.0">
+      <HintPath>..\..\..\..\..\LeapSDK\lib\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />
@@ -66,6 +69,10 @@
     <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Speech\v11.0\Assembly\Microsoft.Speech.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -118,6 +125,8 @@
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioToken.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\KinectAudioStream.cs" />
     <Compile Include="Gesture\Audio\Audio_Djestit\AudioSensor.cs" />
+    <Compile Include="Gesture\Kinect\Kinect_Djestit\Token\HandStateTerm.cs" />
+    <Compile Include="Gesture\Kinect\Kinect_Djestit\Token\SkeletonJointTerm.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureProgress.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureProgressDiscrete.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\Result.cs" />
@@ -136,6 +145,11 @@
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapSensor.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapStateSequence.cs" />
     <Compile Include="Gesture\Leap\Leap_Djestit\LeapToken.cs" />
+    <Compile Include="JSON\CompositeTermFactory.cs" />
+    <Compile Include="JSON\InputTemplate.cs" />
+    <Compile Include="JSON\IEmitter.cs" />
+    <Compile Include="JSON\Kinect\KinectObjectEmitter.cs" />
+    <Compile Include="JSON\ObjectEmitter.cs" />
     <Compile Include="Recognition\Audio\AcquisitionManagerAudio.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureDetector.cs" />
     <Compile Include="Gesture\Kinect\Kinect_VisualGestureBuilder\GestureProgressContinuous.cs" />
@@ -171,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feed\FeedForward\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

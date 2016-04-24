@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 // Leap
 using Leap;
 // ObjectExtension
-using RecognitionGestureFeed_Universal.Utilities;
+using Unica.Utilities;
 
-namespace RecognitionGestureFeed_Universal.Recognition.FrameDataManager
+namespace Unica.Djestit.Recognition.FrameDataManager
 {
     public class LeapData : ICloneable
     {

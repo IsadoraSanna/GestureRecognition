@@ -1,31 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RecognitionGestureFeed_Universal;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-using RecognitionGestureFeed_Universal.Djestit.ErrorToleranceManager;
-// Gesture
-using RecognitionGestureFeed_Universal.Gesture;
-// Djestit Kinect
-using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit;
-// JointInformation
-using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
-// Recognition
-using RecognitionGestureFeed_Universal.Recognition;
-// Feedback
-using RecognitionGestureFeed_Universal.Feed.FeedBack;
-// Feedback Handler/Modifies/Likelihood
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
-// Kinect
-using Microsoft.Kinect;
-// Debug
+﻿using System.Collections.Generic;
+using Unica.Djestit;
+using Unica.Djestit.ErrorToleranceManager;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Unica.Djestit.Kinect2;
+using Unica.Djestit.Feed;
+using Unica.Djestit.Recognition.Kinect2;
 
 namespace UnitTestProject1
 {
@@ -52,7 +32,7 @@ namespace UnitTestProject1
             {
                 //
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
+                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Closed)
                 {
                     return true;
                 }
@@ -150,7 +130,7 @@ namespace UnitTestProject1
             if (token.GetType() == typeof(SkeletonToken))
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
-                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
+                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Open)
                     return true;
                 else
                     return false;
@@ -198,27 +178,27 @@ namespace UnitTestProject1
             /// Gesture
             // Start
             GroundTerm termx1 = new GroundTerm();
-            termx1.type = "Start";
-            termx1.accepts = close;
-            termx1.name = "GroundTerm CloseX";
+            termx1.Type = "Start";
+            termx1.Accepts = close;
+            termx1.Name = "GroundTerm CloseX";
             termx1.likelihood = 0.5f;//new Likelihood(0.01f);
             //termx1.setHandler(Close, porcoddio);
             //termx1.Complete += Close;
             //termx1.handler = new Handler(Close, termx1);
             // Move
             GroundTerm termx2 = new GroundTerm();
-            termx2.type = "Move";
-            termx2.accepts = moveX;
-            termx2.name = "GroundTerm MoveX";
+            termx2.Type = "Move";
+            termx2.Accepts = moveX;
+            termx2.Name = "GroundTerm MoveX";
             termx2.likelihood = 0.75f;//new Likelihood(0.02f);
             //termx2.setHandler(MoveX, porcoddio);
             //termx2.Complete += MoveX;
             //termx2.handler = new Handler(MoveX, termx2);
             // End
             GroundTerm termx3 = new GroundTerm();
-            termx3.type = "End";
-            termx3.accepts = open;
-            termx3.name = "GroundTerm OpenX";
+            termx3.Type = "End";
+            termx3.Accepts = open;
+            termx3.Name = "GroundTerm OpenX";
             termx3.likelihood = 0.5f;//new Likelihood(0.01f);
             //termx3.setHandler(Open, porcoddio);
             //termx3.Complete += Open;
@@ -238,7 +218,7 @@ namespace UnitTestProject1
             listTerm2.Add(disablingx);
             Sequence panX = new Sequence(listTerm2);
             panX.likelihood = ComputeLikelihood.indipendentEvents(panX); //new Likelihood(panX, ProbabilityType.IndipendentEvents);
-            panX.name = "PanX";
+            panX.Name = "PanX";
             //panX.setHandler(PanX, porcoddio);
             //panX.Complete += PanX;
             //panX.handler = new Handler(this.PanX, panX);// Handler
@@ -247,27 +227,27 @@ namespace UnitTestProject1
             /* Pan Asse Y */
             // Start
             GroundTerm termy1 = new GroundTerm();
-            termy1.type = "Start";
-            termy1.accepts = close;
-            termy1.name = "GroundTerm CloseY";
+            termy1.Type = "Start";
+            termy1.Accepts = close;
+            termy1.Name = "GroundTerm CloseY";
             termy1.likelihood = 0.5f;//new Likelihood(0.01f);
             //termy1.setHandler(Close, porcoddio);
             //termy1.Complete += Close;
             //termy1.handler = new Handler(Close, termy1, porcoddio);
             // Move
             GroundTerm termy2 = new GroundTerm();
-            termy2.type = "Move";
-            termy2.accepts = moveY;
-            termy2.name = "GroundTerm MoveY";
+            termy2.Type = "Move";
+            termy2.Accepts = moveY;
+            termy2.Name = "GroundTerm MoveY";
             termy2.likelihood = 0.75f;// new Likelihood(0.3f);
             //termy2.setHandler(MoveY, porcoddio);
             //termy2.Complete += MoveY;
             //termy2.handler = new Handler(MoveY, termy2, porcoddio);
             // End
             GroundTerm termy3 = new GroundTerm();
-            termy3.type = "End";
-            termy3.accepts = open;
-            termy3.name = "GroundTerm OpenY";
+            termy3.Type = "End";
+            termy3.Accepts = open;
+            termy3.Name = "GroundTerm OpenY";
             termy3.likelihood = 0.5f;// new Likelihood(0.01f);
             //termy3.setHandler(Open, porcoddio);
             //termy3.Complete += Open;
@@ -287,7 +267,7 @@ namespace UnitTestProject1
             listTermy2.Add(disablingy);
             Sequence panY = new Sequence(listTermy2);
             panY.likelihood = ComputeLikelihood.indipendentEvents(panY); //new Likelihood(panY, ProbabilityType.IndipendentEvents);
-            panY.name = "PanY";
+            panY.Name = "PanY";
             panY.setErrorTolerance(new ErrorTolerance());
             //panY.setHandler(PanY, porcoddio);
             //panY.Complete += PanY;

@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Djestit
-using RecognitionGestureFeed_Universal.Djestit;
-// Wrapper
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper;
-// Handler
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
-// Likelihood
-using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood;
-// Debug
-using System.Diagnostics;
 
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree
+
+namespace Unica.Djestit.Feed
 {
     /// Enum StateGroup: 
     /// Complete (la gesture è stata eseguita);

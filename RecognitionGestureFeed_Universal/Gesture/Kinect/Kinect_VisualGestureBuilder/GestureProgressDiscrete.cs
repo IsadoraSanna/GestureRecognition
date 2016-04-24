@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// Kinect Gesture
 using Microsoft.Kinect.VisualGestureBuilder;
 
-namespace RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_VisualGestureBuilder
+
+namespace Unica.Djestit.Kinect2.VisualGestureBuilder
 {
     public class GestureProgressDiscrete : GestureProgress
     {

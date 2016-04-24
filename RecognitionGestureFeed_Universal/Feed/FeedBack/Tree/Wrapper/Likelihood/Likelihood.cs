@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 // Djestit
-using RecognitionGestureFeed_Universal.Djestit;
+using Unica.Djestit;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
+namespace Unica.Djestit.Feed
 {
     // Enum che indica i diversi tipi di probabilità
     public enum ProbabilityType
@@ -78,16 +78,16 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
         {
             float tempLikelihood = 1;
 
-            if ((term.GetType() == typeof(Sequence)) || (term.GetType() == typeof(RecognitionGestureFeed_Universal.Djestit.Parallel)) || (term.GetType() == typeof(Disabling)))
+            if ((term.GetType() == typeof(Sequence)) || (term.GetType() == typeof(Unica.Djestit.Parallel)) || (term.GetType() == typeof(Disabling)))
             {
-                foreach (var child in term.children)
+                foreach (var child in term.Children())
                     tempLikelihood *= 0;// child.likelihood.probability;
             }
             else if(term.GetType() == typeof(OrderIndependece))
             {
-                foreach (var child in term.children)
+                foreach (var child in term.Children())
                     //term.likelihood.probability *= child.likelihood.probability;
-                    tempLikelihood *= term.children.Count;
+                    tempLikelihood *= term.ChildrenCount();
             }
             else if(term.GetType() == typeof(Iterative))
             {
@@ -97,7 +97,7 @@ namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Likelihood
             {
                 List<float> list= new List<float>();
 
-                foreach (var child in term.children) 
+                foreach (var child in term.Children()) 
                     list.Add(0);//child.likelihood.probability);
 
                 tempLikelihood = list.Max();

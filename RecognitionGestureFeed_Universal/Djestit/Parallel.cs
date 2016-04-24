@@ -12,20 +12,21 @@ using System.Threading.Tasks;
      * @returns {djestit.Parallel}
      * @extends djestit.CompositeTerm
      */
-namespace RecognitionGestureFeed_Universal.Djestit
+namespace Unica.Djestit
 {
     public class Parallel : CompositeTerm
     {
         // Costruttori
+        public Parallel() : base() { }
         public Parallel(Term term) : base(term)
         {
-            this.children.Clear();
-            this.children.Add(term);
+            //this.children.Clear();
+            //this.children.Add(term);
         }
         public Parallel(List<Term> terms) : base(terms)
         {
-            this.children.Clear();
-            this.children = terms;
+            //this.children.Clear();
+            //this.children = terms;
         }
 
         /*** Metodi ***/

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes
+namespace Unica.Djestit.Feed
 {
     /// Questa classe rappresenta le eccezioni che posso essere inviate a causa di operazioni non corrette
     /// su un oggetto di tipo modifies. 

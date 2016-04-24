@@ -8,7 +8,7 @@ using Microsoft.Kinect;
 // Vector3D
 using System.Windows.Media.Media3D;
 
-namespace RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure
+namespace Unica.Djestit.Recognition.Kinect2
 {
     /// <summary>
     /// La classe bone rappresenta un osso della classe scheletro

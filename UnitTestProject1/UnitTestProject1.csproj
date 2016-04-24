@@ -55,6 +55,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RecognitionGestureFeed_Universal">
       <HintPath>..\RecognitionGestureFeed_Universal\bin\x64\Debug\RecognitionGestureFeed_Universal.dll</HintPath>
     </Reference>
@@ -81,6 +85,12 @@
     <Compile Include="Test_Transaction.cs" />
     <Compile Include="DjestitTest.cs" />
     <Compile Include="Test_Modifies.cs" />
+    <Compile Include="JsonTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JSON\appGesture.txt" />
+    <None Include="JSON\kinect2GL.json" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
