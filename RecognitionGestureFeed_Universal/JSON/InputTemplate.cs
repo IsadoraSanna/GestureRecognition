@@ -7,7 +7,8 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using Unica.Djestit;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Unica.Djestit.JSON
 {
@@ -20,16 +21,18 @@ namespace Unica.Djestit.JSON
         private const string PARALLEL = "parallel";
         private const string ITERATIVE = "iterative";
         private const string GROUND = "gt";
-
         private const string ITERATIONS = "iterations";
+        private const int MAXREFS = 2;
 
-
+        private JObject current = null;
+        private Dictionary<JObject, List<ITermReference>> lookup;
         public string Template { get; set; }
         public List<string> Libs { get; internal set; }
 
         public InputTemplate()
         {
             Libs = new List<string>();
+            lookup = new Dictionary<JObject, List<ITermReference>>();
             Handlebars.RegisterHelper("dj", (writer, context, args) =>
             {
                 if (args.Length == 1)
@@ -81,14 +84,39 @@ namespace Unica.Djestit.JSON
         public ITermReference ParseDeclaration(string declarationFile, IEmitter emitter)
         {
             ITermReference t = null;
+            lookup.Clear();
             using (StreamReader jsonStream = File.OpenText(declarationFile))
             using (JsonTextReader jsonTextReader = new JsonTextReader(jsonStream))
             {
-                JObject current = (JObject)JToken.ReadFrom(jsonTextReader);
+                current = (JObject)JToken.ReadFrom(jsonTextReader);
                 t = this.ParseTerm(current, emitter);
             }
 
             return t;
+        }
+
+        public List<ITermReference> Resolve(string path)
+        {
+            string pattern = @"#[\w\d_\-]*";
+            StringBuilder jsonPath = new StringBuilder();
+            MatchCollection matches = Regex.Matches(path, pattern);
+            jsonPath.Append("$.");
+            int cursor = 0;
+            foreach (Match m in matches)
+            {
+                jsonPath.Append(path.Substring(cursor, m.Index - cursor));
+                jsonPath.Append("*[?(@.id == '").Append(m.ToString().Remove(0, 1)).Append("')]");
+                cursor = m.Index + m.Length;
+            }
+            var selected = current.SelectToken(jsonPath.ToString());
+            if(selected != null && selected is JObject)
+            {
+                JObject json = selected as JObject;
+                return lookup[json];
+            }
+
+            return null;
+
         }
 
         private ITermReference ParseTerm(JObject json, IEmitter emitter)
@@ -198,6 +226,7 @@ namespace Unica.Djestit.JSON
                 }
                 sym.AddChild(cleft);
                 sym.AddChild(cright);
+                AddReference(json, sym);
                 return sym;
             }
             else
@@ -215,11 +244,26 @@ namespace Unica.Djestit.JSON
                         if (json.Property("_right") != null) obj.Remove("_right");
                     }
                 }
-
+                AddReference(json, c);
                 return c;
             }
 
             
+        }
+
+        private void AddReference(JObject key, ITermReference value)
+        {
+            if (lookup.ContainsKey(key))
+            {
+                List<ITermReference> refs = lookup[key];
+                refs.Add(value);
+            }
+            else
+            {
+                List<ITermReference> refs = new List<ITermReference>(MAXREFS);
+                refs.Add(value);
+                lookup.Add(key, refs);
+            }
         }
 
         private ITermReference ParseGroundTerm(JObject json, IEmitter emitter)
