@@ -45,7 +45,7 @@ namespace Unica.Djestit
         public List<Handler> ErrorHandlers = new List<Handler>();
         // Puntatore al padre
         internal CompositeTerm pointFather = null;
-        // Conflict Manager (per gestire la possibilità di un errore durante l'esecuzione della gesture)
+        // TransactionManager
         public TransactionsManager transactionsManager = new TransactionsManager();
         // Nome del Term
         public string Name { get; set; }
@@ -188,12 +188,6 @@ namespace Unica.Djestit
         /// Setta la funzione Complete del term e provvede a crearne l'handler.
         /// </summary>
         /// <param name="func"></param>
-        /// <param name="listModifies"></param>
-        public virtual void setCompleteHandler(GestureEventHandler func, List<Modifies> listModifies)
-        {
-            Complete += func;
-            CompleteHandlers.Add(new Handler(func, this, listModifies));
-        }
         public virtual void setCompleteHandler(GestureEventHandler func)
         {
             Complete += func;
@@ -216,7 +210,7 @@ namespace Unica.Djestit
                     using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
                     {
                         //transactionsManager.onTransactionExcute(handler.elementList);
-                        transactionsManager.onTransactionExcute(handler.listModifies, handler.elementList);
+                        transactionsManager.onTransactionExcute(Feedback.listModifies, handler.elementList);
                         // Da l'ok per completare la transizione.
                         scope.Complete();
                     }
@@ -229,12 +223,6 @@ namespace Unica.Djestit
         /// Setta la funzione Error del term e provvede a crearne l'handler.
         /// </summary>
         /// <param name="func"></param>
-        /// <param name="listModifies"></param>
-        public virtual void setErrorHandler(GestureEventHandler func, List<Modifies> listModifies)
-        {
-            Error += func;
-            ErrorHandlers.Add(new Handler(func, this, listModifies));
-        }
         public virtual void setErrorHandler(GestureEventHandler func)
         {
             Error += func;

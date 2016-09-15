@@ -80,11 +80,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Djestit_Skeleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test_Transaction.cs" />
-    <Compile Include="DjestitTest.cs" />
-    <Compile Include="Test_Modifies.cs" />
     <Compile Include="JsonTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace Unica.Djestit.Kinect2
             this.JointType = type;
         }
 
-        protected override bool _Accepts(Token token)
+        public override bool _accepts(Token token)
         {
             if (token.GetType() == typeof(SkeletonToken))
             {

@@ -34,11 +34,9 @@ namespace Unica.Djestit.Recognition.Kinect2
 
         /* Attributi */
         private static AcquisitionManager singleton = null;
-        // Variabile usata per la comunicazione con la kinect
-        public KinectSensorExtend kinectSensorExtend = null;
         // Numero massimo di scheletri gestibili contemporaneamente
         internal int numSkeletons;
-        //private IList<Body> bodyList; // Lista di Body
+        // Lista di Body
         internal Body[] bodyList = null;
         // Array che contiene gli n_max_skeleton rilevati dalla kinect 
         public Skeleton[] skeletonList;
@@ -74,38 +72,38 @@ namespace Unica.Djestit.Recognition.Kinect2
         private AcquisitionManager(FrameSourceTypes enabledFrameSourceTypes, [Optional] KinectSensorExtend sensor)
         {
             // Inizializzazione sensore e struttura dati scheletro
-            Inizialize(sensor);
+            Inizialize();
 
             /* Inizializzazione Array frameData e ImageSource */
             // Inizializza l'oggetto bodyIndexData
-            FrameDescription bodyIndexFrameDescription = kinectSensorExtend.getKinectSensor().BodyIndexFrameSource.FrameDescription;
+            FrameDescription bodyIndexFrameDescription = KinectSensorExtend.getSensor().BodyIndexFrameSource.FrameDescription;
             bodyIndexData = new BodyIndexData(bodyIndexFrameDescription);
             // Inizializza l'oggetto depthData
-            FrameDescription depthFrameDescription = kinectSensorExtend.getKinectSensor().DepthFrameSource.FrameDescription;
+            FrameDescription depthFrameDescription = KinectSensorExtend.getSensor().DepthFrameSource.FrameDescription;
             this.depthData = new DepthData(depthFrameDescription);
             // Inizializza l'oggetto InfraredData
-            FrameDescription infraredFrameDescription = kinectSensorExtend.getKinectSensor().InfraredFrameSource.FrameDescription;
+            FrameDescription infraredFrameDescription = KinectSensorExtend.getSensor().InfraredFrameSource.FrameDescription;
             this.infraredData = new InfraredData(infraredFrameDescription);
             // Inizializza l'oggetto ColorData
-            FrameDescription colorFrameDescription = kinectSensorExtend.getKinectSensor().ColorFrameSource.FrameDescription;
+            FrameDescription colorFrameDescription = KinectSensorExtend.getSensor().ColorFrameSource.FrameDescription;
             this.colorData = new ColorData(colorFrameDescription);
             // Inizializza l'oggetto LongExposureData
-            FrameDescription longExposureFrameDescription = kinectSensorExtend.getKinectSensor().LongExposureInfraredFrameSource.FrameDescription;
+            FrameDescription longExposureFrameDescription = KinectSensorExtend.getSensor().LongExposureInfraredFrameSource.FrameDescription;
             this.longExposureInfraredData = new LongExposureInfraredData(longExposureFrameDescription);
             // Controlla se sono stati attivati tutti i tipi di FrameSource
             if (enabledFrameSourceTypes.Equals(FrameSourceTypes.Body | FrameSourceTypes.BodyIndex | FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Infrared | FrameSourceTypes.LongExposureInfrared))
                 this.allFrames = true;
             // Attivo il lettore di multiframe
-            this.multiSourceFrameReader = kinectSensorExtend.getKinectSensor().OpenMultiSourceFrameReader(enabledFrameSourceTypes);
+            this.multiSourceFrameReader = KinectSensorExtend.getSensor().OpenMultiSourceFrameReader(enabledFrameSourceTypes);
             // e vi associo il relativo handler
             this.multiSourceFrameReader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
         }
         private AcquisitionManager([Optional] KinectSensorExtend sensor)
         {
-            Inizialize(sensor);
+            Inizialize();
             
             // Attiva il lettore dei BodyFrame che verrano inviati dal dispositivo
-            this.bodyFrameReader = kinectSensorExtend.getKinectSensor().BodyFrameSource.OpenReader();
+            this.bodyFrameReader = KinectSensorExtend.getSensor().BodyFrameSource.OpenReader();
             this.bodyFrameReader.FrameArrived += Reader_BodyFrameArrived;
         }
 
@@ -114,15 +112,10 @@ namespace Unica.Djestit.Recognition.Kinect2
         /// Inizializza il sensore e le strutture dati che conterranno gli scheletri.
         /// </summary>
         /// <param name="sensor"></param>
-        private void Inizialize([Optional] KinectSensorExtend sensor)
+        private void Inizialize()
         {
-            if (sensor == null)
-                kinectSensorExtend = KinectSensorExtend.Instance;
-            else
-                kinectSensorExtend = sensor;
-
             // Numero massimo di scheletri gestibili
-            this.numSkeletons = kinectSensorExtend.getKinectSensor().BodyFrameSource.BodyCount;
+            this.numSkeletons = KinectSensorExtend.getSensor().BodyFrameSource.BodyCount;
             // Iniziliazza l'array di skeleton
             this.skeletonList = new Skeleton[this.numSkeletons];
             for (int index = 0; index < this.numSkeletons; index++)
@@ -132,7 +125,7 @@ namespace Unica.Djestit.Recognition.Kinect2
             }
             // Creo tanti elementi in bodyList quanti sono i body presenti nel frame
             if (this.bodyList == null)
-                this.bodyList = new Body[kinectSensorExtend.getKinectSensor().BodyFrameSource.BodyCount];
+                this.bodyList = new Body[KinectSensorExtend.getSensor().BodyFrameSource.BodyCount];
         }
 
         /// <summary>
@@ -279,7 +272,7 @@ namespace Unica.Djestit.Recognition.Kinect2
             if (bodyFrameReader != null)
                 bodyFrameReader.FrameArrived -= Reader_BodyFrameArrived;
 
-            this.kinectSensorExtend.Close();
+            KinectSensorExtend.Close();
         }
 
         #region Events

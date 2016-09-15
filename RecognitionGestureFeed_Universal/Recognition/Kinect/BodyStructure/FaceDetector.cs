@@ -29,13 +29,13 @@ namespace Unica.Djestit.Recognition.Kinect2
         {
             // Inizializzo il FaceFrameSource, specificando quali sono le espressioni che voglio riconoscere (per ora tutte)
             FaceFrameFeatures faceFrameFeatures = FaceFrameFeatures.BoundingBoxInColorSpace | FaceFrameFeatures.PointsInColorSpace | FaceFrameFeatures.RotationOrientation | FaceFrameFeatures.FaceEngagement | FaceFrameFeatures.Glasses | FaceFrameFeatures.Happy | FaceFrameFeatures.LeftEyeClosed | FaceFrameFeatures.RightEyeClosed | FaceFrameFeatures.LookingAway | FaceFrameFeatures.MouthMoved | FaceFrameFeatures.MouthOpen;
-            this.faceFrameSource = new FaceFrameSource(AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor(), 0, faceFrameFeatures);
+            this.faceFrameSource = new FaceFrameSource(KinectSensorExtend.getSensor(), 0, faceFrameFeatures);
             // Inizializzo il FaceFrameReader e associo l'handler all'evento FrameArrived di FaceFrame
             this.faceFrameReader = this.faceFrameSource.OpenReader();
             this.faceFrameReader.FrameArrived += this.Reader_FaceFrameArrived;
             this.faceFrameResults = null;
             // Inizializzo l'HighDefinitionFaceFrameSource per l'acquisizione dei dati in hd del viso
-            this.highDefinitionFaceFrameSource = new HighDefinitionFaceFrameSource(AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor());
+            this.highDefinitionFaceFrameSource = new HighDefinitionFaceFrameSource(KinectSensorExtend.getSensor());
             // Inizializzo l'HighDefinitionFaceFrameReader e associo l'handler all'evento FrameArrived di HighDefinitionFaceFrame
             this.highDefinitionFaceFrameReader = this.highDefinitionFaceFrameSource.OpenReader();
             this.highDefinitionFaceFrameReader.FrameArrived += this.HdFaceReader_FrameArrived;

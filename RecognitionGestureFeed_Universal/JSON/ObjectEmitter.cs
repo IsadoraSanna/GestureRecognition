@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Unica.Djestit;
+using System.Reflection;
 
 namespace Unica.Djestit.JSON
 {
@@ -60,19 +57,10 @@ namespace Unica.Djestit.JSON
 
             }
 
-
-
             if (c != null)
             {
-                if(args != null)
-                {
-                    if (args.ContainsKey("name"))
-                    {
-                        c.Name = (string)args["name"];
-                    }
-
-                    
-                }
+                fillProperties(c, args);
+                fillCompositeProperties(c, args);
                 return new ObjectTerm(c);
             }
             
@@ -93,6 +81,7 @@ namespace Unica.Djestit.JSON
                     gt = gte.EmitGroundTerm(declaration, args);
                     GroundTerm g = (gt as ObjectTerm).Ground;
                     fillProperties(g, args);
+                    fillGroundProperties(g, args);
                 }
             }
 
@@ -104,14 +93,65 @@ namespace Unica.Djestit.JSON
             groundTermEmitters.Add(prefix, emitter);
         }
 
-        private void fillProperties(GroundTerm g, Dictionary<string, object> args)
+        /// <summary>
+        /// Assegna i diversi attributi al term in soggetto.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="args"></param>
+        private void fillProperties(Term term, Dictionary<string, object> args)
         {
+            // Id
             if (args.ContainsKey("id"))
             {
-                g.Name = args["id"].ToString();
+                term.Name = args["id"].ToString();
             }
-
-            // TODO gestire gli accepts
+            // Complete Handler
+            if (args.ContainsKey("complete_handler") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["complete_handler"].ToString()))
+            {
+                term.setCompleteHandler(Delegate.CreateDelegate(typeof(GestureEventHandler), 
+                    (MethodInfo)GestureLibrary.dictionary_handler_accept[args["complete_handler"].ToString()]) as GestureEventHandler);
+            }
+            // Error Handler
+            if (args.ContainsKey("error_handler") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["error_handler"].ToString()))
+            {
+                term.setErrorHandler(Delegate.CreateDelegate(typeof(GestureEventHandler), (MethodInfo)GestureLibrary.dictionary_handler_accept[args["error_handler"].ToString()]) as GestureEventHandler);
+            }
+        }
+        /// <summary>
+        /// Assegna i diversi attributi propri del composite term.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="args"></param>
+        private void fillCompositeProperties(CompositeTerm c, Dictionary<string, object>args)
+        {
+            if(args.ContainsKey("error_tolerance") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["error_tolerance"].ToString()))
+            {
+                c.setErrorTolerance();
+            }
+        }
+        /// <summary>
+        /// Assegna i diversi attributi propri del ground term.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="args"></param>
+        private void fillGroundProperties(GroundTerm g, Dictionary<string, object> args)
+        {
+            // Accepts
+            if (args.ContainsKey("accepts") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["accepts"].ToString()))
+            {
+                g.Accepts = (Delegate.CreateDelegate(typeof(Accepts<Token>),
+                    (MethodInfo)GestureLibrary.dictionary_handler_accept[args["accepts"].ToString()]) as Accepts<Token>);
+            }
+            if (args.ContainsKey("_accepts") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["_accepts"].ToString()))
+            {
+                g._Accepts = (Delegate.CreateDelegate(typeof(Accepts<Token>),
+                    (MethodInfo)GestureLibrary.dictionary_handler_accept[args["_accepts"].ToString()]) as Accepts<Token>);
+            }
+            // Likelihood
+            if (args.ContainsKey("likelihood") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["likelihood"].ToString()) )
+            {
+                g.likelihood = Convert.ToSingle(GestureLibrary.dictionary_handler_accept[args["likelihood"].ToString()]);
+            }
         }
     }
 
@@ -141,8 +181,7 @@ namespace Unica.Djestit.JSON
             if (Composite == null)
                 throw new ArgumentException("this reference represents a ground term");
             ObjectTerm t = child as ObjectTerm;
-            Composite.AddChild(t.GetTerm());
-            
+            Composite.AddChild(t.GetTerm());            
         }
     }
 

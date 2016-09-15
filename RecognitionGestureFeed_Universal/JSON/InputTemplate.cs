@@ -8,10 +8,55 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Text;
+// Optional Parameters
+using System.Runtime.InteropServices;
 
 namespace Unica.Djestit.JSON
 {
+    /// <summary>
+    /// Fornisce i metodi necessari per la creazione di una libreria di gesture a partire da un file json.
+    /// </summary>
+    public static class GestureLibrary
+    {
+        /* Attributi */
+        public static Dictionary<string, object> dictionary_handler_accept { get; private set; }
+
+        /* Metodi */ 
+        /// <summary>
+        /// A partire dalla libreria di gesture in input crea e restituisce le gesture definite nel file path_template.
+        /// </summary>
+        /// <param name="path_template">Path file template .txt</param>
+        /// <param name="path_library">Path file library .json</param>
+        /// <param name="prefix">Prefisso</param>
+        /// /// <param name="object_emitter">Tipo di emettitore</param>
+        /// <returns></returns>
+        public static ObjectTerm createGesture(string path_template, string path_library, string prefix, string object_emitter, 
+            [Optional] Dictionary<string, object> dictionary)
+        {
+            // Template
+            InputTemplate template = new InputTemplate();
+            template.Template = path_template;
+            template.Libs.Add(path_library);
+            // File temporaneo
+            string current = @"handlebars.json";
+            File.Create(current).Close();
+            // ObjectEmitter
+            ObjectEmitter emitter = new ObjectEmitter();
+            // Espressione - Albero
+            emitter.RegisterGroundTermEmitter(prefix, (IGroundTermEmitter)Activator.CreateInstance(null, object_emitter).Unwrap());
+            // Lista delle gesture selezionate
+            template.GenerateGestureDefinition(current);
+            // Generazione dei term che descrivono la gesture
+            dictionary_handler_accept = dictionary;
+            ITermReference term = template.ParseDeclaration(current, emitter);
+            // Cancella il file temporaneo
+            File.Delete(current);
+            
+
+            return (term as ObjectTerm);
+        }
+    }
+
     public class InputTemplate
     {
         private const string SEQUENCE = "sequence";
@@ -53,7 +98,6 @@ namespace Unica.Djestit.JSON
             });
 
         }
-
 
         public bool GenerateGestureDefinition(string targetFile)
         {
@@ -292,9 +336,5 @@ namespace Unica.Djestit.JSON
             Debug.WriteLine(libs);
             return libs;
         }
-
-
-
-
     }
 }

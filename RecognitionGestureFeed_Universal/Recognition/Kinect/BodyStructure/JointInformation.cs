@@ -18,7 +18,7 @@ namespace Unica.Djestit.Recognition.Kinect2
     {
         /* Attributi */
         public ulong idBody { get; set; }
-        public JointType type { get; set; }
+        public JointType Type { get; set; }
         public CameraSpacePoint position { get; set; }
         public Vector4 orientation { get; set; }
         public TrackingState status { get; set; }
@@ -38,7 +38,7 @@ namespace Unica.Djestit.Recognition.Kinect2
         public void fromJointInformation(JointInformation jointInformation)
         {
             this.idBody = jointInformation.getId();
-            this.type = jointInformation.getType();
+            this.Type = jointInformation.getType();
             this.position = jointInformation.getPosition();
             this.orientation = jointInformation.getOrientation();
             this.status = jointInformation.getStatus();
@@ -51,15 +51,15 @@ namespace Unica.Djestit.Recognition.Kinect2
     public class JointInformation : ICloneable
     {
         /// <summary>
-        /// - idBody: ID legato alla Joints (equivale ai values di https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx)
-        /// - type: Indica il jointType a cui fa riferimento il joint
+        /// - idBody: ID legato alla Joints (equivale ai values di https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointType.aspx)
+        /// - Type: Indica il jointType a cui fa riferimento il joint
         /// - joint: l'oggetto Joint vero e proprio (che contiene coordinate x,y,z)
         /// - position: le coordinate della posizione del joint
         /// - orientation: indica l'orientamento del joint
         /// - status: se il sensore non rileva il joint in questione, allora questo viene posto come false, viceversa se vi sono dei dati disponibili viene posto a true
         ///</summary>
         public ulong idBody { get; set; }
-        public JointType type { get; set; }
+        public JointType Type { get; set; }
         public Joint joint { get; set; }
         public CameraSpacePoint position { get; set; }
         public Vector4 orientation { get; set; }
@@ -78,7 +78,7 @@ namespace Unica.Djestit.Recognition.Kinect2
         public JointInformation(ulong idBody, Joint joint, Vector4 orientation, int idSkeleton)
         {
             this.idBody = idBody;
-            this.type = joint.JointType;
+            this.Type = joint.JointType;
             this.joint = joint;
             this.position = joint.Position;
             this.orientation = orientation; 
@@ -165,7 +165,7 @@ namespace Unica.Djestit.Recognition.Kinect2
         // Restituisce il JointType
         public JointType getType()
         {
-            return this.type;
+            return this.Type;
         }
         /// <summary>
         /// Restituisce il CameraSpacePoint costruito sulle coordinate X e Y del joint

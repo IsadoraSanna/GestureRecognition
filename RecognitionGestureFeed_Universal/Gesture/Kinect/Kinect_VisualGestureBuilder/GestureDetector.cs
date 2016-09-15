@@ -31,7 +31,7 @@ namespace Unica.Djestit.Kinect2.VisualGestureBuilder
                 throw new Exception("Database don't Exist");
 
             // Attiva il FrameSource
-            this.vgbFrameSource = new VisualGestureBuilderFrameSource(AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor(), skeletonId);
+            this.vgbFrameSource = new VisualGestureBuilderFrameSource(KinectSensorExtend.getSensor(), skeletonId);
             // Attiva il reader per i VisualGestureBuilder frame
             this.vgbFrameReader = this.vgbFrameSource.OpenReader();
             if (this.vgbFrameReader != null)

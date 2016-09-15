@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// Djestit
-using Unica.Djestit;
+using System.Runtime.InteropServices;
 // JointInformation
 using Unica.Djestit.Recognition.Kinect2;
 
@@ -17,6 +16,8 @@ namespace Unica.Djestit.Kinect2
         protected SkeletonSensor sensor;
         // Capacità del buffer
         protected int capacity = 5;
+        // Singleton
+        private static KinectSensorInterface singleton = null;
 
         /* Costruttore */
         /// <summary>
@@ -24,7 +25,7 @@ namespace Unica.Djestit.Kinect2
         /// </summary>
         /// <param name="acquisitionManager"></param>
         /// <param name="expression"></param>
-        public KinectSensorInterface(Term expression)
+        private KinectSensorInterface(Term expression)
         {
             // Associa all'evento SkeletonsFrameManaged il relativo handler.
             AcquisitionManager.getInstance().SkeletonsFrameManaged += updateSkeleton;
@@ -32,12 +33,23 @@ namespace Unica.Djestit.Kinect2
             // Inizializza la variabile KinectSensor
             sensorDefine(expression);
         }
-        public KinectSensorInterface()
-        {
-
-        }
 
         /* Metodi */
+        /// <summary>
+        /// Implementazione Singleton.
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static KinectSensorInterface getInstance([Optional] Term expression)
+        {
+            if (singleton == null)
+            {
+                return singleton = new KinectSensorInterface(expression);
+            }
+            else
+                return singleton;
+        }
+
         /// <summary>
         /// Assegna al sensore la lista delle gesture da riconoscere.
         /// </summary>

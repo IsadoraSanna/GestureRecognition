@@ -1,10 +1,26 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using System.Collections.Generic;
+// Thread
+using System.Threading;
+using System.ComponentModel;
+// Reflection
+using System.Reflection;
+// Debug
 using System.Diagnostics;
-using Unica.Djestit;
+// Djestit
+using RecognitionGestureFeed_Universal.Djestit;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Conflict
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Conflict;
+// Gestione Transazioni
+using RecognitionGestureFeed_Universal.Concurrency;
+// database
 using System.Transactions;
-using Unica.Djestit.Feed;
-using Unica.Djestit.Concurrency;
 
 namespace UnitTestProject1
 {
@@ -23,17 +39,17 @@ namespace UnitTestProject1
         {
             // Creo due gesture
             termA = new GroundTerm();
-            termA.Type = "Start";
-            termA.Accepts = closeA;
-            termA.Name = "GroundTerm CloseA";
+            termA.type = "Start";
+            termA.accepts = closeA;
+            termA.name = "GroundTerm CloseA";
             termA.likelihood = 0.5f;
             termA.Complete += completeA;
             //termA.handler = new Handler(completeA, termA);
             termB = new GroundTerm();
-            termB.Type = "Start";
-            termB.Accepts = closeB;
+            termB.type = "Start";
+            termB.accepts = closeB;
             termB.likelihood = 0.6f;
-            termB.Name = "GroundTerm CloseB";
+            termB.name = "GroundTerm CloseB";
             termB.Complete += completeB;
             //termB.handler = new Handler(this.completeB, termB);
             // Choice

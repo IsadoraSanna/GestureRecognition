@@ -58,7 +58,7 @@ namespace Unica.Djestit.Feed
             // Inizializza la stato del Nodo a Default
             this.state = StateGroup.Default;
             // Associa al FeedbackGroup l'handler associato term (se questo non è nullo)
-            if (term.CompleteHandlers != null)
+            if (term.CompleteHandlers != null && term.CompleteHandlers.Count > 0)
             {
                 this.handler = term.CompleteHandlers.First();
                 //this.handler.likelihood = term.likelihood;

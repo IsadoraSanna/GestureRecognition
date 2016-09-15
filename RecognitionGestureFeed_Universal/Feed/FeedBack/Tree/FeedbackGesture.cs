@@ -67,7 +67,7 @@ namespace Unica.Djestit.Feed
         public List<FeedbackLeaf> create(Term term)
         {
             // Se il Term in oggetto è un CompositeTerm, allora continuo ad attraversare l'albero
-            if (term.GetType() != typeof(GroundTerm))
+            if (!(term is GroundTerm))
             {
                 // Casto il Composite Term
                 CompositeTerm compositeTerm = (CompositeTerm)term;

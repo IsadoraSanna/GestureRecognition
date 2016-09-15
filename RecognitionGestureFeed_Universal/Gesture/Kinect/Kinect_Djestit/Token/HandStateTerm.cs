@@ -22,7 +22,7 @@ namespace Unica.Djestit.Kinect2
             
         }
 
-        protected override bool _Accepts(Token token)
+        public override bool _accepts(Token token)
         {
             SkeletonToken sk = token as SkeletonToken;
             if (this.SkeletonId != null && sk.identifier == this.SkeletonId)

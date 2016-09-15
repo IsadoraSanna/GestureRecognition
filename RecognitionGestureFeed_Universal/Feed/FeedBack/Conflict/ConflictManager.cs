@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Runtime.InteropServices;
 
 namespace Unica.Djestit.Feed
 {
@@ -22,9 +22,27 @@ namespace Unica.Djestit.Feed
         private List<Modifies> listDistinct = new List<Modifies>();
         // Lista degli attributi in conflitto
         private List<Modifies> listConflict = new List<Modifies>();
+        // Singleton
+        private static ConflictManager singleton = null;
 
-        /* Costruttore */
-        /// Attraverso l'albero delle gesture, e raccolgo per ognuno la lista di oggetti che modificano a tempo 
+        /* Costruttore */  
+        /// <summary>
+        /// Singleton.
+        /// </summary>
+        /// <param name="elem"></param>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        public static ConflictManager getInstance([Optional] Term term)
+        {
+            if (singleton == null)
+            {
+                singleton = new ConflictManager(term);
+            }
+
+            return singleton;
+        }
+
+        /*// Attraverso l'albero delle gesture e raccolgo per ognuno la lista di oggetti che modificano a tempo 
         /// di esecuzione. Questi dati verranno salvati in un dizionario riportando per ogni term, con una funzione
         /// associata al suo campo CompleteExecute, l'elenco delle variabili su cui agiscono.
         /// Inoltre dalla funzione ottengo anche l'elenco di tutti i modifies che il programma modifica
@@ -41,8 +59,14 @@ namespace Unica.Djestit.Feed
             visitTree(term);
             // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
             determineConflict();
-        }
-        public ConflictManager(List<Modifies> list, Term term)
+        }*/
+        /// <summary>
+        /// Attraverso l'albero delle gesture e raccolgo per ognuno la lista di oggetti che modificano a tempo 
+        /// di esecuzione. Questi dati verranno salvati in un dizionario riportando per ogni term, con una funzione
+        /// associata al suo campo CompleteExecute, l'elenco delle variabili su cui agiscono.
+        /// </summary>
+        /// <param name="term"></param>
+        private ConflictManager(Term term)
         {
             // Inizializzazione liste
             listModifies = new List<Modifies>();
@@ -50,7 +74,7 @@ namespace Unica.Djestit.Feed
             mapConflicts = new Dictionary<Handler, List<Modifies>>();
             mapConflictExec = new Dictionary<Handler, List<Modifies>>();
             // Inizializza la lista degli attributi del programma
-            listModifies = list;
+            listModifies = Feedback.listModifies;
             // Costruisce la map che riporta per ogni funzione la sua lista di modifies
             visitTree(term);
             // Costruisce la map che riporta per ogni funzione la lista di modifies in conflitto con le altre funzioni
@@ -63,7 +87,7 @@ namespace Unica.Djestit.Feed
         {
             // Attraverso l'albero, quindi controllo innanzittutto se il term passato in input è
             // un ground term o composite term
-            if (term.GetType() != typeof(GroundTerm))
+            if (!(term is GroundTerm))
             {
                 // Casto il term in Composite Term
                 CompositeTerm exp = (CompositeTerm)term;

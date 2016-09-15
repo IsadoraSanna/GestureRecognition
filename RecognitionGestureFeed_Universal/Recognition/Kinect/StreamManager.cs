@@ -313,7 +313,7 @@ namespace Unica.Djestit.Recognition.Kinect2
         {
             skeletonBitmap = new DrawingImage(drawingGroup);
             // Prendo dalla variabile kinectSensor, il CoordinateMapper che verrà usata per la stampa degli scheletri
-            coordinateMapper = AcquisitionManager.getInstance().kinectSensorExtend.getKinectSensor().CoordinateMapper;
+            coordinateMapper = KinectSensorExtend.getSensor().CoordinateMapper;
         }
         #endregion Init Stream
 

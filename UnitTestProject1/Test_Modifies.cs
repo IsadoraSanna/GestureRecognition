@@ -1,7 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Collections.Generic;
-using Unica.Djestit.Feed;
+using System.Diagnostics;
+//
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+
 
 namespace UnitTestProject1
 {

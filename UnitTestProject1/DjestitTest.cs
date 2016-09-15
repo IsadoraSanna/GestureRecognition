@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 // Debug
 using System.Diagnostics;
 // Djestit
-using Unica.Djestit;
+using RecognitionGestureFeed_Universal.Djestit;
+using RecognitionGestureFeed_Universal.Gesture.Kinect.Kinect_Djestit;
+// Skeleton
+using RecognitionGestureFeed_Universal.Recognition.Kinect.BodyStructure;
+// Kinect
 using Microsoft.Kinect;
+// FeedBack
+using RecognitionGestureFeed_Universal.Feed.FeedBack;
+// Handler
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.Handler;
+// Modifies
+using RecognitionGestureFeed_Universal.Feed.FeedBack.Tree.Wrapper.CustomAttributes;
+// Test
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Unica.Djestit.Feed;
-using Unica.Djestit.Kinect2;
-using Unica.Djestit.Recognition.Kinect2;
 
 namespace UnitTestProject1
 {
@@ -23,20 +33,20 @@ namespace UnitTestProject1
             /* Pan Asse X */
             // Close
             GroundTerm termx1 = new GroundTerm();
-            termx1.Type = "Start";
-            termx1.Accepts = close;
+            termx1.type = "Start";
+            termx1.accepts = close;
             termx1.Complete += Close;
             //termx1.handler = new Handler(Close, termx1);
             // Move
             GroundTerm termx2 = new GroundTerm();
-            termx2.Type = "Move";
-            termx2.Accepts = moveX;
+            termx2.type = "Move";
+            termx2.accepts = moveX;
             termx2.Complete += Move;
             //termx2.handler = new Handler(Move, termx2);
             // Open
             GroundTerm termx3 = new GroundTerm();
-            termx3.Type = "End";
-            termx3.Accepts = open;
+            termx3.type = "End";
+            termx3.accepts = open;
             termx3.Complete += Open;
             //termx3.handler = new Handler(Open, termx3);
             // Iterative Move
@@ -58,20 +68,20 @@ namespace UnitTestProject1
             /* Pan Asse Y */
             // Close
             GroundTerm termy1 = new GroundTerm();
-            termy1.Type = "Start";
-            termy1.Accepts = close;
+            termy1.type = "Start";
+            termy1.accepts = close;
             termy1.Complete += Close;
             //termy1.handler = new Handler(Close, termy1);
             // Move
             GroundTerm termy2 = new GroundTerm();
-            termy2.Type = "Move";
-            termy2.Accepts = moveY;
+            termy2.type = "Move";
+            termy2.accepts = moveY;
             termy2.Complete += Move;
             //termy2.handler = new Handler(Move, termy2);
             // Open
             GroundTerm termy3 = new GroundTerm();
-            termy3.Type = "End";
-            termy3.Accepts = open;
+            termy3.type = "End";
+            termy3.accepts = open;
             termy3.Complete += Open;
             //termy3.handler = new Handler(Open, termy3);
             // Iterative Move
@@ -108,7 +118,7 @@ namespace UnitTestProject1
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
                 // La gesture inizia se l'utente chiude la mano destra
-                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Closed)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed)
                 {
                     return true;
                 }
@@ -125,7 +135,7 @@ namespace UnitTestProject1
                 SkeletonToken skeletonToken = (SkeletonToken)token;
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
-                JointInformation jNew = skeletonToken.skeleton.getJointInformation(Microsoft.Kinect.JointType.HandRight);
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
                 //Debug.WriteLine("mano X: " +jNew.position.X);
                 List<float> listConfidenceX = new List<float>();
                 List<float> listConfidenceY = new List<float>();
@@ -134,12 +144,12 @@ namespace UnitTestProject1
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = sOld.getJointInformation(Microsoft.Kinect.JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
                 }
                 //Debug.WriteLine(listConfidenceX.Average() + " - " + listConfidenceY.Average());
-                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() > listConfidenceY.Average())
                     return true;
                 else
 
@@ -155,19 +165,18 @@ namespace UnitTestProject1
                 SkeletonToken skeletonToken = (SkeletonToken)token;
                 // Controlla se la mano destra è effettivamente chiusa e se c'è stato un qualche movimento (anche impercettibile)
                 // Preleva dall'ultimo scheletro il JointInformation riguardante la mano
-                JointInformation jNew = skeletonToken.skeleton.getJointInformation(Microsoft.Kinect.JointType.HandRight);
+                JointInformation jNew = skeletonToken.skeleton.getJointInformation(JointType.HandRight);
                 List<float> listConfidenceX = new List<float>();
                 List<float> listConfidenceY = new List<float>();
                 // Calcolo la differenza lungo l'asse X e l'asse Y
                 foreach (Skeleton sOld in skeletonToken.precSkeletons)
                 {
                     // Preleva dal penultimo scheletro il JointInformation riguardante la mano
-                    JointInformation jOld = sOld.getJointInformation(Microsoft.Kinect.JointType.HandRight);
+                    JointInformation jOld = sOld.getJointInformation(JointType.HandRight);
                     listConfidenceX.Add(Math.Abs(jNew.position.X - jOld.position.X));
                     listConfidenceY.Add(Math.Abs(jNew.position.Y - jOld.position.Y));
                 }
-                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Closed && 
-                    listConfidenceX.Average() < listConfidenceY.Average())
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Closed && listConfidenceX.Average() < listConfidenceY.Average())
                     return true;
                 else
                     return false;
@@ -180,7 +189,7 @@ namespace UnitTestProject1
             {
                 SkeletonToken skeletonToken = (SkeletonToken)token;
                 // La gesture termina quando l'utente apre la mano destra
-                if (skeletonToken.skeleton.rightHandStatus == Microsoft.Kinect.HandState.Open)
+                if (skeletonToken.skeleton.rightHandStatus == HandState.Open)
                     return true;
                 else
                     return false;

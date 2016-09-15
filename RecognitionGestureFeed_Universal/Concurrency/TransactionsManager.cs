@@ -26,7 +26,6 @@ namespace Unica.Djestit.Concurrency
         private List<Tuple<Modifies, Modifies>> listMember = new List<Tuple<Modifies, Modifies>>();
         //
         //private List<Modifies> listMemberValue = new List<Modifies>();
-        public int i;
 
         /* Costruttore */
         public TransactionsManager()
@@ -35,6 +34,11 @@ namespace Unica.Djestit.Concurrency
         }
 
         /* Metodi */
+        /// <summary>
+        /// Avvia l'esecuzione della transazione.
+        /// </summary>
+        /// <param name="listMemberValue"></param>
+        /// <param name="listNewMemberValue"></param>
         public void onTransactionExcute(List<Modifies> listMemberValue, List<Modifies> listNewMemberValue)
         {
             transaction = Transaction.Current;
@@ -134,54 +138,3 @@ namespace Unica.Djestit.Concurrency
 
     }
 }
-
-
-
-
-
-/*
-public void CreateTransactionAmbient(int id, List<Modifies> list1, List<Modifies> list2)
-{
-    List<Modifies> listTemp = new List<Modifies>();
-
-    listTemp = setListTemporary(list1, list2);
-
-    //
-    if (!listModifiche.ContainsKey(id))
-    {
-        listModifiche.Add(id, listTemp);
-        return;
-    }
-    //
-    List<Modifies> listTemp2 = new List<Modifies>();
-    listModifiche.TryGetValue(id, out listTemp2);
-    listTemp2.Union(listTemp);
-}
-
-public void ExecuteTransaction(int id, List<Modifies> list1, List<Modifies> listNewMemberValue)
-{
-    List<Modifies> listTemp = new List<Modifies>();
-    listTemp = setListTemporary(list1, listNewMemberValue);
-
-    //
-    transaction = Transaction.Current;
-    if (transaction != null)
-    {
-        transaction.EnlistVolatile(this, EnlistmentOptions.None);
-    }
-    else
-    {
-
-    }
-    List<Modifies> listTemp2 = new List<Modifies>();
-    listModifiche.TryGetValue(id, out listTemp2);
-    listTemp2.Union(listTemp);
-    // 
-    foreach (Modifies mod in listTemp2)
-    {
-        Modifies modTemp = (list1.Find(item => item.Equals(mod)));
-        if (modTemp != null)
-            this.listMember.Add(new Tuple<Modifies, Modifies>(modTemp, mod));
-    }
-
-}*/

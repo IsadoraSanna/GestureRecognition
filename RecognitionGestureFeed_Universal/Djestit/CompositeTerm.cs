@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 // ErrorTolerance
 using Unica.Djestit.ErrorToleranceManager;
+using Unica.Djestit.Feed;
 
 namespace Unica.Djestit
 {
@@ -40,16 +41,17 @@ namespace Unica.Djestit
             foreach(Term term in terms)
             {
                 term.pointFather = this;
-                this.children.Add(term);
+                children.Add(term);
             }
+            ComputeLikelihood.indipendentEvents(this);
         }
-
         public CompositeTerm(Term term)
             : this()
         {
             // Associa al figlio in input il puntatore al padre
             term.pointFather = this;
-            this.children.Add(term);
+            children.Add(term);
+            ComputeLikelihood.indipendentEvents(this);
         }
 
         /* Metodi */
@@ -125,9 +127,9 @@ namespace Unica.Djestit
         /// Permette di settare la variabile ErrorTolerance
         /// </summary>
         /// <param name="err"></param>
-        public void setErrorTolerance(ErrorTolerance err)
+        public void setErrorTolerance()
         {
-            this.error_tolerance = err;
+            this.error_tolerance = new ErrorTolerance();
             this.flagErrTolerance = true;
         }
         /// <summary>

@@ -13,23 +13,19 @@ namespace Unica.Djestit.Feed
         public string name { get; private set; }
         // Lista dei custom attributes di tipo Modifies dichiarati nella funzione
         public List<Modifies> elementList { get; private set; }
-        public List<Modifies> listModifies { get; private set; }
         // Funzione che gestisce la gesture
         public GestureEventHandler function { get; private set; }
         // Probabilità associata alla gesture
         public Likelihood likelihood { get; internal set; }
 
         /* Costruttore */
-        public Handler(GestureEventHandler function, Term term, List<Modifies> listModifies)
+        public Handler(GestureEventHandler function, Term term)
         {
             // Probabilità
-            if (term.GetType() != typeof(GroundTerm))
+            if (term.GetType() == typeof(CompositeTerm))
                 this.likelihood = new Likelihood ((CompositeTerm)term, ProbabilityType.IndipendentEvents);
             else
                 this.likelihood = new Likelihood (term.likelihood);
-            // Lista dei Modifies del programma
-            this.listModifies = new List<Modifies>();
-            this.listModifies = listModifies;
             // Funzione 
             this.function = (GestureEventHandler)function.Clone();
             // Lista dei modifies modificati dalla funzione della gesture
@@ -37,15 +33,7 @@ namespace Unica.Djestit.Feed
             // Nome associata alla funzione
             this.name = function.Method.Name;
         }
-        public Handler(GestureEventHandler function, Term term)
-        {
-            // Funzione 
-            this.function = (GestureEventHandler)function.Clone();
-            // Lista dei modifies modificati dalla funzione della gesture
-            elementList = this.getModifiesAttribute();
-            // Nome associata alla funzione
-            name = function.Method.Name;
-        }
+
         /// <summary>
         /// Costruttore che inizializza a zero (o a null), tutti gli elementi dell'handler
         /// </summary>

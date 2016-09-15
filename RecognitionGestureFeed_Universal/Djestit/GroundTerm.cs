@@ -16,39 +16,25 @@ namespace Unica.Djestit
         /* Attributi */
         public String Type { get; set; }// Tipo di ground term
         public Accepts<Token> Accepts { get; set; }
+        public Accepts<Token> _Accepts { get; set; }
 
-        /* Metodi 
-        public virtual bool _accepts2(Token token)
-        {
-            if(this._accepts != null) 
-                return this._accepts(token); 
-            else 
-                return true;
-        }
-
-        public virtual bool accepts2(Token token)
-        {
-            if (this.Accepts != null)
-                return this.Accepts(token);
-            else
-                return true;
-        }*/
-
-        protected virtual bool _Accepts(Token token)
+        /* Metodi */
+        public virtual bool _accepts(Token token)
         {
             return true;
         }
-       
+
         public override bool lookahead(Token token)
         {
             if(Accepts != null)
             {
                 return _Accepts(token) && Accepts(token);
             }
-            else
+            if(_Accepts != null)
             {
                 return _Accepts(token);
             }
+            return false;
         }
     }
     

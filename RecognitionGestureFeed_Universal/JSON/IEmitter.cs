@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Unica.Djestit.JSON
-{
+{ 
     public interface ITermReference
     {
         void AddChild(ITermReference child);

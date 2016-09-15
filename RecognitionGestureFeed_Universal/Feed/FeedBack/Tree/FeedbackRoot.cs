@@ -16,16 +16,11 @@ namespace Unica.Djestit.Feed
         public List<FeedbackGesture> children = new List<FeedbackGesture>();
         // Term associato alla radice
         public Term term;
-        // Conflict Manager associato alla radice
-        public ConflictManager conflictManager = null;
-        // Transaction Manager associato alla radice
-        public TransactionsManager transactionsManager = new TransactionsManager();
-
         // SortedDictionary che contiene le informazioni relative alle gesture in stato di Continue
         //public SortedDictionary<Handler, List<Modifies>> mapHandler { get; private set; }
 
         /* Costruttore */
-        public FeedbackRoot(List<Modifies> listModifies, Term term)
+        public FeedbackRoot(Term term)
         {
             // Associo il Term alla radice
             this.term = term;
@@ -48,7 +43,7 @@ namespace Unica.Djestit.Feed
 
             // Inizializzo la mappa degli handler, inserendovi la relativa classe che si occupa del Compare tra i vari handler
             //this.mapHandler = new SortedDictionary<Handler, List<Modifies>>();
-            this.conflictManager = new ConflictManager(listModifies, term);
+            ConflictManager.getInstance(term);
 
             // Associa al cambiamento di stato del term l'handler resetTree
             this.term.ChangeState += resetTree;
@@ -79,11 +74,6 @@ namespace Unica.Djestit.Feed
         private void updateComplete(FeedbackGroupEventArgs sender)
         {
             // Esegui le modifiche
-            //using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required))
-            //{
-            //this.transactionsManager.onTransactionExcute(this.conflictManager.listModifies, sender.handler.elementList);
-            //}
-            //this.reset;
             OnFeedbackRootEvent();
         }
 
@@ -95,10 +85,10 @@ namespace Unica.Djestit.Feed
         private void updateContinue(FeedbackGroupEventArgs sender)
         {
             // Se il term ha un handler e non è ancora presente nella mappa, allora lo inserisco, e aggiorno l'albero
-            if (sender.term.hasComplete() && (!this.conflictManager.mapConflictExec.ContainsKey(sender.handler)))
+            if (sender.term.hasComplete() && (!ConflictManager.getInstance().mapConflictExec.ContainsKey(sender.handler)))
             {
                     // Aggiorna l'albero inserendo l'handler.
-                    this.conflictManager.addHandler(sender.handler);
+                    ConflictManager.getInstance().addHandler(sender.handler);
                     OnFeedbackRootEvent();
             }
         }
@@ -111,13 +101,13 @@ namespace Unica.Djestit.Feed
         private void updateError(FeedbackGroupEventArgs sender)
         {
             // Controlla se l'handler si trova nella mappa
-            if (sender.term.hasComplete() && this.conflictManager.mapConflictExec.ContainsKey(sender.handler))
+            if (sender.term.hasComplete() && ConflictManager.getInstance().mapConflictExec.ContainsKey(sender.handler))
             {
                 // Se si, lo si rimuove dalla mappa e si aggiornano di conseguenza anche tutti gli 
                 // elementi dei vari handler presenti nella mappa.
                 //this.mapHandler.Remove(sender.handler);
                 //this.removeNode();
-                this.conflictManager.removeHandler(sender.handler);
+                ConflictManager.getInstance().removeHandler(sender.handler);
                 OnFeedbackRootEvent();
             }
         }
@@ -131,7 +121,7 @@ namespace Unica.Djestit.Feed
             {
                 feedbackGesture.reset();// Resetta il figlio
             }
-            this.conflictManager.mapConflictExec.Clear();// Resetta la mappa degli Handler
+            ConflictManager.getInstance().mapConflictExec.Clear();// Resetta la mappa degli Handler
             //this.mapHandler.Clear();// Resetta la mappa degli Handler
             OnFeedbackRootEvent();
         }
