@@ -124,7 +124,7 @@ namespace Unica.Djestit.JSON
         /// <param name="args"></param>
         private void fillCompositeProperties(CompositeTerm c, Dictionary<string, object>args)
         {
-            if(args.ContainsKey("error_tolerance") && GestureLibrary.dictionary_handler_accept.ContainsKey(args["error_tolerance"].ToString()))
+            if(args.ContainsKey("error_tolerance"))
             {
                 c.setErrorTolerance();
             }

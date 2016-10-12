@@ -3,9 +3,6 @@ using System.Linq;
 // Leap Motion Library
 using Leap;
 using Unica.Djestit.Recognition.FrameDataManager;
-// LeapData
-
-// Debug
 
 namespace Unica.Djestit.Recognition.Leap
 {

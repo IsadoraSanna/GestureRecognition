@@ -17,7 +17,7 @@ namespace Unica.Djestit
         Error = -2
     }
     // Delegate per i GestureEventHandler
-    public delegate void GestureEventHandler(object obj, GestureEventArgs sender);
+    public delegate void GestureEventHandler(Term term_event, GestureEventArgs sender);
     public delegate void GestureChangeStateHandler();
     // Delegate per il TokenFire
     public delegate void TokenFire(object obj, TokenFireArgs sender);
@@ -92,7 +92,7 @@ namespace Unica.Djestit
             // Aggiorna lo stato
             this.state = expressionState.Complete;
             // Genera gli eventi OnComplete e OnChangeState
-            GestureEventArgs e = new GestureEventArgs(this, token);
+            GestureEventArgs e = new GestureEventArgs(pointFather, token);
             onComplete(e);
             onChangeState();
         }
@@ -107,7 +107,7 @@ namespace Unica.Djestit
             // Aggiorna lo stato
             this.state = expressionState.Likely;
             // Genera gli eventi OnLikely, OnComplete e OnChangeState
-            GestureEventArgs e = new GestureEventArgs(this, token);
+            GestureEventArgs e = new GestureEventArgs(pointFather, token);
             onLikely(e);
             onComplete(e);
             onChangeState();
@@ -124,7 +124,7 @@ namespace Unica.Djestit
             // Modifica lo stato
             this.state = expressionState.Error;
             // Genera gli eventi Error e ChangeState
-            GestureEventArgs e = new GestureEventArgs(this, token);
+            GestureEventArgs e = new GestureEventArgs(pointFather, token);
             onError(e);
             onChangeState();
         }
@@ -149,10 +149,7 @@ namespace Unica.Djestit
         /// <param name="t"></param>
         protected virtual void onLikely(GestureEventArgs t)
         {
-            if (Likely != null)
-            {
-                Likely(this, t);
-            }
+            Likely?.Invoke(this, t);
         }
 
         /// <summary>
@@ -234,10 +231,7 @@ namespace Unica.Djestit
         /// <param name="t"></param>
         protected virtual void onError(GestureEventArgs t)
         {
-            if (Error != null)
-            {
-                Error(this, t);
-            }
+            Error?.Invoke(this, t);
         }
     }
 }

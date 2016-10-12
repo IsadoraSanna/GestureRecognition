@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Unica.Djestit
 {
+    ///
     public class GestureEventArgs : EventArgs
     {
         /* Attributi */
+        /// <summary>
+        /// Term che descrive l'intera gesture.
+        /// </summary>
         public readonly Term term;
+        /// <summary>
+        /// Ultimo token ricevuto.
+        /// </summary>
         public readonly Token token;
 
         /* Costruttore */

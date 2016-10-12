@@ -30,3 +30,5 @@ C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\bin\x64\Debug\Mi
 C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\obj\x64\Debug\UnitTestProject1.csprojResolveAssemblyReference.cache
 C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\obj\x64\Debug\UnitTestProject1.dll
 C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\obj\x64\Debug\UnitTestProject1.pdb
+C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\bin\x64\Debug\Newtonsoft.Json.dll
+C:\Users\darkm\Source\Repos\GestureRecognition\UnitTestProject1\bin\x64\Debug\Newtonsoft.Json.xml

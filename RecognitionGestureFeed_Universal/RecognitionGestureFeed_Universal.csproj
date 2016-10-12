@@ -59,8 +59,9 @@
       <HintPath>..\packages\Handlebars.Net.1.7.1\lib\Handlebars.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LeapCSharp.NET4.0">
-      <HintPath>..\LeapCSharp.NET4.0.dll</HintPath>
+    <Reference Include="LeapCSharp.NET4.0, Version=2.3.1.0, Culture=neutral, PublicKeyToken=6e1b1368e71eba9b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Downloads\Leap_Motion_SDK_Windows_2.3.0\LeapDeveloperKit_2.3.0+31543_win\LeapSDK\lib\LeapCSharp.NET4.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Kinect.Face, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86" />

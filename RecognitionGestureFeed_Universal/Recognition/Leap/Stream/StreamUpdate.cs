@@ -5,12 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 // Bitmap
-using System.Windows.Media;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows;
 // Leap
 using Leap;
 

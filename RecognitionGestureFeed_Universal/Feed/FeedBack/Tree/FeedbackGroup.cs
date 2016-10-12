@@ -39,10 +39,9 @@ namespace Unica.Djestit.Feed
         /// Se assume il valore Continue vuol dire che la gesture è in esecuzione;
         /// Se assume il valore Default vuol dire che il sistema sta aspettando che l'utente esegua una gesture;
         /// Se assume il valore False vuol dire che l'utente sta eseguendo una gesture totalmente dissimile, e quindi non dev'essere visualizzato.
-        public StateGroup state;// { get; private set; }
+        public StateGroup state;
         // Probabilità associata al Term
-        //public Likelihood likelihood { get; internal set; }
-        public float likelihood { get; internal set; }
+        public Likelihood likelihood { get; internal set; }
         // Handler associato alla Gesture
         public Handler handler;
         public List<Handler> handlers;
@@ -53,15 +52,13 @@ namespace Unica.Djestit.Feed
             // Assegna al nodo il term a cui dev'essere associato
             this.term = term;
             // Inizializzo la classe Likelihood
-            //this.likelihood = new Likelihood();
-            this.likelihood = term.likelihood;
+            this.likelihood = new Likelihood();
             // Inizializza la stato del Nodo a Default
             this.state = StateGroup.Default;
-            // Associa al FeedbackGroup l'handler associato term (se questo non è nullo)
+            // Associa al FeedbackGroup l'handler associato al term (se questo non è nullo)
             if (term.CompleteHandlers != null && term.CompleteHandlers.Count > 0)
             {
                 this.handler = term.CompleteHandlers.First();
-                //this.handler.likelihood = term.likelihood;
             }
         }
 
@@ -194,6 +191,7 @@ namespace Unica.Djestit.Feed
                 this.state = StateGroup.Complete;// Cambio lo stato
                 this.OnFeedbackGroupComplete();// Genero l'evento
             }
+           
             else if(this.term.state == expressionState.Error)
             {
                 // Error

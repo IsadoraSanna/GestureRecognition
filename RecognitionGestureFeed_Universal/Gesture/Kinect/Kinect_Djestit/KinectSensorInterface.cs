@@ -15,7 +15,7 @@ namespace Unica.Djestit.Kinect2
         // Sensore usato per comunicare al motorino i nuovi token
         protected SkeletonSensor sensor;
         // Capacità del buffer
-        protected int capacity = 5;
+        protected int capacity = 7;
         // Singleton
         private static KinectSensorInterface singleton = null;
 

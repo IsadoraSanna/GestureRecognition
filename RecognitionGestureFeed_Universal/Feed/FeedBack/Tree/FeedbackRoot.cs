@@ -5,7 +5,7 @@ using Unica.Djestit.Concurrency;
 namespace Unica.Djestit.Feed
 {
     // Delegate per gli eventi legati al cambiamento di stato di una gesture
-    public delegate void FeedbackRootEvent();
+    public delegate void FeedbackRootEvent(Dictionary<Handler, List<Modifies>> mapConflictExec);
 
     public class FeedbackRoot
     {
@@ -87,10 +87,10 @@ namespace Unica.Djestit.Feed
             // Se il term ha un handler e non è ancora presente nella mappa, allora lo inserisco, e aggiorno l'albero
             if (sender.term.hasComplete() && (!ConflictManager.getInstance().mapConflictExec.ContainsKey(sender.handler)))
             {
-                    // Aggiorna l'albero inserendo l'handler.
-                    ConflictManager.getInstance().addHandler(sender.handler);
-                    OnFeedbackRootEvent();
+                // Aggiorna l'albero inserendo l'handler.
+                ConflictManager.getInstance().addHandler(sender.handler);
             }
+            OnFeedbackRootEvent();
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Unica.Djestit.Feed
         /// </summary>
         private void reset()
         {
-            foreach (FeedbackGesture feedbackGesture in this.children)
+            foreach (FeedbackGesture feedbackGesture in children)
             {
                 feedbackGesture.reset();// Resetta il figlio
             }
@@ -131,16 +131,15 @@ namespace Unica.Djestit.Feed
         /// </summary>
         private void resetTree()
         {
-            this.reset();
+            reset();
         }
 
         /// <summary>
-        /// Comunica che una delle gesture ha modificato il suo stato
+        /// Comunica che una delle gesture ha modificato il suo stato o che sta continuando l'esecuzione.
         /// </summary>
         public void OnFeedbackRootEvent()
         {
-            if (this.feedbackRootEvent != null)
-                this.feedbackRootEvent();
+            feedbackRootEvent?.Invoke(ConflictManager.getInstance().mapConflictExec);
         }
 
         /*/// <summary>
@@ -228,7 +227,6 @@ namespace Unica.Djestit.Feed
     {
         public int Compare(Handler x, Handler y)
         {
-            //return (y.likelihood.probability.CompareTo(x.likelihood.probability));
             return (y.likelihood.CompareTo(x.likelihood));
         }
     }

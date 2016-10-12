@@ -31,9 +31,6 @@ namespace Unica.Djestit.Feed
                     create(child);
                 }
             }
-
-            // Calcolo della probabilità
-            //this.likelihood = this.handler.likelihood = term.likelihood.probability;
             
             // Handler relativi all'aggiornamento di stato del term e al suo fire
             this.term.TokenFire += updateChild;
@@ -153,17 +150,6 @@ namespace Unica.Djestit.Feed
                 this.state = StateGroup.Error;// Cambio lo stato
                 this.OnFeedbackGroupError();// Genero l'evento
             }
-        }
-
-
-        // Prova
-        private void OnContinue(FeedbackGroupEventArgs sender)
-        {
-            Debug.WriteLine("Sto continuando :" + sender.term.Name.ToString());
-        }
-        private void OnComplete(FeedbackGroupEventArgs sender)
-        {
-            Debug.WriteLine("Ho completato: " + sender.term.Name.ToString());
         }
     }
 }

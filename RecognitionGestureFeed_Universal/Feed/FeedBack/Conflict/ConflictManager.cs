@@ -160,7 +160,7 @@ namespace Unica.Djestit.Feed
 
             // Quindi per ogni handler presente nella mappa, si prende la sua lista di CustomAttribute,
             // e si controlla se va ad agire su attributi presenti anche negli altri handler
-            foreach (var i in this.mapConflictExec)
+            foreach (var i in mapConflictExec)
             {
                 // Toglie dalla lista di Modifies associato all'Handler gli eventuali elementi in conflitto
                 // ovvero quelli contenuti nell'handler della nuova gesture
@@ -186,7 +186,7 @@ namespace Unica.Djestit.Feed
             List<Modifies> list2 = new List<Modifies>();
 
             // Si determina quali sono i nuovi attributi in conflitto
-            foreach (var elem in this.mapConflictExec)
+            foreach (var elem in mapConflictExec)
             {
                 if (listModifies.Count() > 0)
                 {
@@ -222,6 +222,7 @@ namespace Unica.Djestit.Feed
                     i.Value.Add(element);
                 }
             }
+
             mapConflictExec.Remove(handler);
         }
     }

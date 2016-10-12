@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Unica.Djestit
 {
-    //
+    // Delegate funzione di Accept
     public delegate bool Accepts<T>(T token) where T : Token;
 
     public class GroundTerm : Term
@@ -26,14 +26,19 @@ namespace Unica.Djestit
 
         public override bool lookahead(Token token)
         {
-            if(Accepts != null)
+            if(Accepts != null && _Accepts != null)
             {
-                return _Accepts(token) && Accepts(token);
+                return Accepts(token) && _Accepts(token);
             }
-            if(_Accepts != null)
+            else if(Accepts != null)
+            {
+                return Accepts(token);
+            }
+            else if(_Accepts != null)
             {
                 return _Accepts(token);
             }
+            
             return false;
         }
     }

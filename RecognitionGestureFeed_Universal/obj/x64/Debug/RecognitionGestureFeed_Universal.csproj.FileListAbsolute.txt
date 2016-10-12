@@ -30,6 +30,6 @@ C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\
 C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.VisualGestureBuilder.xml
 C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Microsoft.Kinect.Wpf.Controls.xml
 C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\bin\x64\Debug\Newtonsoft.Json.xml
-C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache
 C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.dll
 C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.pdb
+C:\Users\darkm\Source\Repos\GestureRecognition\RecognitionGestureFeed_Universal\obj\x64\Debug\RecognitionGestureFeed_Universal.csprojResolveAssemblyReference.cache

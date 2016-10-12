@@ -333,7 +333,7 @@ namespace Unica.Djestit.JSON
                     //libs.Add(current.Properties);
                 }
             }
-            Debug.WriteLine(libs);
+            //Debug.WriteLine(libs);
             return libs;
         }
     }
